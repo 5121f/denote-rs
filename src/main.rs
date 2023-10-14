@@ -1,5 +1,9 @@
 use clap::Parser;
-use std::{env, fs, io, path::PathBuf};
+use std::{
+    env, fs,
+    io::{self, Stdout, Write},
+    path::PathBuf,
+};
 
 struct Date(String);
 
@@ -89,17 +93,23 @@ struct Cli {
     rename: Option<PathBuf>,
 }
 
+fn print(value: &str, stdout: &mut Stdout) {
+    print!("{}", value);
+    stdout.flush().unwrap();
+}
+
 fn main() {
     let cli = Cli::parse();
     if let Some(path) = cli.rename {
         let current_dir = env::current_dir().unwrap();
         let path = current_dir.join(path);
-        println!("Имя файла: ");
+        let mut stdout = io::stdout();
+        print("Имя файла: ", &mut stdout);
         let mut file_name = String::new();
         let stdin = io::stdin();
         stdin.read_line(&mut file_name).unwrap();
         let file_name = Filename::from_string(file_name);
-        println!("Ключевые слова: ");
+        print("Ключевые слова: ", &mut stdout);
         let mut keywords = String::new();
         stdin.read_line(&mut keywords).unwrap();
         let keywords = Keywords::from_string(keywords);
