@@ -43,20 +43,28 @@ struct Keywords(Vec<String>);
 
 impl Keywords {
     fn from_string(string: String) -> Self {
-        Self(
-            string
-                .to_lowercase()
-                .split(',')
-                .map(ToOwned::to_owned)
-                .collect(),
-        )
+        let keywords: Vec<_> = string
+            .trim()
+            .to_lowercase()
+            .split(',')
+            .map(ToOwned::to_owned)
+            .collect();
+        let keywords = match keywords.first() {
+            Some(first) if first.is_empty() => Vec::new(),
+            _ => keywords,
+        };
+        Self(keywords)
     }
 }
 
 impl ToString for Keywords {
     fn to_string(&self) -> String {
-        let keywords = self.0.join("_");
-        format!("__{keywords}")
+        if self.0.is_empty() {
+            String::new()
+        } else {
+            let keywords = self.0.join("_");
+            format!("__{keywords}")
+        }
     }
 }
 
