@@ -100,18 +100,23 @@ fn print(value: &str, stdout: &mut Stdout) {
 
 fn main() {
     let cli = Cli::parse();
-    if let Some(path) = cli.rename {
+    if let Some(file) = cli.rename {
         let current_dir = env::current_dir().unwrap();
-        let path = current_dir.join(path);
+        let path = current_dir.join(&file);
 
         let mut stdout = io::stdout();
         let stdin = io::stdin();
 
-        print("Имя файла: ", &mut stdout);
+        print(&format!("Имя файла [{}]: ", file.display()), &mut stdout);
         let file_name = {
             let mut buf = String::new();
             stdin.read_line(&mut buf).unwrap();
-            Filename::from_string(buf)
+            let filename = if buf.trim().is_empty() {
+                file.display().to_string()
+            } else {
+                buf
+            };
+            Filename::from_string(filename)
         };
 
         print("Ключевые слова: ", &mut stdout);
