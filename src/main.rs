@@ -24,7 +24,8 @@ struct Filename(String);
 
 impl Filename {
     fn from_string(string: String) -> Self {
-        Self(string.to_lowercase().replace(' ', "-"))
+        let filename = string.to_lowercase().replace(' ', "-");
+        Self(format!("--{filename}"))
     }
 }
 
@@ -47,7 +48,7 @@ impl NameScheme {
 
 impl ToString for NameScheme {
     fn to_string(&self) -> String {
-        format!("{}--{}", self.date.to_string(), self.name.to_string())
+        format!("{}{}", self.date.to_string(), self.name.to_string())
     }
 }
 
