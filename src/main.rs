@@ -103,16 +103,24 @@ fn main() {
     if let Some(path) = cli.rename {
         let current_dir = env::current_dir().unwrap();
         let path = current_dir.join(path);
+
         let mut stdout = io::stdout();
-        print("Имя файла: ", &mut stdout);
-        let mut file_name = String::new();
         let stdin = io::stdin();
-        stdin.read_line(&mut file_name).unwrap();
-        let file_name = Filename::from_string(file_name);
+
+        print("Имя файла: ", &mut stdout);
+        let file_name = {
+            let mut buf = String::new();
+            stdin.read_line(&mut buf).unwrap();
+            Filename::from_string(buf)
+        };
+
         print("Ключевые слова: ", &mut stdout);
-        let mut keywords = String::new();
-        stdin.read_line(&mut keywords).unwrap();
-        let keywords = Keywords::from_string(keywords);
+        let keywords = {
+            let mut buf = String::new();
+            stdin.read_line(&mut buf).unwrap();
+            Keywords::from_string(buf)
+        };
+
         let name_scheme = NameScheme::new(Date::current_time(), file_name, keywords);
         fs::rename(path, current_dir.join(name_scheme.to_string())).unwrap();
     }
