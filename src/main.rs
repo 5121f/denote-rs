@@ -25,7 +25,7 @@ impl ToString for Date {
     }
 }
 
-static FILENAME_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
+static TITLE_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
 
 struct Title(String);
 
@@ -35,7 +35,7 @@ impl Title {
     }
 
     fn retrive_from_string(strnig: &str) -> Option<Self> {
-        Regex::new(FILENAME_REGEXP)
+        Regex::new(TITLE_REGEXP)
             .ok()?
             .captures(strnig)
             .map(|m| Self(m[1].to_owned()))
