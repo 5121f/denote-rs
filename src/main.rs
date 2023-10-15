@@ -1,5 +1,6 @@
 use anyhow::{bail, Context, Ok, Result};
 use clap::Parser;
+use regex::{Match, Regex};
 use std::{
     env, fs,
     io::{self, Write},
@@ -24,12 +25,21 @@ impl ToString for Date {
     }
 }
 
+static FILENAME_REGEXP: &str = r"--([\p{Alphabetic}\pN]*)";
+
 struct Filename(String);
 
 impl Filename {
     fn from_string(string: String) -> Self {
         let filename = string.to_lowercase().replace(' ', "-");
         Self(format!("--{filename}"))
+    }
+
+    fn retrive_from_string(strnig: &str) -> Option<Self> {
+        Regex::new(FILENAME_REGEXP)
+            .ok()?
+            .captures(strnig)
+            .map(|m| Self(m[1].to_owned()))
     }
 }
 
@@ -151,11 +161,14 @@ fn main() -> Result<()> {
         let mut stdout = Stdout::new();
         let mut stdin = Stdin::new();
 
-        stdout.print(&format!("Имя файла [{}]: ", &file_name))?;
+        let title = Filename::retrive_from_string(&file_name)
+            .map(|f| f.to_string())
+            .unwrap_or(file_name.clone());
+        stdout.print(&format!("Имя файла [{}]: ", &title))?;
         let new_file_name = {
             let new_file_name = Some(stdin.read_line()?)
                 .filter(|f| !f.trim().is_empty())
-                .unwrap_or(file_name.clone());
+                .unwrap_or(title);
             Filename::from_string(new_file_name)
         };
 
