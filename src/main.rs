@@ -1,3 +1,4 @@
+use anyhow::{Context, Ok, Result};
 use clap::Parser;
 use std::{
     env, fs,
@@ -101,9 +102,9 @@ impl Stdout {
         Self(io::stdout())
     }
 
-    fn print(&mut self, value: &str) {
+    fn print(&mut self, value: &str) -> Result<()> {
         print!("{}", value);
-        self.0.flush().unwrap();
+        Ok(self.0.flush()?)
     }
 }
 
@@ -120,9 +121,11 @@ impl Stdin {
         }
     }
 
-    fn read_line(&mut self) -> String {
-        self.stdin.read_line(&mut self.buf).unwrap();
-        self.buf.clone()
+    fn read_line(&mut self) -> Result<String> {
+        self.stdin
+            .read_line(&mut self.buf)
+            .context("Не удалось прочитать пользовательский ввод")?;
+        Ok(self.buf.clone())
     }
 }
 
@@ -132,26 +135,26 @@ struct Cli {
     rename: Option<String>,
 }
 
-fn main() {
+fn main() -> Result<()> {
     let cli = Cli::parse();
     if let Some(file_name) = cli.rename {
-        let current_dir = env::current_dir().unwrap();
+        let current_dir = env::current_dir().context("Не удалось получить рабочую директорию")?;
         let path = current_dir.join(&file_name);
 
         let mut stdout = Stdout::new();
         let mut stdin = Stdin::new();
 
-        stdout.print(&format!("Имя файла [{}]: ", &file_name));
+        stdout.print(&format!("Имя файла [{}]: ", &file_name))?;
         let new_file_name = {
-            let new_file_name = Some(stdin.read_line())
+            let new_file_name = Some(stdin.read_line()?)
                 .filter(|f| !f.trim().is_empty())
                 .unwrap_or(file_name.clone());
             Filename::from_string(new_file_name)
         };
 
-        stdout.print("Ключевые слова: ");
+        stdout.print("Ключевые слова: ")?;
         let keywords = {
-            let keywords = stdin.read_line();
+            let keywords = stdin.read_line()?;
             Keywords::from_string(keywords)
         };
 
@@ -159,11 +162,13 @@ fn main() {
         let name_scheme = name_scheme.to_string();
 
         println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
-        stdout.print("Подтвердить переименование? [Y/n] ");
-        let response = stdin.read_line();
+        stdout.print("Подтвердить переименование? [Y/n] ")?;
+        let response = stdin.read_line()?;
         let response = response.trim().to_lowercase();
         if response == "y" || response.is_empty() {
-            fs::rename(path, current_dir.join(name_scheme)).unwrap();
+            fs::rename(&path, current_dir.join(name_scheme))
+                .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
         }
     }
+    Ok(())
 }
