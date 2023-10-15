@@ -27,9 +27,9 @@ impl ToString for Date {
 
 static FILENAME_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
 
-struct Filename(String);
+struct Title(String);
 
-impl Filename {
+impl Title {
     fn from_string(string: String) -> Self {
         Self(string.trim().to_lowercase().replace(' ', "-"))
     }
@@ -49,7 +49,7 @@ impl Filename {
     }
 }
 
-impl ToString for Filename {
+impl ToString for Title {
     fn to_string(&self) -> String {
         format!("--{}", self.0)
     }
@@ -86,15 +86,15 @@ impl ToString for Keywords {
 
 struct NameScheme {
     date: Date,
-    name: Filename,
+    title: Title,
     keywords: Keywords,
 }
 
 impl NameScheme {
-    fn new(date: Date, name: Filename, keywords: Keywords) -> Self {
+    fn new(date: Date, title: Title, keywords: Keywords) -> Self {
         Self {
             date,
-            name,
+            title,
             keywords,
         }
     }
@@ -105,7 +105,7 @@ impl ToString for NameScheme {
         format!(
             "{}{}{}",
             self.date.to_string(),
-            self.name.to_string(),
+            self.title.to_string(),
             self.keywords.to_string()
         )
     }
@@ -169,15 +169,15 @@ fn main() -> Result<()> {
         let mut stdout = Stdout::new();
         let mut stdin = Stdin::new();
 
-        let title = Filename::retrive_from_string(&file_name)
+        let title = Title::retrive_from_string(&file_name)
             .and_then(|f| f.desluggify())
             .unwrap_or(file_name.clone());
-        stdout.print(&format!("Имя файла [{}]: ", &title))?;
-        let new_file_name = {
-            let new_file_name = Some(stdin.read_line()?)
+        stdout.print(&format!("Заголовок [{}]: ", &title))?;
+        let title = {
+            let title = Some(stdin.read_line()?)
                 .filter(|f| !f.trim().is_empty())
                 .unwrap_or(title);
-            Filename::from_string(new_file_name)
+            Title::from_string(title)
         };
 
         stdout.print("Ключевые слова: ")?;
@@ -186,7 +186,7 @@ fn main() -> Result<()> {
             Keywords::from_string(keywords)
         };
 
-        let name_scheme = NameScheme::new(Date::current_time(), new_file_name, keywords);
+        let name_scheme = NameScheme::new(Date::current_time(), title, keywords);
         let name_scheme = name_scheme.to_string();
 
         println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
