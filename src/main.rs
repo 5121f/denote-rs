@@ -41,11 +41,14 @@ impl Title {
             .map(|m| Self(m[1].to_owned()))
     }
 
-    fn desluggify(&self) -> Option<String> {
-        let mut desluggify = self.0.clone().replace('-', " ");
-        let firs_letter = desluggify.chars().next()?.to_uppercase().to_string();
-        desluggify.replace_range(0..1, &firs_letter);
-        Some(desluggify)
+    fn desluggify(&self) -> String {
+        self.0
+            .clone()
+            .replace('-', " ")
+            .chars()
+            .enumerate()
+            .map(|(i, c)| if i == 0 { c.to_ascii_uppercase() } else { c })
+            .collect()
     }
 }
 
@@ -170,7 +173,7 @@ fn main() -> Result<()> {
         let mut stdin = Stdin::new();
 
         let title = Title::retrive_from_string(&file_name)
-            .and_then(|f| f.desluggify())
+            .map(|f| f.desluggify())
             .unwrap_or(file_name.clone());
         stdout.print(&format!("Заголовок [{}]: ", &title))?;
         let title = {
