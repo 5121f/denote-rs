@@ -31,8 +31,7 @@ struct Filename(String);
 
 impl Filename {
     fn from_string(string: String) -> Self {
-        let filename = string.to_lowercase().replace(' ', "-");
-        Self(format!("--{filename}"))
+        Self(string.trim().to_lowercase().replace(' ', "-"))
     }
 
     fn retrive_from_string(strnig: &str) -> Option<Self> {
@@ -41,11 +40,18 @@ impl Filename {
             .captures(strnig)
             .map(|m| Self(m[1].to_owned()))
     }
+
+    fn desluggify(&self) -> Option<String> {
+        let mut desluggify = self.0.clone().replace('-', " ");
+        let firs_letter = desluggify.chars().next()?.to_uppercase().to_string();
+        desluggify.replace_range(0..1, &firs_letter);
+        Some(desluggify)
+    }
 }
 
 impl ToString for Filename {
     fn to_string(&self) -> String {
-        self.0.clone()
+        format!("--{}", self.0)
     }
 }
 
@@ -135,7 +141,9 @@ impl Stdin {
         self.stdin
             .read_line(&mut self.buf)
             .context("Не удалось прочитать пользовательский ввод")?;
-        Ok(self.buf.clone())
+        let res = self.buf.clone();
+        self.buf.clear();
+        Ok(res)
     }
 }
 
@@ -162,7 +170,7 @@ fn main() -> Result<()> {
         let mut stdin = Stdin::new();
 
         let title = Filename::retrive_from_string(&file_name)
-            .map(|f| f.to_string())
+            .and_then(|f| f.desluggify())
             .unwrap_or(file_name.clone());
         stdout.print(&format!("Имя файла [{}]: ", &title))?;
         let new_file_name = {
