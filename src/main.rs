@@ -1,4 +1,4 @@
-use anyhow::{Context, Ok, Result};
+use anyhow::{bail, Context, Ok, Result};
 use clap::Parser;
 use std::{
     env, fs,
@@ -140,6 +140,13 @@ fn main() -> Result<()> {
     if let Some(file_name) = cli.rename {
         let current_dir = env::current_dir().context("Не удалось получить рабочую директорию")?;
         let path = current_dir.join(&file_name);
+
+        if !path.exists() {
+            bail!("Указаного файла не существует.");
+        }
+        if !path.is_file() {
+            bail!("Указан не файл.");
+        }
 
         let mut stdout = Stdout::new();
         let mut stdin = Stdin::new();
