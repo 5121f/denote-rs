@@ -25,7 +25,7 @@ impl ToString for Date {
     }
 }
 
-static FILENAME_REGEXP: &str = r"--([\p{Alphabetic}\pN]*)";
+static FILENAME_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
 
 struct Filename(String);
 
