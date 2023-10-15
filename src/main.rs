@@ -1,6 +1,6 @@
 use anyhow::{bail, Context, Ok, Result};
 use clap::Parser;
-use regex::{Match, Regex};
+use regex::Regex;
 use std::{
     env, fs,
     io::{self, Write},
