@@ -135,6 +135,15 @@ fn main() {
         };
 
         let name_scheme = NameScheme::new(Date::current_time(), file_name, keywords);
-        fs::rename(path, current_dir.join(name_scheme.to_string())).unwrap();
+        let name_scheme = name_scheme.to_string();
+
+        println!("Переименовать \"{}\" в \"{}\"", file.display(), name_scheme);
+        print("Подтвердить переименование? [Y/n] ", &mut stdout);
+        let mut buf = String::new();
+        stdin.read_line(&mut buf).unwrap();
+        let response = buf.trim().to_lowercase();
+        if response == "y" || response.is_empty() {
+            fs::rename(path, current_dir.join(name_scheme)).unwrap();
+        }
     }
 }
