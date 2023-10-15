@@ -134,22 +134,22 @@ struct Cli {
 
 fn main() {
     let cli = Cli::parse();
-    if let Some(file) = cli.rename {
+    if let Some(file_name) = cli.rename {
         let current_dir = env::current_dir().unwrap();
-        let path = current_dir.join(&file);
+        let path = current_dir.join(&file_name);
 
         let mut stdout = Stdout::new();
         let mut stdin = Stdin::new();
 
-        stdout.print(&format!("Имя файла [{}]: ", &file));
-        let file_name = {
-            let filename = stdin.read_line();
-            let filename = if filename.trim().is_empty() {
-                file.clone()
+        stdout.print(&format!("Имя файла [{}]: ", &file_name));
+        let new_file_name = {
+            let new_file_name = stdin.read_line();
+            let new_file_name = if new_file_name.trim().is_empty() {
+                file_name.clone()
             } else {
-                filename
+                new_file_name
             };
-            Filename::from_string(filename)
+            Filename::from_string(new_file_name)
         };
 
         stdout.print("Ключевые слова: ");
@@ -158,10 +158,10 @@ fn main() {
             Keywords::from_string(keywords)
         };
 
-        let name_scheme = NameScheme::new(Date::current_time(), file_name, keywords);
+        let name_scheme = NameScheme::new(Date::current_time(), new_file_name, keywords);
         let name_scheme = name_scheme.to_string();
 
-        println!("Переименовать \"{}\" в \"{}\"", &file, name_scheme);
+        println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
         stdout.print("Подтвердить переименование? [Y/n] ");
         let response = stdin.read_line();
         let response = response.trim().to_lowercase();
