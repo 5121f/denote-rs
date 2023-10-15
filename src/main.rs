@@ -143,12 +143,9 @@ fn main() {
 
         stdout.print(&format!("Имя файла [{}]: ", &file_name));
         let new_file_name = {
-            let new_file_name = stdin.read_line();
-            let new_file_name = if new_file_name.trim().is_empty() {
-                file_name.clone()
-            } else {
-                new_file_name
-            };
+            let new_file_name = Some(stdin.read_line())
+                .filter(|f| !f.trim().is_empty())
+                .unwrap_or(file_name.clone());
             Filename::from_string(new_file_name)
         };
 
