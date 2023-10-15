@@ -1,4 +1,4 @@
-use anyhow::{bail, Context, Ok, Result};
+use anyhow::{bail, Context, Result};
 use clap::Parser;
 use regex::Regex;
 use std::{
