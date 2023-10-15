@@ -1,8 +1,7 @@
 use clap::Parser;
 use std::{
     env, fs,
-    io::{self, Stdout, Write},
-    path::PathBuf,
+    io::{self, Write},
 };
 
 struct Date(String);
@@ -95,15 +94,42 @@ impl ToString for NameScheme {
     }
 }
 
+struct Stdout(io::Stdout);
+
+impl Stdout {
+    fn new() -> Self {
+        Self(io::stdout())
+    }
+
+    fn print(&mut self, value: &str) {
+        print!("{}", value);
+        self.0.flush().unwrap();
+    }
+}
+
+struct Stdin {
+    stdin: io::Stdin,
+    buf: String,
+}
+
+impl Stdin {
+    fn new() -> Self {
+        Self {
+            stdin: io::stdin(),
+            buf: String::new(),
+        }
+    }
+
+    fn read_line(&mut self) -> String {
+        self.stdin.read_line(&mut self.buf).unwrap();
+        self.buf.clone()
+    }
+}
+
 #[derive(Parser)]
 struct Cli {
     #[clap(long)]
     rename: Option<String>,
-}
-
-fn print(value: &str, stdout: &mut Stdout) {
-    print!("{}", value);
-    stdout.flush().unwrap();
 }
 
 fn main() {
@@ -112,36 +138,33 @@ fn main() {
         let current_dir = env::current_dir().unwrap();
         let path = current_dir.join(&file);
 
-        let mut stdout = io::stdout();
-        let stdin = io::stdin();
+        let mut stdout = Stdout::new();
+        let mut stdin = Stdin::new();
 
-        print(&format!("Имя файла [{}]: ", &file), &mut stdout);
+        stdout.print(&format!("Имя файла [{}]: ", &file));
         let file_name = {
-            let mut buf = String::new();
-            stdin.read_line(&mut buf).unwrap();
-            let filename = if buf.trim().is_empty() {
+            let filename = stdin.read_line();
+            let filename = if filename.trim().is_empty() {
                 file.clone()
             } else {
-                buf
+                filename
             };
             Filename::from_string(filename)
         };
 
-        print("Ключевые слова: ", &mut stdout);
+        stdout.print("Ключевые слова: ");
         let keywords = {
-            let mut buf = String::new();
-            stdin.read_line(&mut buf).unwrap();
-            Keywords::from_string(buf)
+            let keywords = stdin.read_line();
+            Keywords::from_string(keywords)
         };
 
         let name_scheme = NameScheme::new(Date::current_time(), file_name, keywords);
         let name_scheme = name_scheme.to_string();
 
         println!("Переименовать \"{}\" в \"{}\"", &file, name_scheme);
-        print("Подтвердить переименование? [Y/n] ", &mut stdout);
-        let mut buf = String::new();
-        stdin.read_line(&mut buf).unwrap();
-        let response = buf.trim().to_lowercase();
+        stdout.print("Подтвердить переименование? [Y/n] ");
+        let response = stdin.read_line();
+        let response = response.trim().to_lowercase();
         if response == "y" || response.is_empty() {
             fs::rename(path, current_dir.join(name_scheme)).unwrap();
         }
