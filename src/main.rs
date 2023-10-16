@@ -1,12 +1,8 @@
 use anyhow::{bail, Context, Ok, Result};
-use chrono::{NaiveDateTime, NaiveTime};
+use chrono::NaiveDateTime;
 use clap::Parser;
 use regex::Regex;
-use std::{
-    env, fs,
-    io::{self, Write},
-    path::{Path, PathBuf},
-};
+use std::{env, fs, io, path::PathBuf};
 
 const ID_REGEXP: &str = r"\d{8}T\d{8}";
 
