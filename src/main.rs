@@ -1,4 +1,5 @@
-use anyhow::{bail, Context, Result};
+use anyhow::{bail, Context, Ok, Result};
+use chrono::{NaiveDateTime, NaiveTime};
 use clap::Parser;
 use regex::Regex;
 use std::{
@@ -12,13 +13,33 @@ const ID_REGEXP: &str = r"\d{8}T\d{8}";
 struct Date(String);
 
 impl Date {
-    fn current_time() -> Self {
-        let now = chrono::offset::Local::now();
-        let date = now.date_naive().format("%Y%m%d").to_string();
-        let time = now.time();
+    fn from_date_time(date_time: NaiveDateTime) -> Self {
+        let date = date_time.date().format("%Y%m%d").to_string();
+        let time = date_time.time();
         let milliseconds = time.format("%3f").to_string()[..2].to_owned();
         let time = time.format("%H%M%S").to_string();
         Self(format!("{date}T{time}{milliseconds}"))
+    }
+
+    fn current_time() -> Self {
+        Self::from_date_time(chrono::offset::Local::now().naive_local())
+    }
+
+    fn from_string(string: &str) -> Result<Self> {
+        let currnet_time = chrono::offset::Local::now().naive_local().time();
+        let seconds = currnet_time.format("%S:%.f").to_string();
+        let date_time = chrono::NaiveDateTime::parse_from_str(
+            &format!("{string}:{seconds}"),
+            "%Y-%m-%d %H:%M:%S:%.f",
+        )
+        .or_else(|_| {
+            let time = currnet_time.format("%H:%M:%S:%.f").to_string();
+            chrono::NaiveDateTime::parse_from_str(
+                &format!("{string} {time}"),
+                "%Y-%m-%d %H:%M:%S:%.f",
+            )
+        })?;
+        Ok(Self::from_date_time(date_time))
     }
 
     fn retrive_from_string(string: &str) -> Option<Self> {
@@ -176,13 +197,16 @@ struct Cli {
 #[derive(Parser)]
 enum Commands {
     /// Rename file
-    Rename { file_name: String },
+    Rename {
+        file_name: String,
+        date: Option<String>,
+    },
 }
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
-        Commands::Rename { file_name } => {
+        Commands::Rename { file_name, date } => {
             let current_dir =
                 env::current_dir().context("Не удалось получить рабочую директорию")?;
             let path = current_dir.join(&file_name);
@@ -220,9 +244,14 @@ fn main() -> Result<()> {
                 Keywords::from_string(&keywords)
             };
 
-            let date = Date::retrive_from_string(&file_title).unwrap_or_else(Date::current_time);
+            let identifier = if let Some(date) = date {
+                println!("\"{date}\"");
+                Date::from_string(&date).context("Не удалось конвертировать дату.")?
+            } else {
+                Date::retrive_from_string(&file_title).unwrap_or_else(Date::current_time)
+            };
 
-            let name_scheme = NameScheme::new(date, title, keywords, extension);
+            let name_scheme = NameScheme::new(identifier, title, keywords, extension);
             let name_scheme = name_scheme.to_string();
 
             if file_title == name_scheme {
