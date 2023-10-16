@@ -4,6 +4,7 @@ use regex::Regex;
 use std::{
     env, fs,
     io::{self, Write},
+    path::{Path, PathBuf},
 };
 
 const ID_REGEXP: &str = r"\d{8}T\d{8}";
@@ -100,26 +101,33 @@ struct NameScheme {
     date: Date,
     title: Title,
     keywords: Keywords,
+    extention: Option<String>,
 }
 
 impl NameScheme {
-    fn new(date: Date, title: Title, keywords: Keywords) -> Self {
+    fn new(date: Date, title: Title, keywords: Keywords, extention: Option<String>) -> Self {
         Self {
             date,
             title,
             keywords,
+            extention,
         }
     }
 }
 
 impl ToString for NameScheme {
     fn to_string(&self) -> String {
-        format!(
+        let title = format!(
             "{}{}{}",
             self.date.to_string(),
             self.title.to_string(),
             self.keywords.to_string()
-        )
+        );
+        if let Some(extention) = &self.extention {
+            format!("{title}.{extention}")
+        } else {
+            title
+        }
     }
 }
 
@@ -180,12 +188,18 @@ fn main() -> Result<()> {
             bail!("Указан не файл.");
         }
 
+        let extension = path.extension().and_then(|s| s.to_str()).map(String::from);
+        let file_title = PathBuf::from(file_name.clone())
+            .file_stem()
+            .map(|s| s.to_string_lossy().to_string())
+            .unwrap_or_else(String::new);
+
         let mut stdout = Stdout::new();
         let mut stdin = Stdin::new();
 
-        let title = Title::retrive_from_string(&file_name)
+        let title = Title::retrive_from_string(&file_title)
             .map(|f| f.desluggify())
-            .unwrap_or(file_name.clone());
+            .unwrap_or(file_title.clone());
         stdout.print(&format!("Заголовок [{}]: ", &title))?;
         let title = {
             let title = Some(stdin.read_line()?)
@@ -200,12 +214,12 @@ fn main() -> Result<()> {
             Keywords::from_string(&keywords)
         };
 
-        let date = Date::retrive_from_string(&file_name).unwrap_or_else(Date::current_time);
+        let date = Date::retrive_from_string(&file_title).unwrap_or_else(Date::current_time);
 
-        let name_scheme = NameScheme::new(date, title, keywords);
+        let name_scheme = NameScheme::new(date, title, keywords, extension);
         let name_scheme = name_scheme.to_string();
 
-        if file_name == name_scheme {
+        if file_title == name_scheme {
             println!("Действие не требуется.");
         } else {
             println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
