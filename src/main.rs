@@ -9,9 +9,9 @@ use std::{env, fs, path::PathBuf};
 
 const ID_REGEXP: &str = r"\d{8}T\d{8}";
 
-struct Date(String);
+struct Identifier(String);
 
-impl Date {
+impl Identifier {
     fn from_date_time(date_time: NaiveDateTime) -> Self {
         let date = date_time.date().format("%Y%m%d").to_string();
         let time = date_time.time();
@@ -49,7 +49,7 @@ impl Date {
     }
 }
 
-impl ToString for Date {
+impl ToString for Identifier {
     fn to_string(&self) -> String {
         self.0.clone()
     }
@@ -117,14 +117,14 @@ impl ToString for Keywords {
 }
 
 struct NameScheme {
-    date: Date,
+    date: Identifier,
     title: Title,
     keywords: Keywords,
     extention: Option<String>,
 }
 
 impl NameScheme {
-    fn new(date: Date, title: Title, keywords: Keywords, extention: Option<String>) -> Self {
+    fn new(date: Identifier, title: Title, keywords: Keywords, extention: Option<String>) -> Self {
         Self {
             date,
             title,
@@ -203,9 +203,10 @@ fn main() -> Result<()> {
             let keywords = Keywords::from_string(&stdin.read_line()?);
 
             let identifier = if let Some(date) = date {
-                Date::from_string(&date).context("Не удалось конвертировать дату.")?
+                Identifier::from_string(&date).context("Не удалось конвертировать дату.")?
             } else {
-                Date::extract_from_string(&file_title).unwrap_or_else(Date::current_time)
+                Identifier::extract_from_string(&file_title)
+                    .unwrap_or_else(Identifier::current_time)
             };
 
             let name_scheme =
