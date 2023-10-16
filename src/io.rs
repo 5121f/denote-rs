@@ -36,4 +36,9 @@ impl Stdin {
         self.buf.clear();
         Ok(res)
     }
+
+    pub(crate) fn take_confirmation(&mut self) -> Result<bool> {
+        let response = self.read_line()?;
+        Ok(response == "\n" || response.to_lowercase() == "y\n")
+    }
 }

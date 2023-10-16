@@ -217,9 +217,7 @@ fn main() -> Result<()> {
             } else {
                 println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
                 stdout.print("Подтвердить переименование? [Y/n] ")?;
-                let response = stdin.read_line()?;
-                let response = response.trim().to_lowercase();
-                if response == "y" || response.is_empty() {
+                if stdin.take_confirmation()? {
                     fs::rename(&path, current_dir.join(name_scheme))
                         .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
                 }
