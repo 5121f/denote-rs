@@ -72,13 +72,12 @@ impl Title {
     }
 
     fn desluggify(&self) -> String {
-        self.0
-            .clone()
-            .replace('-', " ")
-            .chars()
-            .enumerate()
-            .map(|(i, c)| if i == 0 { c.to_ascii_uppercase() } else { c })
-            .collect()
+        let deslugify = self.0.clone().replace('-', " ");
+        let mut chars = deslugify.chars();
+        match chars.next() {
+            None => String::new(),
+            Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
+        }
     }
 }
 
