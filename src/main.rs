@@ -162,7 +162,8 @@ impl Stdin {
 #[derive(Parser)]
 #[command(arg_required_else_help = true)]
 struct Cli {
-    #[clap(long)]
+    /// Rename file
+    #[clap(long, value_name = "FILE")]
     rename: Option<String>,
 }
 
