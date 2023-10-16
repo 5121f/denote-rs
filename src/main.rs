@@ -232,28 +232,23 @@ fn main() -> Result<()> {
                 .map(|f| f.desluggify())
                 .unwrap_or(file_title.clone());
             stdout.print(&format!("Заголовок [{}]: ", &title))?;
-            let title = {
-                let title = Some(stdin.read_line()?)
+            let new_title = Title::from_string(
+                &Some(stdin.read_line()?)
                     .filter(|f| !f.trim().is_empty())
-                    .unwrap_or(title);
-                Title::from_string(&title)
-            };
+                    .unwrap_or(title),
+            );
 
             stdout.print("Ключевые слова: ")?;
-            let keywords = {
-                let keywords = stdin.read_line()?;
-                Keywords::from_string(&keywords)
-            };
+            let keywords = Keywords::from_string(&stdin.read_line()?);
 
             let identifier = if let Some(date) = date {
-                println!("\"{date}\"");
                 Date::from_string(&date).context("Не удалось конвертировать дату.")?
             } else {
                 Date::retrive_from_string(&file_title).unwrap_or_else(Date::current_time)
             };
 
-            let name_scheme = NameScheme::new(identifier, title, keywords, extension);
-            let name_scheme = name_scheme.to_string();
+            let name_scheme =
+                NameScheme::new(identifier, new_title, keywords, extension).to_string();
 
             if file_title == name_scheme {
                 println!("Действие не требуется.");
