@@ -168,67 +168,74 @@ impl Stdin {
 }
 
 #[derive(Parser)]
-#[command(arg_required_else_help = true)]
 struct Cli {
+    #[clap(subcommand)]
+    command: Commands,
+}
+
+#[derive(Parser)]
+enum Commands {
     /// Rename file
-    #[clap(long, value_name = "FILE")]
-    rename: Option<String>,
+    Rename { file_name: String },
 }
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
-    if let Some(file_name) = cli.rename {
-        let current_dir = env::current_dir().context("Не удалось получить рабочую директорию")?;
-        let path = current_dir.join(&file_name);
+    match cli.command {
+        Commands::Rename { file_name } => {
+            let current_dir =
+                env::current_dir().context("Не удалось получить рабочую директорию")?;
+            let path = current_dir.join(&file_name);
 
-        if !path.exists() {
-            bail!("Указаного файла не существует.");
-        }
-        if !path.is_file() {
-            bail!("Указан не файл.");
-        }
+            if !path.exists() {
+                bail!("Указаного файла не существует.");
+            }
+            if !path.is_file() {
+                bail!("Указан не файл.");
+            }
 
-        let extension = path.extension().and_then(|s| s.to_str()).map(String::from);
-        let file_title = PathBuf::from(file_name.clone())
-            .file_stem()
-            .map(|s| s.to_string_lossy().to_string())
-            .unwrap_or_else(String::new);
+            let extension = path.extension().and_then(|s| s.to_str()).map(String::from);
+            let file_title = PathBuf::from(file_name.clone())
+                .file_stem()
+                .map(|s| s.to_string_lossy().to_string())
+                .unwrap_or_else(String::new);
 
-        let mut stdout = Stdout::new();
-        let mut stdin = Stdin::new();
+            let mut stdout = Stdout::new();
+            let mut stdin = Stdin::new();
 
-        let title = Title::retrive_from_string(&file_title)
-            .map(|f| f.desluggify())
-            .unwrap_or(file_title.clone());
-        stdout.print(&format!("Заголовок [{}]: ", &title))?;
-        let title = {
-            let title = Some(stdin.read_line()?)
-                .filter(|f| !f.trim().is_empty())
-                .unwrap_or(title);
-            Title::from_string(&title)
-        };
+            let title = Title::retrive_from_string(&file_title)
+                .map(|f| f.desluggify())
+                .unwrap_or(file_title.clone());
+            stdout.print(&format!("Заголовок [{}]: ", &title))?;
+            let title = {
+                let title = Some(stdin.read_line()?)
+                    .filter(|f| !f.trim().is_empty())
+                    .unwrap_or(title);
+                Title::from_string(&title)
+            };
 
-        stdout.print("Ключевые слова: ")?;
-        let keywords = {
-            let keywords = stdin.read_line()?;
-            Keywords::from_string(&keywords)
-        };
+            stdout.print("Ключевые слова: ")?;
+            let keywords = {
+                let keywords = stdin.read_line()?;
+                Keywords::from_string(&keywords)
+            };
 
-        let date = Date::retrive_from_string(&file_title).unwrap_or_else(Date::current_time);
+            let date = Date::retrive_from_string(&file_title).unwrap_or_else(Date::current_time);
 
-        let name_scheme = NameScheme::new(date, title, keywords, extension);
-        let name_scheme = name_scheme.to_string();
+            let name_scheme = NameScheme::new(date, title, keywords, extension);
+            let name_scheme = name_scheme.to_string();
 
-        if file_title == name_scheme {
-            println!("Действие не требуется.");
-        } else {
-            println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
-            stdout.print("Подтвердить переименование? [Y/n] ")?;
-            let response = stdin.read_line()?;
-            let response = response.trim().to_lowercase();
-            if response == "y" || response.is_empty() {
-                fs::rename(&path, current_dir.join(name_scheme))
-                    .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
+            if file_title == name_scheme {
+                println!("Действие не требуется.");
+            } else {
+                println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
+                stdout.print("Подтвердить переименование? [Y/n] ")?;
+                let response = stdin.read_line()?;
+                let response = response.trim().to_lowercase();
+                if response == "y" || response.is_empty() {
+                    fs::rename(&path, current_dir.join(name_scheme))
+                        .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
+                }
             }
         }
     }
