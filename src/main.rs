@@ -30,7 +30,7 @@ static TITLE_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
 struct Title(String);
 
 impl Title {
-    fn from_string(string: String) -> Self {
+    fn from_string(string: &str) -> Self {
         Self(string.trim().to_lowercase().replace(' ', "-"))
     }
 
@@ -61,7 +61,7 @@ impl ToString for Title {
 struct Keywords(Vec<String>);
 
 impl Keywords {
-    fn from_string(string: String) -> Self {
+    fn from_string(string: &str) -> Self {
         let keywords: Vec<_> = string
             .trim()
             .to_lowercase()
@@ -180,13 +180,13 @@ fn main() -> Result<()> {
             let title = Some(stdin.read_line()?)
                 .filter(|f| !f.trim().is_empty())
                 .unwrap_or(title);
-            Title::from_string(title)
+            Title::from_string(&title)
         };
 
         stdout.print("Ключевые слова: ")?;
         let keywords = {
             let keywords = stdin.read_line()?;
-            Keywords::from_string(keywords)
+            Keywords::from_string(&keywords)
         };
 
         let name_scheme = NameScheme::new(Date::current_time(), title, keywords);
