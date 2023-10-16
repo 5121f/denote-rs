@@ -41,7 +41,7 @@ impl Date {
         Ok(Self::from_date_time(date_time))
     }
 
-    fn retrive_from_string(string: &str) -> Option<Self> {
+    fn extract_from_string(string: &str) -> Option<Self> {
         Regex::new(ID_REGEXP)
             .ok()?
             .find(string)
@@ -64,7 +64,7 @@ impl Title {
         Self(string.trim().to_lowercase().replace(' ', "-"))
     }
 
-    fn retrive_from_string(strnig: &str) -> Option<Self> {
+    fn extract_from_string(strnig: &str) -> Option<Self> {
         Regex::new(TITLE_REGEXP)
             .ok()?
             .captures(strnig)
@@ -189,7 +189,7 @@ fn main() -> Result<()> {
             let mut stdout = Stdout::new();
             let mut stdin = Stdin::new();
 
-            let title = Title::retrive_from_string(&file_title)
+            let title = Title::extract_from_string(&file_title)
                 .map(|f| f.desluggify())
                 .unwrap_or(file_title.clone());
             stdout.print(&format!("Заголовок [{}]: ", &title))?;
@@ -205,7 +205,7 @@ fn main() -> Result<()> {
             let identifier = if let Some(date) = date {
                 Date::from_string(&date).context("Не удалось конвертировать дату.")?
             } else {
-                Date::retrive_from_string(&file_title).unwrap_or_else(Date::current_time)
+                Date::extract_from_string(&file_title).unwrap_or_else(Date::current_time)
             };
 
             let name_scheme =
