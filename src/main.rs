@@ -250,7 +250,7 @@ fn main() -> Result<()> {
             let name_scheme =
                 NameScheme::new(identifier, new_title, keywords, extension).to_string();
 
-            if file_title == name_scheme {
+            if file_name == name_scheme {
                 println!("Действие не требуется.");
             } else {
                 println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
