@@ -1,12 +1,11 @@
+mod io;
+
+use crate::io::{Stdin, Stdout};
 use anyhow::{bail, Context, Ok, Result};
 use chrono::NaiveDateTime;
 use clap::Parser;
 use regex::Regex;
-use std::{
-    env, fs,
-    io::{self, Write},
-    path::PathBuf,
-};
+use std::{env, fs, path::PathBuf};
 
 const ID_REGEXP: &str = r"\d{8}T\d{8}";
 
@@ -149,43 +148,6 @@ impl ToString for NameScheme {
         } else {
             title
         }
-    }
-}
-
-struct Stdout(io::Stdout);
-
-impl Stdout {
-    fn new() -> Self {
-        Self(io::stdout())
-    }
-
-    fn print(&mut self, value: &str) -> Result<()> {
-        print!("{}", value);
-        self.0.flush()?;
-        Ok(())
-    }
-}
-
-struct Stdin {
-    stdin: io::Stdin,
-    buf: String,
-}
-
-impl Stdin {
-    fn new() -> Self {
-        Self {
-            stdin: io::stdin(),
-            buf: String::new(),
-        }
-    }
-
-    fn read_line(&mut self) -> Result<String> {
-        self.stdin
-            .read_line(&mut self.buf)
-            .context("Не удалось прочитать пользовательский ввод")?;
-        let res = self.buf.clone();
-        self.buf.clear();
-        Ok(res)
     }
 }
 
