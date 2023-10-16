@@ -203,13 +203,17 @@ fn main() -> Result<()> {
         let name_scheme = NameScheme::new(date, title, keywords);
         let name_scheme = name_scheme.to_string();
 
-        println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
-        stdout.print("Подтвердить переименование? [Y/n] ")?;
-        let response = stdin.read_line()?;
-        let response = response.trim().to_lowercase();
-        if response == "y" || response.is_empty() {
-            fs::rename(&path, current_dir.join(name_scheme))
-                .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
+        if file_name == name_scheme {
+            println!("Действие не требуется.");
+        } else {
+            println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
+            stdout.print("Подтвердить переименование? [Y/n] ")?;
+            let response = stdin.read_line()?;
+            let response = response.trim().to_lowercase();
+            if response == "y" || response.is_empty() {
+                fs::rename(&path, current_dir.join(name_scheme))
+                    .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
+            }
         }
     }
     Ok(())
