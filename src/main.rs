@@ -160,6 +160,7 @@ impl Stdin {
 }
 
 #[derive(Parser)]
+#[command(arg_required_else_help = true)]
 struct Cli {
     #[clap(long)]
     rename: Option<String>,
