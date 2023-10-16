@@ -161,7 +161,8 @@ impl Stdout {
 
     fn print(&mut self, value: &str) -> Result<()> {
         print!("{}", value);
-        Ok(self.0.flush()?)
+        self.0.flush()?;
+        Ok(())
     }
 }
 
