@@ -6,6 +6,8 @@ use std::{
     io::{self, Write},
 };
 
+const ID_REGEXP: &str = r"\d{8}T\d{8}";
+
 struct Date(String);
 
 impl Date {
@@ -16,6 +18,13 @@ impl Date {
         let milliseconds = time.format("%3f").to_string()[..2].to_owned();
         let time = time.format("%H%M%S").to_string();
         Self(format!("{date}T{time}{milliseconds}"))
+    }
+
+    fn retrive_from_string(string: &str) -> Option<Self> {
+        Regex::new(ID_REGEXP)
+            .ok()?
+            .find(string)
+            .map(|f| Self(f.as_str().to_owned()))
     }
 }
 
@@ -189,7 +198,9 @@ fn main() -> Result<()> {
             Keywords::from_string(&keywords)
         };
 
-        let name_scheme = NameScheme::new(Date::current_time(), title, keywords);
+        let date = Date::retrive_from_string(&file_name).unwrap_or_else(Date::current_time);
+
+        let name_scheme = NameScheme::new(date, title, keywords);
         let name_scheme = name_scheme.to_string();
 
         println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
