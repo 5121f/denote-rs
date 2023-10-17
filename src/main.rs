@@ -24,7 +24,7 @@ impl Identifier {
         Self::from_date_time(chrono::offset::Local::now().naive_local())
     }
 
-    fn from_string(string: &str) -> Result<Self> {
+    fn from_string(string: &str) -> Option<Self> {
         let currnet_time = chrono::offset::Local::now().naive_local().time();
         let seconds = currnet_time.format("%S:%.f").to_string();
         let date_time = chrono::NaiveDateTime::parse_from_str(
@@ -37,8 +37,9 @@ impl Identifier {
                 &format!("{string} {time}"),
                 "%Y-%m-%d %H:%M:%S:%.f",
             )
-        })?;
-        Ok(Self::from_date_time(date_time))
+        })
+        .ok()?;
+        Some(Self::from_date_time(date_time))
     }
 
     fn extract_from_string(string: &str) -> Option<Self> {
