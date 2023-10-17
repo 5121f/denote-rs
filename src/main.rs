@@ -183,6 +183,12 @@ fn main() -> Result<()> {
                 .file_stem()
                 .map(|s| s.to_string_lossy().to_string())
                 .unwrap_or_else(String::new);
+            let identifier = if let Some(date) = date {
+                Identifier::from_string(&date).context("Не удалось конвертировать дату.")?
+            } else {
+                Identifier::extract_from_string(&file_title)
+                    .unwrap_or_else(Identifier::current_time)
+            };
 
             let mut stdout = Stdout::new();
             let mut stdin = Stdin::new();
@@ -199,13 +205,6 @@ fn main() -> Result<()> {
 
             stdout.print("Ключевые слова: ")?;
             let keywords = Keywords::from_string(&stdin.read_line()?);
-
-            let identifier = if let Some(date) = date {
-                Identifier::from_string(&date).context("Не удалось конвертировать дату.")?
-            } else {
-                Identifier::extract_from_string(&file_title)
-                    .unwrap_or_else(Identifier::current_time)
-            };
 
             let name_scheme =
                 NameScheme::new(identifier, new_title, keywords, extension).to_string();
