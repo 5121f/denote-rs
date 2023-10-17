@@ -107,12 +107,9 @@ impl Keywords {
 
 impl ToString for Keywords {
     fn to_string(&self) -> String {
-        if self.0.is_empty() {
-            String::new()
-        } else {
-            let keywords = self.0.join("_");
-            format!("__{keywords}")
-        }
+        (!self.0.is_empty())
+            .then_some(format!("__{}", self.0.join("_")))
+            .unwrap_or_default()
     }
 }
 
