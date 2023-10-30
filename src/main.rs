@@ -1,8 +1,8 @@
 mod io;
 
 use crate::io::{Stdin, Stdout};
-use anyhow::{bail, Context, Ok, Result};
-use chrono::NaiveDateTime;
+use anyhow::{bail, Context, Result};
+use chrono::{Duration, NaiveDateTime};
 use clap::Parser;
 use regex::Regex;
 use std::{env, fs, path::PathBuf};
@@ -26,19 +26,20 @@ impl Identifier {
 
     fn from_string(string: &str) -> Option<Self> {
         let currnet_time = chrono::offset::Local::now().naive_local().time();
-        let seconds = currnet_time.format("%S:%.f").to_string();
-        let date_time = chrono::NaiveDateTime::parse_from_str(
-            &format!("{string}:{seconds}"),
-            "%Y-%m-%d %H:%M:%S:%.f",
-        )
-        .or_else(|_| {
-            let time = currnet_time.format("%H:%M:%S:%.f").to_string();
-            chrono::NaiveDateTime::parse_from_str(
-                &format!("{string} {time}"),
-                "%Y-%m-%d %H:%M:%S:%.f",
-            )
-        })
-        .ok()?;
+        let date_time = chrono::NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
+            .map(|d| {
+                d.checked_add_signed(Duration::milliseconds(
+                    currnet_time.format("%S%3f").to_string().parse().ok()?,
+                ))
+            })
+            .ok()
+            .flatten();
+        let date_time = match date_time {
+            Some(date_time) => date_time,
+            None => chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
+                .ok()?
+                .and_time(currnet_time),
+        };
         Some(Self::from_date_time(date_time))
     }
 
