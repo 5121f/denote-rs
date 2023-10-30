@@ -115,40 +115,6 @@ impl ToString for Keywords {
     }
 }
 
-struct NameScheme {
-    date: Identifier,
-    title: Title,
-    keywords: Keywords,
-    extention: Option<String>,
-}
-
-impl NameScheme {
-    fn new(date: Identifier, title: Title, keywords: Keywords, extention: Option<String>) -> Self {
-        Self {
-            date,
-            title,
-            keywords,
-            extention,
-        }
-    }
-}
-
-impl ToString for NameScheme {
-    fn to_string(&self) -> String {
-        let title = format!(
-            "{}{}{}",
-            self.date.to_string(),
-            self.title.to_string(),
-            self.keywords.to_string()
-        );
-        if let Some(extention) = &self.extention {
-            format!("{title}.{extention}")
-        } else {
-            title
-        }
-    }
-}
-
 #[derive(Parser)]
 struct Cli {
     #[clap(subcommand)]
@@ -207,16 +173,25 @@ fn main() -> Result<()> {
             stdout.print("Ключевые слова: ")?;
             let keywords = Keywords::from_string(&stdin.read_line()?);
 
-            let name_scheme =
-                NameScheme::new(identifier, new_title, keywords, extension).to_string();
+            let new_file_title = [
+                identifier.to_string(),
+                new_title.to_string(),
+                keywords.to_string(),
+            ]
+            .concat();
+            let new_file_name = if let Some(extention) = &extension {
+                format!("{new_file_title}.{extention}")
+            } else {
+                new_file_title
+            };
 
-            if file_name == name_scheme {
+            if file_name == new_file_name {
                 println!("Действие не требуется.");
             } else {
-                println!("Переименовать \"{}\" в \"{}\"", &file_name, name_scheme);
+                println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
                 stdout.print("Подтвердить переименование? [Y/n] ")?;
                 if stdin.take_confirmation()? {
-                    fs::rename(&path, current_dir.join(name_scheme))
+                    fs::rename(&path, current_dir.join(new_file_name))
                         .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
                 }
             }
