@@ -4,7 +4,6 @@ use std::io::Write;
 pub struct Io {
     stdout: std::io::Stdout,
     stdin: std::io::Stdin,
-    buf: String,
 }
 
 impl Io {
@@ -12,17 +11,15 @@ impl Io {
         Self {
             stdin: std::io::stdin(),
             stdout: std::io::stdout(),
-            buf: String::new(),
         }
     }
 
     pub fn read_line(&mut self) -> Result<String> {
+        let mut buf = String::new();
         self.stdin
-            .read_line(&mut self.buf)
+            .read_line(&mut buf)
             .context("Не удалось прочитать пользовательский ввод")?;
-        let res = self.buf.clone();
-        self.buf.clear();
-        Ok(res)
+        Ok(buf)
     }
 
     pub fn print(&mut self, value: &str) -> Result<()> {
