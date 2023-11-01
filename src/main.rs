@@ -1,6 +1,6 @@
 mod io;
 
-use crate::io::{Stdin, Stdout};
+use crate::io::Io;
 use anyhow::{bail, Context, Result};
 use chrono::{Duration, NaiveDateTime};
 use clap::Parser;
@@ -157,21 +157,20 @@ fn main() -> Result<()> {
                     .unwrap_or_else(Identifier::current_time)
             };
 
-            let mut stdout = Stdout::new();
-            let mut stdin = Stdin::new();
+            let mut io = Io::new();
 
             let title = Title::extract_from_string(&file_title)
                 .map(|f| f.desluggify())
                 .unwrap_or(file_title.clone());
-            stdout.print(&format!("Заголовок [{}]: ", &title))?;
+            io.print(&format!("Заголовок [{}]: ", &title))?;
             let new_title = Title::from_string(
-                &Some(stdin.read_line()?)
+                &Some(io.read_line()?)
                     .filter(|f| !f.trim().is_empty())
                     .unwrap_or(title),
             );
 
-            stdout.print("Ключевые слова: ")?;
-            let keywords = Keywords::from_string(&stdin.read_line()?);
+            io.print("Ключевые слова: ")?;
+            let keywords = Keywords::from_string(&io.read_line()?);
 
             let new_file_title = [
                 identifier.to_string(),
@@ -189,8 +188,7 @@ fn main() -> Result<()> {
                 println!("Действие не требуется.");
             } else {
                 println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
-                stdout.print("Подтвердить переименование? [Y/n] ")?;
-                if stdin.take_confirmation()? {
+                if io.question("Подтвердить переименование?", true)? {
                     fs::rename(&path, current_dir.join(new_file_name))
                         .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
                 }
