@@ -33,13 +33,12 @@ impl Identifier {
                 ))
             })
             .ok()
-            .flatten();
-        let date_time = match date_time {
-            Some(date_time) => date_time,
-            None => chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
-                .ok()?
-                .and_time(currnet_time),
-        };
+            .flatten()
+            .or_else(|| {
+                chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
+                    .map(|d| d.and_time(currnet_time))
+                    .ok()
+            })?;
         Some(Self::from_date_time(date_time))
     }
 
