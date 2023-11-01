@@ -134,9 +134,7 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
         Commands::Rename { file_name, date } => {
-            let current_dir =
-                env::current_dir().context("Не удалось получить рабочую директорию")?;
-            let path = current_dir.join(&file_name);
+            let path = PathBuf::from(&file_name);
 
             if !path.exists() {
                 bail!("Указаного файла не существует.");
@@ -146,10 +144,10 @@ fn main() -> Result<()> {
             }
 
             let extension = path.extension().and_then(|s| s.to_str()).map(String::from);
-            let file_title = PathBuf::from(file_name.clone())
+            let file_title = path
                 .file_stem()
                 .map(|s| s.to_string_lossy().to_string())
-                .unwrap_or_else(String::new);
+                .unwrap_or_default();
             let identifier = if let Some(date) = date {
                 Identifier::from_string(&date).context("Не удалось конвертировать дату.")?
             } else {
@@ -189,7 +187,7 @@ fn main() -> Result<()> {
             } else {
                 println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
                 if io.question("Подтвердить переименование?", true)? {
-                    fs::rename(&path, current_dir.join(new_file_name))
+                    fs::rename(&path, new_file_name)
                         .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
                 }
             }
