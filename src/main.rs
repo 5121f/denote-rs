@@ -5,7 +5,7 @@ use anyhow::{bail, Context, Result};
 use chrono::{Duration, NaiveDateTime};
 use clap::Parser;
 use regex::Regex;
-use std::{env, fs, path::PathBuf};
+use std::{fs, path::PathBuf};
 
 const ID_REGEXP: &str = r"\d{8}T\d{8}";
 
