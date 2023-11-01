@@ -109,9 +109,10 @@ impl Keywords {
 
 impl ToString for Keywords {
     fn to_string(&self) -> String {
-        (!self.0.is_empty())
-            .then_some(format!("__{}", self.0.join("_")))
-            .unwrap_or_default()
+        if self.0.is_empty() {
+            return String::new();
+        }
+        format!("__{}", self.0.join("_"))
     }
 }
 
