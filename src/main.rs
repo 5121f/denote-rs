@@ -118,81 +118,71 @@ impl ToString for Keywords {
 
 #[derive(Parser)]
 struct Cli {
-    #[clap(subcommand)]
-    command: Commands,
-}
-
-#[derive(Parser)]
-enum Commands {
-    /// Rename file
-    Rename {
-        file_name: String,
-        date: Option<String>,
-    },
+    file_name: String,
+    date: Option<String>,
 }
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
-    match cli.command {
-        Commands::Rename { file_name, date } => {
-            let path = PathBuf::from(&file_name);
+    let path = PathBuf::from(&cli.file_name);
 
-            if !path.exists() {
-                bail!("Указаного файла не существует.");
-            }
-            if !path.is_file() {
-                bail!("Указан не файл.");
-            }
+    if !path.exists() {
+        bail!("Указаного файла не существует.");
+    }
+    if !path.is_file() {
+        bail!("Указан не файл.");
+    }
 
-            let extension = path.extension().and_then(|s| s.to_str()).map(String::from);
-            let file_title = path
-                .file_stem()
-                .map(|s| s.to_string_lossy().to_string())
-                .unwrap_or_default();
-            let identifier = if let Some(date) = date {
-                Identifier::from_string(&date).context("Не удалось конвертировать дату.")?
-            } else {
-                Identifier::extract_from_string(&file_title)
-                    .unwrap_or_else(Identifier::current_time)
-            };
+    let extension = path.extension().and_then(|s| s.to_str()).map(String::from);
+    let file_title = path
+        .file_stem()
+        .map(|s| s.to_string_lossy().to_string())
+        .unwrap_or_default();
+    let identifier = if let Some(date) = cli.date {
+        Identifier::from_string(&date).context("Не удалось конвертировать дату.")?
+    } else {
+        Identifier::extract_from_string(&file_title).unwrap_or_else(Identifier::current_time)
+    };
 
-            let mut io = Io::new();
+    let mut io = Io::new();
 
-            let title = Title::extract_from_string(&file_title)
-                .map(|f| f.desluggify())
-                .unwrap_or(file_title.clone());
-            io.print(&format!("Заголовок [{}]: ", &title))?;
-            let new_title = Title::from_string(
-                &Some(io.read_line()?)
-                    .filter(|f| !f.trim().is_empty())
-                    .unwrap_or(title),
-            );
+    let title = Title::extract_from_string(&file_title)
+        .map(|f| f.desluggify())
+        .unwrap_or(file_title.clone());
+    io.print(&format!("Заголовок [{}]: ", &title))?;
+    let new_title = Title::from_string(
+        &Some(io.read_line()?)
+            .filter(|f| !f.trim().is_empty())
+            .unwrap_or(title),
+    );
 
-            io.print("Ключевые слова: ")?;
-            let keywords = Keywords::from_string(&io.read_line()?);
+    io.print("Ключевые слова: ")?;
+    let keywords = Keywords::from_string(&io.read_line()?);
 
-            let new_file_title = [
-                identifier.to_string(),
-                new_title.to_string(),
-                keywords.to_string(),
-            ]
-            .concat();
-            let new_file_name = if let Some(extention) = &extension {
-                format!("{new_file_title}.{extention}")
-            } else {
-                new_file_title
-            };
+    let new_file_title = [
+        identifier.to_string(),
+        new_title.to_string(),
+        keywords.to_string(),
+    ]
+    .concat();
+    let new_file_name = if let Some(extention) = &extension {
+        format!("{new_file_title}.{extention}")
+    } else {
+        new_file_title
+    };
 
-            if file_name == new_file_name {
-                println!("Действие не требуется.");
-            } else {
-                println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
-                if io.question("Подтвердить переименование?", true)? {
-                    fs::rename(&path, new_file_name)
-                        .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
-                }
-            }
+    if cli.file_name == new_file_name {
+        println!("Действие не требуется.");
+    } else {
+        println!(
+            "Переименовать \"{}\" в \"{}\"",
+            &cli.file_name, new_file_name
+        );
+        if io.question("Подтвердить переименование?", true)? {
+            fs::rename(&path, new_file_name)
+                .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
         }
     }
+
     Ok(())
 }
