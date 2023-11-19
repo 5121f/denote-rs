@@ -65,10 +65,10 @@ impl Title {
         Self(string.trim().to_lowercase().replace(' ', "-"))
     }
 
-    fn extract_from_string(strnig: &str) -> Option<Self> {
+    fn extract_from_string(string: &str) -> Option<Self> {
         Regex::new(TITLE_REGEXP)
             .ok()?
-            .find(strnig)
+            .find(string)
             .map(|m| Self(m.as_str().to_owned()))
     }
 
