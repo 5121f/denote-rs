@@ -68,8 +68,8 @@ impl Title {
     fn extract_from_string(strnig: &str) -> Option<Self> {
         Regex::new(TITLE_REGEXP)
             .ok()?
-            .captures(strnig)
-            .map(|m| Self(m[1].to_owned()))
+            .find(strnig)
+            .map(|m| Self(m.as_str().to_owned()))
     }
 
     fn desluggify(&self) -> String {
