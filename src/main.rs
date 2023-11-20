@@ -11,6 +11,7 @@ use std::{fs, path::PathBuf};
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
+    let mut io = Io::new();
 
     match cli {
         Cli::Rename { file_name, date } => {
@@ -38,8 +39,6 @@ fn main() -> Result<()> {
                     .unwrap_or_else(Identifier::current_time)
             };
 
-            let mut io = Io::new();
-
             let mut name_scheme_builder = NameSchemeBuilder::new()
                 .identifier(identifier)
                 .take_title_from_user_with_old_title(&mut io, &title)?
@@ -63,11 +62,12 @@ fn main() -> Result<()> {
         }
         Cli::Touch { date } => {
             let mut name_scheme_builder = NameSchemeBuilder::new();
+
             if let Some(date) = date {
                 let identifier = Identifier::from_string(&date)?;
                 name_scheme_builder = name_scheme_builder.identifier(identifier);
             };
-            let mut io = Io::new();
+
             let file_name = name_scheme_builder
                 .take_title_from_user(&mut io)?
                 .take_keywords_from_user(&mut io)?
