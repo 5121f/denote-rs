@@ -58,6 +58,7 @@ impl ToString for Identifier {
 
 static TITLE_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
 
+#[derive(Default)]
 struct Title(String);
 
 impl Title {
@@ -88,6 +89,7 @@ impl ToString for Title {
     }
 }
 
+#[derive(Default)]
 struct Keywords(Vec<String>);
 
 impl Keywords {
@@ -121,6 +123,74 @@ struct Cli {
     date: Option<String>,
 }
 
+struct NameScheme {
+    title: Title,
+    keywords: Keywords,
+    identifier: Identifier,
+}
+
+impl ToString for NameScheme {
+    fn to_string(&self) -> String {
+        [
+            self.identifier.to_string(),
+            self.title.to_string(),
+            self.keywords.to_string(),
+        ]
+        .concat()
+    }
+}
+
+#[derive(Default)]
+struct NameSchemeBuilder {
+    title: Option<Title>,
+    keywords: Option<Keywords>,
+    identifier: Option<Identifier>,
+}
+
+impl NameSchemeBuilder {
+    fn new() -> Self {
+        Self::default()
+    }
+
+    fn take_title_from_user_with_old_title(mut self, io: &mut Io, old_title: &str) -> Result<Self> {
+        io.print(&format!("Заголовок [{}]: ", &old_title))?;
+        let title = Title::from_string(
+            &Some(io.read_line()?)
+                .filter(|f| !f.trim().is_empty())
+                .unwrap_or(old_title.to_owned()),
+        );
+        self.title = Some(title);
+        Ok(self)
+    }
+
+    fn take_title_from_user(mut self, io: &mut Io) -> Result<Self> {
+        io.print("Заголовок: ")?;
+        let title = Title::from_string(&io.read_line()?);
+        self.title = Some(title);
+        Ok(self)
+    }
+
+    fn take_keywords_from_user(mut self, io: &mut Io) -> Result<Self> {
+        io.print("Ключевые слова: ")?;
+        let keywords = Keywords::from_string(&io.read_line()?);
+        self.keywords = Some(keywords);
+        Ok(self)
+    }
+
+    fn identifier(mut self, identifier: Identifier) -> Self {
+        self.identifier = Some(identifier);
+        self
+    }
+
+    fn build(self) -> NameScheme {
+        NameScheme {
+            title: self.title.unwrap_or_default(),
+            keywords: self.keywords.unwrap_or_default(),
+            identifier: self.identifier.unwrap_or_else(Identifier::current_time),
+        }
+    }
+}
+
 fn main() -> Result<()> {
     let cli = Cli::parse();
     let path = PathBuf::from(&cli.file_name);
@@ -137,6 +207,9 @@ fn main() -> Result<()> {
         .file_stem()
         .map(|s| s.to_string_lossy().to_string())
         .unwrap_or_default();
+    let title = Title::extract_from_string(&file_title)
+        .map(|f| f.desluggify())
+        .unwrap_or(file_title.to_owned());
     let identifier = if let Some(date) = cli.date {
         Identifier::from_string(&date).context("Не удалось конвертировать дату.")?
     } else {
@@ -145,25 +218,13 @@ fn main() -> Result<()> {
 
     let mut io = Io::new();
 
-    let title = Title::extract_from_string(&file_title)
-        .map(|f| f.desluggify())
-        .unwrap_or(file_title.clone());
-    io.print(&format!("Заголовок [{}]: ", &title))?;
-    let new_title = Title::from_string(
-        &Some(io.read_line()?)
-            .filter(|f| !f.trim().is_empty())
-            .unwrap_or(title),
-    );
+    let namescheme_builder = NameSchemeBuilder::new()
+        .identifier(identifier)
+        .take_title_from_user_with_old_title(&mut io, &title)?
+        .take_keywords_from_user(&mut io)?;
 
-    io.print("Ключевые слова: ")?;
-    let keywords = Keywords::from_string(&io.read_line()?);
+    let new_file_title = namescheme_builder.build().to_string();
 
-    let new_file_title = [
-        identifier.to_string(),
-        new_title.to_string(),
-        keywords.to_string(),
-    ]
-    .concat();
     let new_file_name = if let Some(extention) = &extension {
         format!("{new_file_title}.{extention}")
     } else {
