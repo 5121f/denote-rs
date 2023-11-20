@@ -19,7 +19,7 @@ impl Io {
         self.stdin
             .read_line(&mut buf)
             .context("Не удалось прочитать пользовательский ввод")?;
-        Ok(buf)
+        Ok(buf.trim().to_owned())
     }
 
     pub fn print(&mut self, value: &str) -> Result<()> {
