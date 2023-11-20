@@ -127,16 +127,27 @@ struct NameScheme {
     title: Title,
     keywords: Keywords,
     identifier: Identifier,
+    extention: Option<String>,
 }
 
 impl ToString for NameScheme {
     fn to_string(&self) -> String {
-        [
-            self.identifier.to_string(),
-            self.title.to_string(),
-            self.keywords.to_string(),
-        ]
-        .concat()
+        if let Some(extention) = self.extention {
+            format!(
+                "{}{}{}.{}",
+                self.identifier.to_string(),
+                self.title.to_string(),
+                self.keywords.to_string(),
+                extention
+            )
+        } else {
+            [
+                self.identifier.to_string(),
+                self.title.to_string(),
+                self.keywords.to_string(),
+            ]
+            .concat()
+        }
     }
 }
 
@@ -145,6 +156,7 @@ struct NameSchemeBuilder {
     title: Option<Title>,
     keywords: Option<Keywords>,
     identifier: Option<Identifier>,
+    extention: Option<String>,
 }
 
 impl NameSchemeBuilder {
@@ -182,11 +194,17 @@ impl NameSchemeBuilder {
         self
     }
 
+    fn extention(mut self, extention: String) -> Self {
+        self.extention = Some(extention);
+        self
+    }
+
     fn build(self) -> NameScheme {
         NameScheme {
             title: self.title.unwrap_or_default(),
             keywords: self.keywords.unwrap_or_default(),
             identifier: self.identifier.unwrap_or_else(Identifier::current_time),
+            extention: self.extention,
         }
     }
 }
@@ -218,18 +236,16 @@ fn main() -> Result<()> {
 
     let mut io = Io::new();
 
-    let new_file_title = NameSchemeBuilder::new()
+    let mut name_scheme_builder = NameSchemeBuilder::new()
         .identifier(identifier)
         .take_title_from_user_with_old_title(&mut io, &title)?
-        .take_keywords_from_user(&mut io)?
-        .build()
-        .to_string();
+        .take_keywords_from_user(&mut io)?;
 
-    let new_file_name = if let Some(extention) = &extension {
-        format!("{new_file_title}.{extention}")
-    } else {
-        new_file_title
-    };
+    if let Some(extention) = extension {
+        name_scheme_builder = name_scheme_builder.extention(extention);
+    }
+
+    let new_file_name = name_scheme_builder.build().to_string();
 
     if cli.file_name == new_file_name {
         println!("Действие не требуется.");
