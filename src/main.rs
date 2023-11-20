@@ -24,22 +24,23 @@ impl Identifier {
         Self::from_date_time(chrono::offset::Local::now().naive_local())
     }
 
-    fn from_string(string: &str) -> Option<Self> {
+    fn from_string(string: &str) -> Result<Self> {
         let currnet_time = chrono::offset::Local::now().naive_local().time();
-        let date_time = chrono::NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
+        let first_try = chrono::NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
             .map(|d| {
                 d.checked_add_signed(Duration::milliseconds(
                     currnet_time.format("%S%3f").to_string().parse().ok()?,
                 ))
             })
             .ok()
-            .flatten()
-            .or_else(|| {
-                chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
-                    .map(|d| d.and_time(currnet_time))
-                    .ok()
-            })?;
-        Some(Self::from_date_time(date_time))
+            .flatten();
+        let date_time = match first_try {
+            Some(date) => date,
+            None => chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
+                .map(|d| d.and_time(currnet_time))
+                .context("Не удалось конвертировать дату.")?,
+        };
+        Ok(Self::from_date_time(date_time))
     }
 
     fn extract_from_string(string: &str) -> Option<Self> {
@@ -246,7 +247,7 @@ fn main() -> Result<()> {
                 .map(|f| f.desluggify())
                 .unwrap_or(file_title.to_owned());
             let identifier = if let Some(date) = date {
-                Identifier::from_string(&date).context("Не удалось конвертировать дату.")?
+                Identifier::from_string(&date)?
             } else {
                 Identifier::extract_from_string(&file_title)
                     .unwrap_or_else(Identifier::current_time)
@@ -278,8 +279,7 @@ fn main() -> Result<()> {
         Cli::Touch { date } => {
             let mut name_scheme_builder = NameSchemeBuilder::new();
             if let Some(date) = date {
-                let identifier =
-                    Identifier::from_string(&date).context("Не удалось конвертировать дату.")?;
+                let identifier = Identifier::from_string(&date)?;
                 name_scheme_builder = name_scheme_builder.identifier(identifier);
             };
             let mut io = Io::new();
