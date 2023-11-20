@@ -132,7 +132,7 @@ struct NameScheme {
 
 impl ToString for NameScheme {
     fn to_string(&self) -> String {
-        if let Some(extention) = self.extention {
+        if let Some(extention) = &self.extention {
             format!(
                 "{}{}{}.{}",
                 self.identifier.to_string(),
