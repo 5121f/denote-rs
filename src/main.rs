@@ -218,12 +218,12 @@ fn main() -> Result<()> {
 
     let mut io = Io::new();
 
-    let namescheme_builder = NameSchemeBuilder::new()
+    let new_file_title = NameSchemeBuilder::new()
         .identifier(identifier)
         .take_title_from_user_with_old_title(&mut io, &title)?
-        .take_keywords_from_user(&mut io)?;
-
-    let new_file_title = namescheme_builder.build().to_string();
+        .take_keywords_from_user(&mut io)?
+        .build()
+        .to_string();
 
     let new_file_name = if let Some(extention) = &extension {
         format!("{new_file_title}.{extention}")
