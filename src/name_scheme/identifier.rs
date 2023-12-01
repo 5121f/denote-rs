@@ -45,10 +45,8 @@ impl Identifier {
             .context("Не удалось извлечь илентификатор из строки")?;
         Ok(Self(id.as_str().to_owned()))
     }
-}
 
-impl ToString for Identifier {
-    fn to_string(&self) -> String {
-        self.0.clone()
+    pub(crate) fn into_string(self) -> String {
+        self.0
     }
 }

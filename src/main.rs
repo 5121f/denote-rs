@@ -48,7 +48,7 @@ fn main() -> Result<()> {
                 name_scheme_builder = name_scheme_builder.extention(extention);
             }
 
-            let new_file_name = name_scheme_builder.build().to_string();
+            let new_file_name = name_scheme_builder.build().into_string();
 
             if file_name == new_file_name {
                 println!("Действие не требуется.");
@@ -73,7 +73,7 @@ fn main() -> Result<()> {
                 .take_keywords_from_user(&mut io)?
                 .take_extention_from_user(&mut io)?
                 .build()
-                .to_string();
+                .into_string();
 
             if io.question(&format!("Создать файл \"{file_name}\"?"), true)? {
                 fs::File::create(file_name).context("Не удалсоь создать файл.")?;

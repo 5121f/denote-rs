@@ -27,10 +27,8 @@ impl Title {
             Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
         }
     }
-}
 
-impl ToString for Title {
-    fn to_string(&self) -> String {
+    pub(crate) fn into_string(self) -> String {
         format!("--{}", self.0)
     }
 }

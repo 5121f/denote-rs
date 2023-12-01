@@ -15,10 +15,8 @@ impl Keywords {
         };
         Self(keywords)
     }
-}
 
-impl ToString for Keywords {
-    fn to_string(&self) -> String {
+    pub(crate) fn into_string(self) -> String {
         if self.0.is_empty() {
             return String::new();
         }

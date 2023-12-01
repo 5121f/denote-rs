@@ -14,21 +14,21 @@ pub(crate) struct NameScheme {
     extention: Option<String>,
 }
 
-impl ToString for NameScheme {
-    fn to_string(&self) -> String {
+impl NameScheme {
+    pub(crate) fn into_string(self) -> String {
         if let Some(extention) = &self.extention {
             format!(
                 "{}{}{}.{}",
-                self.identifier.to_string(),
-                self.title.to_string(),
-                self.keywords.to_string(),
+                self.identifier.into_string(),
+                self.title.into_string(),
+                self.keywords.into_string(),
                 extention
             )
         } else {
             [
-                self.identifier.to_string(),
-                self.title.to_string(),
-                self.keywords.to_string(),
+                self.identifier.into_string(),
+                self.title.into_string(),
+                self.keywords.into_string(),
             ]
             .concat()
         }
