@@ -38,11 +38,12 @@ impl Identifier {
         Ok(Self::from_date_time(date_time))
     }
 
-    pub(crate) fn extract_from_string(string: &str) -> Option<Self> {
-        Regex::new(ID_REGEXP)
-            .ok()?
+    pub(crate) fn extract_from_string(string: &str) -> Result<Self> {
+        let id = Regex::new(ID_REGEXP)
+            .context("Произошла ошибка при компиляции регулярного выражения")?
             .find(string)
-            .map(|f| Self(f.as_str().to_owned()))
+            .context("Не удалось извлечь илентификатор из строки")?;
+        Ok(Self(id.as_str().to_owned()))
     }
 }
 

@@ -1,3 +1,4 @@
+use anyhow::{anyhow, Context, Result};
 use regex::Regex;
 
 static TITLE_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
@@ -10,11 +11,12 @@ impl Title {
         Self(string.trim().to_lowercase().replace(' ', "-"))
     }
 
-    pub(crate) fn extract_from_string(string: &str) -> Option<Self> {
-        Regex::new(TITLE_REGEXP)
-            .ok()?
+    pub(crate) fn extract_from_string(string: &str) -> Result<Self> {
+        let capture = Regex::new(TITLE_REGEXP)
+            .context("Произошла ошибка при компиляции регулярного выражения")?
             .captures(string)
-            .map(|m| Self(m[1].to_owned()))
+            .ok_or_else(|| anyhow!("Не удалось извечь заголовок из строки"))?;
+        Ok(Self(capture[1].to_owned()))
     }
 
     pub(crate) fn desluggify(&self) -> String {

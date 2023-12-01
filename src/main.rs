@@ -36,7 +36,7 @@ fn main() -> Result<()> {
                 Identifier::from_string(&date)?
             } else {
                 Identifier::extract_from_string(&file_title)
-                    .unwrap_or_else(Identifier::current_time)
+                    .unwrap_or_else(|_| Identifier::current_time())
             };
 
             let mut name_scheme_builder = NameSchemeBuilder::new()
