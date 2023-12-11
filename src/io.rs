@@ -34,10 +34,10 @@ impl Io {
         print!("{}", prompt);
         self.stdout.flush()?;
         let response = self.read_line()?;
-        let response = if response == "\n" {
+        let response = if response.is_empty() {
             default_ansfer
         } else {
-            response.to_lowercase() == "y\n"
+            response.to_lowercase() == "y"
         };
         Ok(response)
     }
