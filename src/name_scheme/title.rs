@@ -2,12 +2,15 @@ use anyhow::{anyhow, Context, Result};
 use regex::Regex;
 
 static TITLE_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
+static PUNCTUATION: &str = r"\p{P}";
 
 #[derive(Default)]
 pub(crate) struct Title(String);
 
 impl Title {
     pub(crate) fn from_string(string: &str) -> Self {
+        let punctuation = Regex::new(PUNCTUATION).unwrap();
+        let string = punctuation.replace_all(string, "");
         Self(string.trim().to_lowercase().replace(' ', "-"))
     }
 
