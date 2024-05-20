@@ -19,6 +19,7 @@ fn main() -> Result<()> {
             date,
             date_from_metadata,
             accept,
+            title_accept,
         } => {
             let path = PathBuf::from(&file_name);
 
@@ -34,9 +35,6 @@ fn main() -> Result<()> {
                 .file_stem()
                 .map(|s| s.to_string_lossy().to_string())
                 .unwrap_or_default();
-            let title = Title::extract_from_string(&file_title)
-                .map(|f| f.desluggify())
-                .unwrap_or(file_title.to_owned());
 
             let identifier = if date_from_metadata {
                 Identifier::from_file_metadata(&path)?
@@ -49,8 +47,18 @@ fn main() -> Result<()> {
 
             let mut name_scheme_builder = NameSchemeBuilder::new()
                 .identifier(identifier)
-                .take_title_from_user_with_old_title(&mut io, &title)?
                 .take_keywords_from_user(&mut io)?;
+
+            let title = Title::extract_from_string(&file_title);
+            if title_accept {
+                name_scheme_builder = name_scheme_builder.title(title?);
+            } else {
+                let title = title
+                    .map(|f| f.desluggify())
+                    .unwrap_or(file_title.to_owned());
+                name_scheme_builder =
+                    name_scheme_builder.take_title_from_user_with_old_title(&mut io, &title)?;
+            }
 
             if let Some(extention) = extension {
                 name_scheme_builder = name_scheme_builder.extention(extention);

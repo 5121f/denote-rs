@@ -78,6 +78,11 @@ impl NameSchemeBuilder {
         Ok(self)
     }
 
+    pub(crate) fn title(mut self, title: Title) -> Self {
+        self.title = Some(title);
+        self
+    }
+
     pub(crate) fn identifier(mut self, identifier: Identifier) -> Self {
         self.identifier = Some(identifier);
         self

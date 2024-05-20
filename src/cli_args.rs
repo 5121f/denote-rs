@@ -10,6 +10,9 @@ pub(crate) enum Cli {
         date_from_metadata: bool,
         #[clap(long, short)]
         accept: bool,
+        /// Accept existing file title
+        #[clap(long, short)]
+        title_accept: bool,
     },
     Touch {
         date: Option<String>,
