@@ -2,7 +2,7 @@ mod cli_args;
 mod io;
 mod name_scheme;
 
-use anyhow::{bail, Context, Ok, Result};
+use anyhow::{bail, Context, Result};
 use clap::Parser;
 use cli_args::Cli;
 use io::Io;
