@@ -48,15 +48,23 @@ fn main() -> Result<()> {
 
             let mut name_scheme_builder = NameSchemeBuilder::new().identifier(identifier);
 
-            let title = Title::extract_from_string(&file_title);
+            let old_title;
+            let title_view;
+            match Title::extract_from_string(&file_title) {
+                Ok(title) => {
+                    title_view = title.desluggify();
+                    old_title = title;
+                }
+                Err(_) => {
+                    title_view = file_title.to_owned();
+                    old_title = Title::from_string(&title_view)?;
+                }
+            }
             if title_accept {
-                name_scheme_builder = name_scheme_builder.title(title?);
+                name_scheme_builder = name_scheme_builder.title(old_title);
             } else {
-                let title = title
-                    .map(|f| f.desluggify())
-                    .unwrap_or(file_title.to_owned());
-                name_scheme_builder =
-                    name_scheme_builder.take_title_from_user_with_old_title(&mut io, &title)?;
+                name_scheme_builder = name_scheme_builder
+                    .take_title_from_user_with_old_title(&mut io, &title_view)?;
             }
 
             if !no_tags {
