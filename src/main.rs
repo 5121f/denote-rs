@@ -70,13 +70,13 @@ fn main() -> Result<()> {
             let new_file_name = name_scheme_builder.build().into_string();
 
             if file_name == new_file_name {
-                println!("Действие не требуется.");
+                println!("Действий не требуется");
                 return Ok(());
             }
 
             if !accept {
                 println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
-                let accepted = io.question("Подтвердить переименование?", true)?;
+                let accepted = io.question("Вы подтверждаете?", true)?;
                 if !accepted {
                     return Ok(());
                 }
