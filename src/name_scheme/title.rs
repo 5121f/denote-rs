@@ -1,8 +1,8 @@
 use anyhow::{anyhow, Context, Result};
 use regex::Regex;
 
-static TITLE_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
-static PUNCTUATION: &str = r"\p{P}";
+const TITLE_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
+const PUNCTUATION: &str = r"\p{P}";
 
 #[derive(Default)]
 pub(crate) struct Title(String);
