@@ -80,7 +80,7 @@ fn main() -> Result<()> {
             if let Some(date) = date {
                 let identifier = Identifier::from_string(&date)?;
                 name_scheme_builder = name_scheme_builder.identifier(identifier);
-            };
+            }
 
             let file_name = name_scheme_builder
                 .take_title_from_user(&mut io)?
