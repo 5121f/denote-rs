@@ -8,6 +8,8 @@ pub(crate) enum Cli {
         date: Option<String>,
         #[clap(long, short = 'm', conflicts_with("date"))]
         date_from_metadata: bool,
+        #[clap(long, short)]
+        accept: bool,
     },
     Touch {
         date: Option<String>,

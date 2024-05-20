@@ -18,6 +18,7 @@ fn main() -> Result<()> {
             file_name,
             date,
             date_from_metadata,
+            accept,
         } => {
             let path = PathBuf::from(&file_name);
 
@@ -62,12 +63,16 @@ fn main() -> Result<()> {
                 return Ok(());
             }
 
-            println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
-            let accepted = io.question("Подтвердить переименование?", true)?;
-            if accepted {
-                fs::rename(&path, new_file_name)
-                    .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
+            if !accept {
+                println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
+                let accepted = io.question("Подтвердить переименование?", true)?;
+                if !accepted {
+                    return Ok(());
+                }
             }
+
+            fs::rename(&path, new_file_name)
+                .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
         }
         Cli::Touch { date } => {
             let mut name_scheme_builder = NameSchemeBuilder::new();
