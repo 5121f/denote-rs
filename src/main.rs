@@ -20,6 +20,7 @@ fn main() -> Result<()> {
             date_from_metadata,
             accept,
             title_accept,
+            no_keywords: no_tags,
         } => {
             let path = PathBuf::from(&file_name);
 
@@ -45,9 +46,7 @@ fn main() -> Result<()> {
                     .unwrap_or_else(|_| Identifier::current_time())
             };
 
-            let mut name_scheme_builder = NameSchemeBuilder::new()
-                .identifier(identifier)
-                .take_keywords_from_user(&mut io)?;
+            let mut name_scheme_builder = NameSchemeBuilder::new().identifier(identifier);
 
             let title = Title::extract_from_string(&file_title);
             if title_accept {
@@ -58,6 +57,10 @@ fn main() -> Result<()> {
                     .unwrap_or(file_title.to_owned());
                 name_scheme_builder =
                     name_scheme_builder.take_title_from_user_with_old_title(&mut io, &title)?;
+            }
+
+            if !no_tags {
+                name_scheme_builder = name_scheme_builder.take_keywords_from_user(&mut io)?
             }
 
             if let Some(extention) = extension {

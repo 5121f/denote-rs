@@ -13,6 +13,8 @@ pub(crate) enum Cli {
         /// Accept existing file title
         #[clap(long, short)]
         title_accept: bool,
+        #[clap(long, short = 'k')]
+        no_keywords: bool,
     },
     Touch {
         date: Option<String>,
