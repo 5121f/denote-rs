@@ -39,15 +39,15 @@ fn main() -> Result<()> {
 
             if let Some(date) = date {
                 let identifier = Identifier::from_string(&date)?;
-                name_scheme_builder = name_scheme_builder.identifier(identifier);
+                name_scheme_builder.identifier(identifier);
             }
 
-            let file_name = name_scheme_builder
+            name_scheme_builder
                 .take_title_from_user(&mut io)?
                 .take_keywords_from_user(&mut io)?
-                .take_extention_from_user(&mut io)?
-                .build()
-                .into_string();
+                .take_extention_from_user(&mut io)?;
+
+            let file_name = name_scheme_builder.build().into_string();
 
             let accepted = io.question(&format!("Создать файл \"{file_name}\"?"), true)?;
             if accepted {
@@ -91,7 +91,8 @@ fn rename_file(
         Identifier::extract_from_string(&file_title).unwrap_or_else(|_| Identifier::current_time())
     };
 
-    let mut name_scheme_builder = NameSchemeBuilder::new().identifier(identifier);
+    let mut name_scheme_builder = NameSchemeBuilder::new();
+    name_scheme_builder.identifier(identifier);
 
     let old_title;
     let title_view;
@@ -106,18 +107,17 @@ fn rename_file(
         }
     }
     if title_accept {
-        name_scheme_builder = name_scheme_builder.title(old_title);
+        name_scheme_builder.title(old_title);
     } else {
-        name_scheme_builder =
-            name_scheme_builder.take_title_from_user_with_old_title(io, &title_view)?;
+        name_scheme_builder.take_title_from_user_with_old_title(io, &title_view)?;
     }
 
     if !no_keywords {
-        name_scheme_builder = name_scheme_builder.take_keywords_from_user(io)?
+        name_scheme_builder.take_keywords_from_user(io)?;
     }
 
     if let Some(extention) = extension {
-        name_scheme_builder = name_scheme_builder.extention(extention);
+        name_scheme_builder.extention(extention);
     }
 
     let new_file_name = name_scheme_builder.build().into_string();

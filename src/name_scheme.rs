@@ -48,10 +48,10 @@ impl NameSchemeBuilder {
     }
 
     pub(crate) fn take_title_from_user_with_old_title(
-        mut self,
+        &mut self,
         io: &mut Io,
         old_title: &str,
-    ) -> Result<Self> {
+    ) -> Result<&mut Self> {
         io.print(&format!("Заголовок [{}]: ", &old_title))?;
         let user_input = io.read_line()?;
         let title = if user_input.trim().is_empty() {
@@ -64,36 +64,36 @@ impl NameSchemeBuilder {
         Ok(self)
     }
 
-    pub(crate) fn take_title_from_user(mut self, io: &mut Io) -> Result<Self> {
+    pub(crate) fn take_title_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
         io.print("Заголовок: ")?;
         let title = Title::from_string(&io.read_line()?)?;
         self.title = Some(title);
         Ok(self)
     }
 
-    pub(crate) fn take_keywords_from_user(mut self, io: &mut Io) -> Result<Self> {
+    pub(crate) fn take_keywords_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
         io.print("Ключевые слова: ")?;
         let keywords = Keywords::from_string(&io.read_line()?);
         self.keywords = Some(keywords);
         Ok(self)
     }
 
-    pub(crate) fn title(mut self, title: Title) -> Self {
+    pub(crate) fn title(&mut self, title: Title) -> &mut Self {
         self.title = Some(title);
         self
     }
 
-    pub(crate) fn identifier(mut self, identifier: Identifier) -> Self {
+    pub(crate) fn identifier(&mut self, identifier: Identifier) -> &mut Self {
         self.identifier = Some(identifier);
         self
     }
 
-    pub(crate) fn extention(mut self, extention: String) -> Self {
+    pub(crate) fn extention(&mut self, extention: String) -> &mut Self {
         self.extention = Some(extention);
         self
     }
 
-    pub(crate) fn take_extention_from_user(mut self, io: &mut Io) -> Result<Self> {
+    pub(crate) fn take_extention_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
         io.print("Расширение: ")?;
         let extention = io.read_line()?;
         if !extention.is_empty() {
