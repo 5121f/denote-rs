@@ -8,10 +8,11 @@ const PUNCTUATION: &str = r"\p{P}";
 pub(crate) struct Title(String);
 
 impl Title {
-    pub(crate) fn from_string(string: &str) -> Self {
-        let punctuation = Regex::new(PUNCTUATION).unwrap();
+    pub(crate) fn from_string(string: &str) -> Result<Self> {
+        let punctuation = Regex::new(PUNCTUATION)?;
         let string = punctuation.replace_all(string, "");
-        Self(string.trim().to_lowercase().replace(' ', "-"))
+        let string = string.trim().to_lowercase().replace(' ', "-");
+        Ok(Self(string))
     }
 
     pub(crate) fn extract_from_string(string: &str) -> Result<Self> {

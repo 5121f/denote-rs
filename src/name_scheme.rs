@@ -58,14 +58,14 @@ impl NameSchemeBuilder {
             &Some(io.read_line()?)
                 .filter(|f| !f.trim().is_empty())
                 .unwrap_or(old_title.to_owned()),
-        );
+        )?;
         self.title = Some(title);
         Ok(self)
     }
 
     pub(crate) fn take_title_from_user(mut self, io: &mut Io) -> Result<Self> {
         io.print("Заголовок: ")?;
-        let title = Title::from_string(&io.read_line()?);
+        let title = Title::from_string(&io.read_line()?)?;
         self.title = Some(title);
         Ok(self)
     }
