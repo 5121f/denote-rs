@@ -15,83 +15,24 @@ fn main() -> Result<()> {
 
     match cli {
         Cli::Rename {
-            file_name,
+            file_names,
             date,
             date_from_metadata,
             accept,
             title_accept,
-            no_keywords: no_tags,
+            no_keywords,
         } => {
-            let path = PathBuf::from(&file_name);
-
-            if !path.exists() {
-                bail!("Указаного файла не существует.");
+            for file_name in file_names {
+                rename_file(
+                    file_name,
+                    date.as_ref().map(|d| d.as_str()),
+                    date_from_metadata,
+                    accept,
+                    title_accept,
+                    no_keywords,
+                    &mut io,
+                )?;
             }
-            if !path.is_file() {
-                bail!("Указан не файл.");
-            }
-
-            let extension = path.extension().and_then(|s| s.to_str()).map(String::from);
-            let file_title = path
-                .file_stem()
-                .map(|s| s.to_string_lossy().to_string())
-                .unwrap_or_default();
-
-            let identifier = if date_from_metadata {
-                Identifier::from_file_metadata(&path)?
-            } else if let Some(date) = date {
-                Identifier::from_string(&date)?
-            } else {
-                Identifier::extract_from_string(&file_title)
-                    .unwrap_or_else(|_| Identifier::current_time())
-            };
-
-            let mut name_scheme_builder = NameSchemeBuilder::new().identifier(identifier);
-
-            let old_title;
-            let title_view;
-            match Title::extract_from_string(&file_title) {
-                Ok(title) => {
-                    title_view = title.desluggify();
-                    old_title = title;
-                }
-                Err(_) => {
-                    title_view = file_title.to_owned();
-                    old_title = Title::from_string(&title_view)?;
-                }
-            }
-            if title_accept {
-                name_scheme_builder = name_scheme_builder.title(old_title);
-            } else {
-                name_scheme_builder = name_scheme_builder
-                    .take_title_from_user_with_old_title(&mut io, &title_view)?;
-            }
-
-            if !no_tags {
-                name_scheme_builder = name_scheme_builder.take_keywords_from_user(&mut io)?
-            }
-
-            if let Some(extention) = extension {
-                name_scheme_builder = name_scheme_builder.extention(extention);
-            }
-
-            let new_file_name = name_scheme_builder.build().into_string();
-
-            if file_name == new_file_name {
-                println!("Действий не требуется");
-                return Ok(());
-            }
-
-            if !accept {
-                println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
-                let accepted = io.question("Вы подтверждаете?", true)?;
-                if !accepted {
-                    return Ok(());
-                }
-            }
-
-            fs::rename(&path, new_file_name)
-                .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
         }
         Cli::Touch { date } => {
             let mut name_scheme_builder = NameSchemeBuilder::new();
@@ -114,6 +55,88 @@ fn main() -> Result<()> {
             }
         }
     }
+
+    Ok(())
+}
+
+fn rename_file(
+    file_name: String,
+    date: Option<&str>,
+    date_from_metadata: bool,
+    accept: bool,
+    title_accept: bool,
+    no_keywords: bool,
+    io: &mut Io,
+) -> Result<()> {
+    let path = PathBuf::from(&file_name);
+
+    if !path.exists() {
+        bail!("Указаного файла не существует.");
+    }
+    if !path.is_file() {
+        bail!("Указан не файл.");
+    }
+
+    let extension = path.extension().and_then(|s| s.to_str()).map(String::from);
+    let file_title = path
+        .file_stem()
+        .map(|s| s.to_string_lossy().to_string())
+        .unwrap_or_default();
+
+    let identifier = if date_from_metadata {
+        Identifier::from_file_metadata(&path)?
+    } else if let Some(date) = date {
+        Identifier::from_string(&date)?
+    } else {
+        Identifier::extract_from_string(&file_title).unwrap_or_else(|_| Identifier::current_time())
+    };
+
+    let mut name_scheme_builder = NameSchemeBuilder::new().identifier(identifier);
+
+    let old_title;
+    let title_view;
+    match Title::extract_from_string(&file_title) {
+        Ok(title) => {
+            title_view = title.desluggify();
+            old_title = title;
+        }
+        Err(_) => {
+            title_view = file_title.to_owned();
+            old_title = Title::from_string(&title_view)?;
+        }
+    }
+    if title_accept {
+        name_scheme_builder = name_scheme_builder.title(old_title);
+    } else {
+        name_scheme_builder =
+            name_scheme_builder.take_title_from_user_with_old_title(io, &title_view)?;
+    }
+
+    if !no_keywords {
+        name_scheme_builder = name_scheme_builder.take_keywords_from_user(io)?
+    }
+
+    if let Some(extention) = extension {
+        name_scheme_builder = name_scheme_builder.extention(extention);
+    }
+
+    let new_file_name = name_scheme_builder.build().into_string();
+
+    if file_name == new_file_name {
+        println!("Действий не требуется");
+        return Ok(());
+    }
+
+    if !accept {
+        println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
+        let accepted = io.question("Вы подтверждаете?", true)?;
+        if !accepted {
+            return Ok(());
+        }
+    }
+
+    fs::rename(&path, new_file_name)
+        .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
 
     Ok(())
 }
