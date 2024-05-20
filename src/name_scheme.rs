@@ -54,11 +54,13 @@ impl NameSchemeBuilder {
         old_title: &str,
     ) -> Result<Self> {
         io.print(&format!("Заголовок [{}]: ", &old_title))?;
-        let title = Title::from_string(
-            &Some(io.read_line()?)
-                .filter(|f| !f.trim().is_empty())
-                .unwrap_or(old_title.to_owned()),
-        )?;
+        let user_input = io.read_line()?;
+        let title = if user_input.trim().is_empty() {
+            old_title.to_owned()
+        } else {
+            user_input
+        };
+        let title = Title::from_string(&title)?;
         self.title = Some(title);
         Ok(self)
     }
