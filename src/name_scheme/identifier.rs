@@ -1,5 +1,7 @@
+use std::{fs, path::Path};
+
 use anyhow::{Context, Result};
-use chrono::{Duration, NaiveDateTime};
+use chrono::{DateTime, Duration, Local, NaiveDateTime};
 use regex::Regex;
 
 const ID_REGEXP: &str = r"\d{8}T\d{8}";
@@ -44,6 +46,13 @@ impl Identifier {
             .find(string)
             .context("Не удалось извлечь илентификатор из строки")?;
         Ok(Self(id.as_str().to_owned()))
+    }
+
+    pub(crate) fn from_file_metadata(path: &Path) -> Result<Self> {
+        let metadata = fs::metadata(path)?;
+        let created = metadata.created()?;
+        let created: DateTime<Local> = created.into();
+        Ok(Self::from_date_time(created.naive_local()))
     }
 
     pub(crate) fn into_string(self) -> String {

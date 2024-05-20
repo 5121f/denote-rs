@@ -14,7 +14,11 @@ fn main() -> Result<()> {
     let mut io = Io::new();
 
     match cli {
-        Cli::Rename { file_name, date } => {
+        Cli::Rename {
+            file_name,
+            date,
+            date_from_metadata,
+        } => {
             let path = PathBuf::from(&file_name);
 
             if !path.exists() {
@@ -32,7 +36,10 @@ fn main() -> Result<()> {
             let title = Title::extract_from_string(&file_title)
                 .map(|f| f.desluggify())
                 .unwrap_or(file_title.to_owned());
-            let identifier = if let Some(date) = date {
+
+            let identifier = if date_from_metadata {
+                Identifier::from_file_metadata(&path)?
+            } else if let Some(date) = date {
                 Identifier::from_string(&date)?
             } else {
                 Identifier::extract_from_string(&file_title)
