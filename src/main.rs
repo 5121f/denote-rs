@@ -2,7 +2,7 @@ mod cli_args;
 mod io;
 mod name_scheme;
 
-use anyhow::{bail, Context, Result};
+use anyhow::{bail, Context, Ok, Result};
 use clap::Parser;
 use cli_args::Cli;
 use io::Io;
@@ -52,12 +52,14 @@ fn main() -> Result<()> {
 
             if file_name == new_file_name {
                 println!("Действие не требуется.");
-            } else {
-                println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
-                if io.question("Подтвердить переименование?", true)? {
-                    fs::rename(&path, new_file_name)
-                        .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
-                }
+                return Ok(());
+            }
+
+            println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
+            let accepted = io.question("Подтвердить переименование?", true)?;
+            if accepted {
+                fs::rename(&path, new_file_name)
+                    .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
             }
         }
         Cli::Touch { date } => {
@@ -75,7 +77,8 @@ fn main() -> Result<()> {
                 .build()
                 .into_string();
 
-            if io.question(&format!("Создать файл \"{file_name}\"?"), true)? {
+            let accepted = io.question(&format!("Создать файл \"{file_name}\"?"), true)?;
+            if accepted {
                 fs::File::create(file_name).context("Не удалсоь создать файл.")?;
             }
         }
