@@ -17,6 +17,7 @@ pub(crate) enum Cli {
         no_keywords: bool,
     },
     Touch {
+        #[clap(long, short)]
         date: Option<String>,
     },
 }

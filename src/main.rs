@@ -40,6 +40,8 @@ fn main() -> Result<()> {
             if let Some(date) = date {
                 let identifier = Identifier::from_string(&date)?;
                 name_scheme_builder.identifier(identifier);
+            } else {
+                name_scheme_builder.identifier(Identifier::current_time());
             }
 
             name_scheme_builder
