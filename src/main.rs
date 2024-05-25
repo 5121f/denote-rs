@@ -37,14 +37,13 @@ fn main() -> Result<()> {
         Cli::Touch { date } => {
             let mut name_scheme_builder = NameSchemeBuilder::new();
 
-            if let Some(date) = date {
-                let identifier = Identifier::from_string(&date)?;
-                name_scheme_builder.identifier(identifier);
-            } else {
-                name_scheme_builder.identifier(Identifier::current_time());
-            }
+            let identifier = match date {
+                Some(date) => Identifier::from_string(&date)?,
+                None => Identifier::current_time(),
+            };
 
             name_scheme_builder
+                .identifier(identifier)
                 .take_title_from_user(&mut io)?
                 .take_keywords_from_user(&mut io)?
                 .take_extention_from_user(&mut io)?;
