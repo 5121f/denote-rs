@@ -8,14 +8,14 @@ const PUNCTUATION: &str = r"\p{P}";
 pub(crate) struct Title(String);
 
 impl Title {
-    pub(crate) fn from_string(string: &str) -> Result<Self> {
+    pub(crate) fn parse(string: &str) -> Result<Self> {
         let punctuation = Regex::new(PUNCTUATION)?;
         let string = punctuation.replace_all(string, "");
         let string = string.trim().to_lowercase().replace(' ', "-");
         Ok(Self(string))
     }
 
-    pub(crate) fn extract_from_string(string: &str) -> Result<Self> {
+    pub(crate) fn find_in_string(string: &str) -> Result<Self> {
         let capture = Regex::new(TITLE_REGEXP)
             .context("Произошла ошибка при компиляции регулярного выражения")?
             .captures(string)

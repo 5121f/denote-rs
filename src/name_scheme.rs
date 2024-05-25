@@ -59,14 +59,14 @@ impl NameSchemeBuilder {
         } else {
             user_input
         };
-        let title = Title::from_string(&title)?;
+        let title = Title::parse(&title)?;
         self.title = Some(title);
         Ok(self)
     }
 
     pub(crate) fn take_title_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
         io.print("Заголовок: ")?;
-        let title = Title::from_string(&io.read_line()?)?;
+        let title = Title::parse(&io.read_line()?)?;
         self.title = Some(title);
         Ok(self)
     }
