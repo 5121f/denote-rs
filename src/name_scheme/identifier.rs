@@ -22,6 +22,9 @@ impl Identifier {
     }
 
     pub(crate) fn from_string(string: &str) -> Result<Self> {
+        if string == "now" {
+            return Ok(Self::current_time());
+        }
         let currnet_time = chrono::offset::Local::now().naive_local().time();
         let first_try = chrono::NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
             .map(|d| {
