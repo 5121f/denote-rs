@@ -34,29 +34,32 @@ fn main() -> Result<()> {
                 )?;
             }
         }
-        Cli::Touch { date } => {
-            let mut name_scheme_builder = NameSchemeBuilder::new();
-
-            let identifier = match date {
-                Some(date) => Identifier::from_string(&date)?,
-                None => Identifier::current_time(),
-            };
-
-            name_scheme_builder
-                .identifier(identifier)
-                .take_title_from_user(&mut io)?
-                .take_keywords_from_user(&mut io)?
-                .take_extention_from_user(&mut io)?;
-
-            let file_name = name_scheme_builder.build().into_string();
-
-            let accepted = io.question(&format!("Создать файл \"{file_name}\"?"), true)?;
-            if accepted {
-                fs::File::create(file_name).context("Не удалсоь создать файл.")?;
-            }
-        }
+        Cli::Touch { date } => touch(date.as_deref(), &mut io)?,
     }
 
+    Ok(())
+}
+
+fn touch(date: Option<&str>, io: &mut Io) -> Result<()> {
+    let mut name_scheme_builder = NameSchemeBuilder::new();
+
+    let identifier = match date {
+        Some(date) => Identifier::from_string(&date)?,
+        None => Identifier::current_time(),
+    };
+
+    name_scheme_builder
+        .identifier(identifier)
+        .take_title_from_user(io)?
+        .take_keywords_from_user(io)?
+        .take_extention_from_user(io)?;
+
+    let file_name = name_scheme_builder.build().into_string();
+
+    let accepted = io.question(&format!("Создать файл \"{file_name}\"?"), true)?;
+    if accepted {
+        fs::File::create(file_name).context("Не удалсоь создать файл.")?;
+    }
     Ok(())
 }
 
