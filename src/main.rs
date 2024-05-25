@@ -44,7 +44,7 @@ fn touch(date: Option<&str>, io: &mut Io) -> Result<()> {
     let mut name_scheme_builder = NameSchemeBuilder::new();
 
     let identifier = match date {
-        Some(date) => Identifier::from_string(&date)?,
+        Some(date) => Identifier::from_string(date)?,
         None => Identifier::current_time(),
     };
 
