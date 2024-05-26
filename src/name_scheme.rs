@@ -106,7 +106,7 @@ impl NameSchemeBuilder {
         NameScheme {
             title: self.title.unwrap_or_default(),
             keywords: self.keywords.unwrap_or_default(),
-            identifier: self.identifier.unwrap_or_else(Identifier::current_time),
+            identifier: self.identifier.unwrap_or_else(Identifier::now),
             extention: self.extention,
         }
     }

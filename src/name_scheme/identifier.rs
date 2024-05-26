@@ -17,13 +17,13 @@ impl Identifier {
         Self(format!("{date}T{time}{milliseconds}"))
     }
 
-    pub(crate) fn current_time() -> Self {
+    pub(crate) fn now() -> Self {
         Self::from_date_time(chrono::offset::Local::now().naive_local())
     }
 
     pub(crate) fn from_string(string: &str) -> Result<Self> {
         if string == "now" {
-            return Ok(Self::current_time());
+            return Ok(Self::now());
         }
         let currnet_time = chrono::offset::Local::now().naive_local().time();
         let first_try = chrono::NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")

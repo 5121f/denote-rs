@@ -45,7 +45,7 @@ fn touch(date: Option<&str>, io: &mut Io) -> Result<()> {
 
     let identifier = match date {
         Some(date) => Identifier::from_string(date)?,
-        None => Identifier::current_time(),
+        None => Identifier::now(),
     };
 
     name_scheme_builder
@@ -92,7 +92,7 @@ fn rename_file(
     } else if let Some(date) = date {
         Identifier::from_string(&date)?
     } else {
-        Identifier::extract_from_string(&file_title).unwrap_or_else(|_| Identifier::current_time())
+        Identifier::extract_from_string(&file_title).unwrap_or_else(|_| Identifier::now())
     };
 
     let mut name_scheme_builder = NameSchemeBuilder::new();
