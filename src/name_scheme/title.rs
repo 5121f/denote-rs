@@ -9,7 +9,8 @@ pub(crate) struct Title(String);
 
 impl Title {
     pub(crate) fn parse(string: &str) -> Result<Self> {
-        let punctuation = Regex::new(PUNCTUATION)?;
+        let punctuation = Regex::new(PUNCTUATION)
+            .context("Произошла ошибка при компиляции регулярного выражения")?;
         let string = punctuation.replace_all(string, "");
         let string = string.trim().to_lowercase().replace(' ', "-");
         Ok(Self(string))
