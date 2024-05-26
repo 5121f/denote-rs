@@ -54,8 +54,7 @@ impl Identifier {
 
     pub(crate) fn from_file_metadata(path: &Path) -> Result<Self> {
         let metadata = fs::metadata(path)?;
-        let created = metadata.created()?;
-        let created: DateTime<Local> = created.into();
+        let created: DateTime<Local> = metadata.created()?.into();
         Ok(Self::from_date_time(created.naive_local()))
     }
 
