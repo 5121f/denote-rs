@@ -18,7 +18,8 @@ impl Identifier {
     }
 
     pub(crate) fn now() -> Self {
-        Self::from_date_time(chrono::offset::Local::now().naive_local())
+        let now = chrono::offset::Local::now().naive_local();
+        Self::from_date_time(now)
     }
 
     pub(crate) fn from_string(string: &str) -> Result<Self> {
