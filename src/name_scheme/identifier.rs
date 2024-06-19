@@ -39,16 +39,16 @@ impl Identifier {
             Some(date) => date,
             None => chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
                 .map(|d| d.and_time(currnet_time))
-                .context("Не удалось конвертировать дату.")?,
+                .context("Failed to convert date")?,
         };
         Ok(Self::from_date_time(date_time))
     }
 
     pub(crate) fn extract_from_string(string: &str) -> Result<Self> {
         let id = Regex::new(ID_REGEXP)
-            .context("Произошла ошибка при компиляции регулярного выражения")?
+            .context("Failed to regex compile")?
             .find(string)
-            .context("Не удалось извлечь илентификатор из строки")?;
+            .context("Failed to extract identifire")?;
         Ok(Self(id.as_str().to_owned()))
     }
 

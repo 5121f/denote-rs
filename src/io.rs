@@ -18,7 +18,7 @@ impl Io {
         let mut buf = String::new();
         self.stdin
             .read_line(&mut buf)
-            .context("Не удалось прочитать пользовательский ввод")?;
+            .context("Failed to read user input")?;
         Ok(buf.trim().to_owned())
     }
 

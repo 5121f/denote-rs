@@ -52,7 +52,7 @@ impl NameSchemeBuilder {
         io: &mut Io,
         old_title: &str,
     ) -> Result<&mut Self> {
-        io.print(&format!("Заголовок [{}]: ", &old_title))?;
+        io.print(&format!("Title [{}]: ", &old_title))?;
         let user_input = io.read_line()?;
         let title = if user_input.trim().is_empty() {
             old_title.to_owned()
@@ -65,14 +65,14 @@ impl NameSchemeBuilder {
     }
 
     pub(crate) fn take_title_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
-        io.print("Заголовок: ")?;
+        io.print("Title: ")?;
         let title = Title::parse(&io.read_line()?)?;
         self.title = Some(title);
         Ok(self)
     }
 
     pub(crate) fn take_keywords_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
-        io.print("Ключевые слова: ")?;
+        io.print("Keywords: ")?;
         let keywords = Keywords::from_string(&io.read_line()?);
         self.keywords = Some(keywords);
         Ok(self)
@@ -94,7 +94,7 @@ impl NameSchemeBuilder {
     }
 
     pub(crate) fn take_extention_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
-        io.print("Расширение: ")?;
+        io.print("Extention: ")?;
         let extention = io.read_line()?;
         if !extention.is_empty() {
             self.extention = Some(extention);

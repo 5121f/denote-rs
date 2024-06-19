@@ -54,9 +54,9 @@ fn touch(date: Option<&str>, io: &mut Io) -> Result<()> {
 
     let file_name = name_scheme_builder.build().into_string();
 
-    let accepted = io.question(&format!("Создать файл \"{file_name}\"?"), true)?;
+    let accepted = io.question(&format!("Create file \"{file_name}\"?"), true)?;
     if accepted {
-        fs::File::create(file_name).context("Не удалсоь создать файл.")?;
+        fs::File::create(file_name).context("Failed to file creation")?;
     }
     Ok(())
 }
@@ -72,10 +72,10 @@ fn rename_file(
     let path = PathBuf::from(&file_name);
 
     if !path.exists() {
-        bail!("Указаного файла не существует.");
+        bail!("File dosen't exists");
     }
-    if !path.is_file() {
-        bail!("Указан не файл.");
+    if path.is_dir() {
+        bail!("Renaming directories are not supported");
     }
 
     let extension = path.extension().and_then(|s| s.to_str()).map(String::from);
@@ -116,20 +116,19 @@ fn rename_file(
     let new_file_name = name_scheme_builder.build().into_string();
 
     if file_name == new_file_name {
-        println!("Действий не требуется");
+        println!("No action required");
         return Ok(());
     }
 
     if !accept {
-        println!("Переименовать \"{}\" в \"{}\"", &file_name, new_file_name);
-        let accepted = io.question("Вы подтверждаете?", true)?;
+        println!("Rename \"{}\" в \"{}\"", &file_name, new_file_name);
+        let accepted = io.question("Accept?", true)?;
         if !accepted {
             return Ok(());
         }
     }
 
-    fs::rename(&path, new_file_name)
-        .with_context(|| format!("Не удалсоь переименовать файл {path:?}"))?;
+    fs::rename(&path, new_file_name).with_context(|| format!("Failed to rename file {path:?}"))?;
 
     Ok(())
 }

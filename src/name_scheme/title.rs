@@ -9,8 +9,7 @@ pub(crate) struct Title(String);
 
 impl Title {
     pub(crate) fn parse(string: &str) -> Result<Self> {
-        let punctuation = Regex::new(PUNCTUATION)
-            .context("Произошла ошибка при компиляции регулярного выражения")?;
+        let punctuation = Regex::new(PUNCTUATION).context("Failed to regex compile")?;
         let string = punctuation.replace_all(string, "");
         let string = string.trim().to_lowercase().replace(' ', "-");
         Ok(Self(string))
@@ -18,9 +17,9 @@ impl Title {
 
     pub(crate) fn find_in_string(string: &str) -> Result<Self> {
         let capture = Regex::new(TITLE_REGEXP)
-            .context("Произошла ошибка при компиляции регулярного выражения")?
+            .context("Failed to regex compile")?
             .captures(string)
-            .ok_or_else(|| anyhow!("Не удалось извечь заголовок из строки"))?;
+            .ok_or_else(|| anyhow!("Extract title failed"))?;
         Ok(Self(capture[1].to_owned()))
     }
 
