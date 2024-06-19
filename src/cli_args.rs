@@ -3,6 +3,7 @@ use clap::Parser;
 #[derive(Parser)]
 pub(crate) enum Cli {
     Rename {
+        #[clap(required = true)]
         file_names: Vec<String>,
         /// You can use "now" to use current time
         #[clap(long, short, conflicts_with("date_from_metadata"))]
