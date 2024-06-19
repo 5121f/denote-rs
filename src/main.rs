@@ -19,7 +19,6 @@ fn main() -> Result<()> {
             date,
             date_from_metadata,
             accept,
-            title_accept,
             no_keywords,
         } => {
             for file_name in file_names {
@@ -28,7 +27,6 @@ fn main() -> Result<()> {
                     date.as_ref().map(|d| d.as_str()),
                     date_from_metadata,
                     accept,
-                    title_accept,
                     no_keywords,
                     &mut io,
                 )?;
@@ -68,7 +66,6 @@ fn rename_file(
     date: Option<&str>,
     date_from_metadata: bool,
     accept: bool,
-    title_accept: bool,
     no_keywords: bool,
     io: &mut Io,
 ) -> Result<()> {
@@ -98,7 +95,7 @@ fn rename_file(
     let mut name_scheme_builder = NameSchemeBuilder::new();
     name_scheme_builder.identifier(identifier);
 
-    if title_accept {
+    if accept {
         let title = Title::find_in_string(&file_title).or_else(|_| Title::parse(&file_title))?;
         name_scheme_builder.title(title);
     } else {

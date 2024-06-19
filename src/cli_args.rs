@@ -9,11 +9,9 @@ pub(crate) enum Cli {
         date: Option<String>,
         #[clap(long, short = 'm', conflicts_with("date"))]
         date_from_metadata: bool,
+        /// Accept all questions
         #[clap(long, short)]
         accept: bool,
-        /// Accept existing file title
-        #[clap(long, short)]
-        title_accept: bool,
         #[clap(long, short = 'k')]
         no_keywords: bool,
     },
