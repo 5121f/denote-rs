@@ -2,6 +2,16 @@
 
 Rename and create files with [denote](https://github.com/protesilaos/denote) name shcheme.
 
+## Building
+
+```
+$ git clone https://github.com/5121f/denote-rs.git
+$ cd denote-rs
+$ cargo build --release
+$ target/release/denote-rs --version
+0.1.0
+```
+
 ## TODO
 
 - Signatures
