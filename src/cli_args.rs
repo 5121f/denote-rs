@@ -9,6 +9,7 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(version = clap::crate_version!())]
 pub(crate) enum Cli {
+    #[clap(about = "Rename existing file")]
     Rename {
         #[clap(required = true)]
         file_names: Vec<String>,
@@ -25,6 +26,7 @@ pub(crate) enum Cli {
         #[clap(long, short = 'k')]
         no_keywords: bool,
     },
+    #[clap(about = "Create new file")]
     Touch {
         /// Date of file creating. You can use "now" to use current system time
         #[clap(long, short)]
