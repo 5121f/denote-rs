@@ -5,7 +5,7 @@ pub(crate) enum Cli {
     Rename {
         #[clap(required = true)]
         file_names: Vec<String>,
-        /// Date of file creating. You can use "now" to use current time.
+        /// Date of file creating. You can use "now" to use current time
         #[clap(long, short, conflicts_with("date_from_metadata"))]
         date: Option<String>,
         /// Use date from metadata
@@ -19,7 +19,7 @@ pub(crate) enum Cli {
         no_keywords: bool,
     },
     Touch {
-        /// Date of file creating. You can use "now" to use current time.
+        /// Date of file creating. You can use "now" to use current time
         #[clap(long, short)]
         date: Option<String>,
     },
