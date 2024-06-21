@@ -4,6 +4,10 @@ Rename and create files with [denote](https://github.com/protesilaos/denote) nam
 
 ## Building
 
+denote-rs written in Rust so you need Rust compiler and Cargo for build it.
+
+To build denote-rs:
+
 ```
 $ git clone https://github.com/5121f/denote-rs.git
 $ cd denote-rs
