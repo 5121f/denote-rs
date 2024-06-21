@@ -27,12 +27,11 @@ impl NameScheme {
             self.identifier.into_string(),
             self.title.into_string(),
         );
-        if let Some(keywords) = self.keywords.into_string() {
-            name_scheme = format!("{}{}", name_scheme, keywords);
-        }
-        if let Some(extention) = &self.extention {
-            name_scheme = format!("{}.{}", name_scheme, extention);
-        }
+        name_scheme = maybe_add(name_scheme, self.keywords.into_string().as_deref());
+        name_scheme = maybe_add(
+            name_scheme,
+            self.extention.map(|ext| format!(".{}", ext)).as_deref(),
+        );
         name_scheme
     }
 }
@@ -113,4 +112,11 @@ impl NameSchemeBuilder {
             extention: self.extention,
         }
     }
+}
+
+fn maybe_add<'a, 'b>(base: String, added: Option<&str>) -> String {
+    if let Some(added) = added {
+        return format!("{}{}", base, added);
+    }
+    base
 }
