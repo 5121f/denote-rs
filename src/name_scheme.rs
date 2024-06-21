@@ -22,21 +22,16 @@ pub(crate) struct NameScheme {
 
 impl NameScheme {
     pub(crate) fn into_string(self) -> String {
-        if let Some(extention) = &self.extention {
-            return format!(
-                "{}{}{}.{}",
-                self.identifier.into_string(),
-                self.title.into_string(),
-                self.keywords.into_string(),
-                extention
-            );
-        }
-        format!(
+        let mut name_scheme = format!(
             "{}{}{}",
             self.identifier.into_string(),
             self.title.into_string(),
             self.keywords.into_string(),
-        )
+        );
+        if let Some(extention) = &self.extention {
+            name_scheme = format!("{}.{}", name_scheme, extention);
+        }
+        name_scheme
     }
 }
 
