@@ -7,6 +7,7 @@
 use clap::Parser;
 
 #[derive(Parser)]
+#[command(version = clap::crate_version!())]
 pub(crate) enum Cli {
     Rename {
         #[clap(required = true)]
