@@ -22,10 +22,10 @@ impl Keywords {
         Self(keywords)
     }
 
-    pub(crate) fn into_string(self) -> String {
+    pub(crate) fn into_string(self) -> Option<String> {
         if self.0.is_empty() {
-            return String::new();
+            return None;
         }
-        format!("__{}", self.0.join("_"))
+        Some(format!("__{}", self.0.join("_")))
     }
 }

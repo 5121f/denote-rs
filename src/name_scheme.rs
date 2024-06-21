@@ -23,11 +23,13 @@ pub(crate) struct NameScheme {
 impl NameScheme {
     pub(crate) fn into_string(self) -> String {
         let mut name_scheme = format!(
-            "{}{}{}",
+            "{}{}",
             self.identifier.into_string(),
             self.title.into_string(),
-            self.keywords.into_string(),
         );
+        if let Some(keywords) = self.keywords.into_string() {
+            name_scheme = format!("{}{}", name_scheme, keywords);
+        }
         if let Some(extention) = &self.extention {
             name_scheme = format!("{}.{}", name_scheme, extention);
         }
