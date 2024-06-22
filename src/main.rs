@@ -17,7 +17,6 @@ use std::{fs, path::PathBuf};
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
-    let mut io = Io::new();
 
     match cli {
         Cli::Rename {
@@ -28,23 +27,19 @@ fn main() -> Result<()> {
             no_keywords,
         } => {
             for file_name in file_names {
-                rename_file(
-                    file_name,
-                    date.as_ref().map(|d| d.as_str()),
-                    date_from_metadata,
-                    accept,
-                    no_keywords,
-                    &mut io,
-                )?;
+                let date = date.as_ref().map(|d| d.as_str());
+                rename_file(file_name, date, date_from_metadata, accept, no_keywords)?;
             }
         }
-        Cli::Touch { date } => touch(date.as_deref(), &mut io)?,
+        Cli::Touch { date } => touch(date.as_deref())?,
     }
 
     Ok(())
 }
 
-fn touch(date: Option<&str>, io: &mut Io) -> Result<()> {
+fn touch(date: Option<&str>) -> Result<()> {
+    let mut io = Io::new();
+
     let identifier = match date {
         Some(date) => Identifier::from_string(date)?,
         None => Identifier::now(),
@@ -65,8 +60,9 @@ fn rename_file(
     date_from_metadata: bool,
     accept: bool,
     no_keywords: bool,
-    io: &mut Io,
 ) -> Result<()> {
+    let mut io = Io::new();
+
     let path = PathBuf::from(&file_name);
 
     if !path.exists() {
