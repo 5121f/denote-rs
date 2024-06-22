@@ -4,20 +4,21 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+pub(crate) mod extention;
 pub(crate) mod identifier;
 pub(crate) mod keywords;
 pub(crate) mod title;
 
 use crate::io::Io;
 
-use self::{identifier::Identifier, keywords::Keywords, title::Title};
+use self::{extention::Extention, identifier::Identifier, keywords::Keywords, title::Title};
 use anyhow::Result;
 
 pub(crate) struct NameScheme {
     title: Title,
     keywords: Keywords,
     identifier: Identifier,
-    extention: Option<String>,
+    extention: Extention,
 }
 
 impl NameScheme {
@@ -28,10 +29,7 @@ impl NameScheme {
             self.title.into_string(),
         );
         name_scheme = maybe_add(name_scheme, self.keywords.into_string().as_deref());
-        name_scheme = maybe_add(
-            name_scheme,
-            self.extention.map(|ext| format!(".{}", ext)).as_deref(),
-        );
+        name_scheme = maybe_add(name_scheme, self.extention.to_string().as_deref());
         name_scheme
     }
 }
@@ -41,7 +39,7 @@ pub(crate) struct NameSchemeBuilder {
     title: Option<Title>,
     keywords: Option<Keywords>,
     identifier: Option<Identifier>,
-    extention: Option<String>,
+    extention: Extention,
 }
 
 impl NameSchemeBuilder {
@@ -91,16 +89,14 @@ impl NameSchemeBuilder {
     }
 
     pub(crate) fn extention(&mut self, extention: String) -> &mut Self {
-        self.extention = Some(extention);
+        self.extention = Extention::new(extention);
         self
     }
 
     pub(crate) fn take_extention_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
         io.print("Extention: ")?;
         let extention = io.read_line()?;
-        if !extention.is_empty() {
-            self.extention = Some(extention);
-        }
+        self.extention = Extention::new(extention);
         Ok(self)
     }
 
