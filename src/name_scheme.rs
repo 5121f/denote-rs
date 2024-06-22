@@ -15,7 +15,7 @@ use self::{extention::Extention, identifier::Identifier, keywords::Keywords, tit
 use anyhow::Result;
 
 pub(crate) struct NameScheme {
-    title: Title,
+    title: Option<Title>,
     keywords: Option<Keywords>,
     identifier: Identifier,
     extention: Option<Extention>,
@@ -23,11 +23,10 @@ pub(crate) struct NameScheme {
 
 impl NameScheme {
     pub(crate) fn into_string(self) -> String {
-        let mut name_scheme = format!(
-            "{}{}",
-            self.identifier.into_string(),
-            self.title.into_string(),
-        );
+        let mut name_scheme = self.identifier.into_string();
+
+        let title = self.title.map(|title| title.into_string());
+        name_scheme = maybe_add(name_scheme, title.as_deref());
 
         let keywords = self.keywords.map(|keywrds| keywrds.to_string());
         name_scheme = maybe_add(name_scheme, keywords.as_deref());
@@ -64,15 +63,13 @@ impl NameSchemeBuilder {
         } else {
             user_input
         };
-        let title = Title::parse(&title)?;
-        self.title = Some(title);
+        self.title = Title::parse(&title)?;
         Ok(self)
     }
 
     pub(crate) fn take_title_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
         io.print("Title: ")?;
-        let title = Title::parse(&io.read_line()?)?;
-        self.title = Some(title);
+        self.title = Title::parse(&io.read_line()?)?;
         Ok(self)
     }
 
@@ -106,7 +103,7 @@ impl NameSchemeBuilder {
 
     pub(crate) fn build(self) -> NameScheme {
         NameScheme {
-            title: self.title.unwrap_or_default(),
+            title: self.title,
             keywords: self.keywords,
             identifier: self.identifier.unwrap_or_else(Identifier::now),
             extention: self.extention,

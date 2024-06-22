@@ -103,9 +103,11 @@ fn rename_file(
 
     if accept {
         let title = Title::find_in_string(&file_title).or_else(|_| Title::parse(&file_title))?;
-        name_scheme_builder.title(title);
+        if let Some(title) = title {
+            name_scheme_builder.title(title);
+        }
     } else {
-        let title = Title::find_in_string(&file_title)
+        let title = Title::find_in_string(&file_title)?
             .map(|title| title.desluggify())
             .unwrap_or(file_title);
         name_scheme_builder.take_title_from_user_with_old_title(io, &title)?;
