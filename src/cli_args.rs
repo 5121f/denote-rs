@@ -22,9 +22,6 @@ pub(crate) enum Cli {
         /// Accept all questions
         #[clap(long, short)]
         accept: bool,
-        /// Don't use keywords
-        #[clap(long, short = 'k')]
-        no_keywords: bool,
     },
     #[clap(about = "Create new file")]
     Touch {

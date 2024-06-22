@@ -24,11 +24,10 @@ fn main() -> Result<()> {
             date,
             date_from_metadata,
             accept,
-            no_keywords,
         } => {
             for file_name in file_names {
                 let date = date.as_ref().map(|d| d.as_str());
-                rename_file(file_name, date, date_from_metadata, accept, no_keywords)?;
+                rename_file(file_name, date, date_from_metadata, accept)?;
             }
         }
         Cli::Touch { date } => touch(date.as_deref())?,
@@ -59,7 +58,6 @@ fn rename_file(
     date: Option<&str>,
     date_from_metadata: bool,
     accept: bool,
-    no_keywords: bool,
 ) -> Result<()> {
     let mut io = Io::new();
 
@@ -101,7 +99,7 @@ fn rename_file(
         io.title_with_old_title(&old_title)?
     };
 
-    let keywords = if !no_keywords { io.keywords()? } else { None };
+    let keywords = if accept { None } else { io.keywords()? };
 
     let new_file_name = name_scheme(identifier, title, keywords, extention);
 
