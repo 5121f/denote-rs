@@ -8,7 +8,7 @@
 pub(crate) struct Keywords(Vec<String>);
 
 impl Keywords {
-    pub(crate) fn from_string(string: &str) -> Self {
+    pub(crate) fn from_string(string: &str) -> Option<Self> {
         let keywords: Vec<_> = string
             .trim()
             .to_lowercase()
@@ -16,16 +16,13 @@ impl Keywords {
             .map(ToOwned::to_owned)
             .collect();
         let keywords = match keywords.first() {
-            Some(first) if first.is_empty() => Vec::new(),
+            Some(first) if first.is_empty() => return None,
             _ => keywords,
         };
-        Self(keywords)
+        Some(Self(keywords))
     }
 
-    pub(crate) fn into_string(self) -> Option<String> {
-        if self.0.is_empty() {
-            return None;
-        }
-        Some(format!("__{}", self.0.join("_")))
+    pub(crate) fn to_string(&self) -> String {
+        format!("__{}", self.0.join("_"))
     }
 }

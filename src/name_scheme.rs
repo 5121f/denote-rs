@@ -16,7 +16,7 @@ use anyhow::Result;
 
 pub(crate) struct NameScheme {
     title: Title,
-    keywords: Keywords,
+    keywords: Option<Keywords>,
     identifier: Identifier,
     extention: Option<Extention>,
 }
@@ -28,11 +28,13 @@ impl NameScheme {
             self.identifier.into_string(),
             self.title.into_string(),
         );
-        name_scheme = maybe_add(name_scheme, self.keywords.into_string().as_deref());
-        name_scheme = maybe_add(
-            name_scheme,
-            self.extention.map(|ext| ext.to_string()).as_deref(),
-        );
+
+        let keywords = self.keywords.map(|keywrds| keywrds.to_string());
+        name_scheme = maybe_add(name_scheme, keywords.as_deref());
+
+        let extention = self.extention.map(|ext| ext.to_string());
+        name_scheme = maybe_add(name_scheme, extention.as_deref());
+
         name_scheme
     }
 }
@@ -76,8 +78,7 @@ impl NameSchemeBuilder {
 
     pub(crate) fn take_keywords_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
         io.print("Keywords: ")?;
-        let keywords = Keywords::from_string(&io.read_line()?);
-        self.keywords = Some(keywords);
+        self.keywords = Keywords::from_string(&io.read_line()?);
         Ok(self)
     }
 
@@ -106,7 +107,7 @@ impl NameSchemeBuilder {
     pub(crate) fn build(self) -> NameScheme {
         NameScheme {
             title: self.title.unwrap_or_default(),
-            keywords: self.keywords.unwrap_or_default(),
+            keywords: self.keywords,
             identifier: self.identifier.unwrap_or_else(Identifier::now),
             extention: self.extention,
         }
