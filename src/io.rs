@@ -7,6 +7,8 @@
 use anyhow::{Context, Result};
 use std::io::Write;
 
+use crate::name_scheme::{extention::Extention, keywords::Keywords, title::Title};
+
 pub struct Io {
     stdout: std::io::Stdout,
     stdin: std::io::Stdin,
@@ -46,5 +48,34 @@ impl Io {
             response.to_lowercase() == "y"
         };
         Ok(response)
+    }
+
+    pub(crate) fn title_with_old_title(&mut self, old_title: &str) -> Result<Option<Title>> {
+        self.print(&format!("Title [{}]: ", &old_title))?;
+        let input = self.read_line()?;
+        let title = if input.trim().is_empty() {
+            old_title.to_owned()
+        } else {
+            input
+        };
+        Title::parse(&title)
+    }
+
+    pub(crate) fn title(&mut self) -> Result<Option<Title>> {
+        self.print("Title: ")?;
+        let input = self.read_line()?;
+        Title::parse(&input)
+    }
+
+    pub(crate) fn keywords(&mut self) -> Result<Option<Keywords>> {
+        self.print("Keywords: ")?;
+        let input = self.read_line()?;
+        Ok(Keywords::from_string(&input))
+    }
+
+    pub(crate) fn extention(&mut self) -> Result<Option<Extention>> {
+        self.print("Extention: ")?;
+        let input = self.read_line()?;
+        Ok(Extention::new(input))
     }
 }

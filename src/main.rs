@@ -12,7 +12,7 @@ use anyhow::{bail, Context, Result};
 use clap::Parser;
 use cli_args::Cli;
 use io::Io;
-use name_scheme::{identifier::Identifier, title::Title, NameSchemeBuilder};
+use name_scheme::{extention::Extention, identifier::Identifier, name_scheme, title::Title};
 use std::{fs, path::PathBuf};
 
 fn main() -> Result<()> {
@@ -45,20 +45,12 @@ fn main() -> Result<()> {
 }
 
 fn touch(date: Option<&str>, io: &mut Io) -> Result<()> {
-    let mut name_scheme_builder = NameSchemeBuilder::new();
-
     let identifier = match date {
         Some(date) => Identifier::from_string(date)?,
         None => Identifier::now(),
     };
 
-    name_scheme_builder
-        .identifier(identifier)
-        .take_title_from_user(io)?
-        .take_keywords_from_user(io)?
-        .take_extention_from_user(io)?;
-
-    let file_name = name_scheme_builder.build().into_string();
+    let file_name = name_scheme(identifier, io.title()?, io.keywords()?, io.extention()?);
 
     let accepted = io.question(&format!("Create file \"{file_name}\"?"), true)?;
     if accepted {
@@ -84,7 +76,13 @@ fn rename_file(
         bail!("Renaming directories are not supported");
     }
 
-    let extension = path.extension().and_then(|s| s.to_str()).map(String::from);
+    let extention = path
+        .extension()
+        .and_then(|s| s.to_str())
+        .map(String::from)
+        .map(Extention::new)
+        .flatten();
+
     let file_title = path
         .file_stem()
         .map(|s| s.to_string_lossy().to_string())
@@ -98,30 +96,18 @@ fn rename_file(
         Identifier::extract_from_string(&file_title).unwrap_or_else(|_| Identifier::now())
     };
 
-    let mut name_scheme_builder = NameSchemeBuilder::new();
-    name_scheme_builder.identifier(identifier);
-
-    if accept {
-        let title = Title::find_in_string(&file_title).or_else(|_| Title::parse(&file_title))?;
-        if let Some(title) = title {
-            name_scheme_builder.title(title);
-        }
+    let title = if accept {
+        Title::find_in_string(&file_title).or_else(|_| Title::parse(&file_title))?
     } else {
-        let title = Title::find_in_string(&file_title)?
+        let old_title = Title::find_in_string(&file_title)?
             .map(|title| title.desluggify())
             .unwrap_or(file_title);
-        name_scheme_builder.take_title_from_user_with_old_title(io, &title)?;
-    }
+        io.title_with_old_title(&old_title)?
+    };
 
-    if !no_keywords {
-        name_scheme_builder.take_keywords_from_user(io)?;
-    }
+    let keywords = if !no_keywords { io.keywords()? } else { None };
 
-    if let Some(extention) = extension {
-        name_scheme_builder.extention(extention);
-    }
-
-    let new_file_name = name_scheme_builder.build().into_string();
+    let new_file_name = name_scheme(identifier, title, keywords, extention);
 
     if file_name == new_file_name {
         println!("No action required");

@@ -9,106 +9,26 @@ pub(crate) mod identifier;
 pub(crate) mod keywords;
 pub(crate) mod title;
 
-use crate::io::Io;
-
 use self::{extention::Extention, identifier::Identifier, keywords::Keywords, title::Title};
-use anyhow::Result;
 
-pub(crate) struct NameScheme {
-    title: Option<Title>,
-    keywords: Option<Keywords>,
+pub(crate) fn name_scheme(
     identifier: Identifier,
-    extention: Option<Extention>,
-}
-
-impl NameScheme {
-    pub(crate) fn into_string(self) -> String {
-        let mut name_scheme = self.identifier.into_string();
-
-        let title = self.title.map(|title| title.into_string());
-        name_scheme = maybe_add(name_scheme, title.as_deref());
-
-        let keywords = self.keywords.map(|keywrds| keywrds.to_string());
-        name_scheme = maybe_add(name_scheme, keywords.as_deref());
-
-        let extention = self.extention.map(|ext| ext.to_string());
-        name_scheme = maybe_add(name_scheme, extention.as_deref());
-
-        name_scheme
-    }
-}
-
-#[derive(Default)]
-pub(crate) struct NameSchemeBuilder {
     title: Option<Title>,
     keywords: Option<Keywords>,
-    identifier: Option<Identifier>,
     extention: Option<Extention>,
-}
+) -> String {
+    let mut name_scheme = identifier.into_string();
 
-impl NameSchemeBuilder {
-    pub(crate) fn new() -> Self {
-        Self::default()
-    }
+    let title = title.map(|title| title.into_string());
+    name_scheme = maybe_add(name_scheme, title.as_deref());
 
-    pub(crate) fn take_title_from_user_with_old_title(
-        &mut self,
-        io: &mut Io,
-        old_title: &str,
-    ) -> Result<&mut Self> {
-        io.print(&format!("Title [{}]: ", &old_title))?;
-        let user_input = io.read_line()?;
-        let title = if user_input.trim().is_empty() {
-            old_title.to_owned()
-        } else {
-            user_input
-        };
-        self.title = Title::parse(&title)?;
-        Ok(self)
-    }
+    let keywords = keywords.map(|keywrds| keywrds.to_string());
+    name_scheme = maybe_add(name_scheme, keywords.as_deref());
 
-    pub(crate) fn take_title_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
-        io.print("Title: ")?;
-        self.title = Title::parse(&io.read_line()?)?;
-        Ok(self)
-    }
+    let extention = extention.map(|ext| ext.to_string());
+    name_scheme = maybe_add(name_scheme, extention.as_deref());
 
-    pub(crate) fn take_keywords_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
-        io.print("Keywords: ")?;
-        self.keywords = Keywords::from_string(&io.read_line()?);
-        Ok(self)
-    }
-
-    pub(crate) fn title(&mut self, title: Title) -> &mut Self {
-        self.title = Some(title);
-        self
-    }
-
-    pub(crate) fn identifier(&mut self, identifier: Identifier) -> &mut Self {
-        self.identifier = Some(identifier);
-        self
-    }
-
-    pub(crate) fn extention(&mut self, extention: String) -> &mut Self {
-        self.extention = Extention::new(extention);
-        self
-    }
-
-    pub(crate) fn take_extention_from_user(&mut self, io: &mut Io) -> Result<&mut Self> {
-        io.print("Extention: ")?;
-        let extention = io.read_line()?;
-        self.extention = Extention::new(extention);
-        Ok(self)
-    }
-
-    pub(crate) fn build(self) -> NameScheme {
-        NameScheme {
-            title: self.title,
-            keywords: self.keywords,
-            identifier: self.identifier.unwrap_or_else(Identifier::now),
-            extention: self.extention,
-        }
-    }
+    name_scheme
 }
 
 fn maybe_add<'a, 'b>(base: String, added: Option<&str>) -> String {
