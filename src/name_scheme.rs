@@ -18,7 +18,7 @@ pub(crate) struct NameScheme {
     title: Title,
     keywords: Keywords,
     identifier: Identifier,
-    extention: Extention,
+    extention: Option<Extention>,
 }
 
 impl NameScheme {
@@ -29,7 +29,10 @@ impl NameScheme {
             self.title.into_string(),
         );
         name_scheme = maybe_add(name_scheme, self.keywords.into_string().as_deref());
-        name_scheme = maybe_add(name_scheme, self.extention.to_string().as_deref());
+        name_scheme = maybe_add(
+            name_scheme,
+            self.extention.map(|ext| ext.to_string()).as_deref(),
+        );
         name_scheme
     }
 }
@@ -39,7 +42,7 @@ pub(crate) struct NameSchemeBuilder {
     title: Option<Title>,
     keywords: Option<Keywords>,
     identifier: Option<Identifier>,
-    extention: Extention,
+    extention: Option<Extention>,
 }
 
 impl NameSchemeBuilder {

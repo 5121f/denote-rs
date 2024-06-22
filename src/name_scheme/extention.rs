@@ -1,15 +1,15 @@
 #[derive(Default)]
-pub(crate) struct Extention(Option<String>);
+pub(crate) struct Extention(String);
 
 impl Extention {
-    pub(crate) fn new(ext: String) -> Self {
+    pub(crate) fn new(ext: String) -> Option<Self> {
         if ext.is_empty() {
-            return Self(None);
+            return None;
         }
-        Self(Some(ext))
+        Some(Self(ext))
     }
 
-    pub(crate) fn to_string(self) -> Option<String> {
-        self.0.map(|ext| format!(".{}", ext))
+    pub(crate) fn to_string(&self) -> String {
+        format!(".{}", self.0)
     }
 }
