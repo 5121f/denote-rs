@@ -15,28 +15,14 @@ pub struct Io {
 }
 
 impl Io {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         Self {
             stdin: std::io::stdin(),
             stdout: std::io::stdout(),
         }
     }
 
-    pub fn read_line(&mut self) -> Result<String> {
-        let mut buf = String::new();
-        self.stdin
-            .read_line(&mut buf)
-            .context("Failed to read user input")?;
-        Ok(buf.trim().to_owned())
-    }
-
-    pub fn print(&mut self, value: &str) -> Result<()> {
-        print!("{}", value);
-        self.stdout.flush()?;
-        Ok(())
-    }
-
-    pub fn question(&mut self, text: &str, default_ansfer: bool) -> Result<bool> {
+    pub(crate) fn question(&mut self, text: &str, default_ansfer: bool) -> Result<bool> {
         print!("{}", text);
         let prompt = if default_ansfer { " [Y/n] " } else { " [y/N] " };
         print!("{}", prompt);
@@ -77,5 +63,19 @@ impl Io {
         self.print("Extention: ")?;
         let input = self.read_line()?;
         Ok(Extention::new(input))
+    }
+
+    fn read_line(&mut self) -> Result<String> {
+        let mut buf = String::new();
+        self.stdin
+            .read_line(&mut buf)
+            .context("Failed to read user input")?;
+        Ok(buf.trim().to_owned())
+    }
+
+    fn print(&mut self, value: &str) -> Result<()> {
+        print!("{}", value);
+        self.stdout.flush()?;
+        Ok(())
     }
 }
