@@ -28,6 +28,7 @@ fn main() -> Result<()> {
             title,
             keywords,
             default,
+            accept,
         } => {
             for file_name in file_names {
                 let date = date.as_ref().map(|d| d.as_str());
@@ -40,6 +41,7 @@ fn main() -> Result<()> {
                     title,
                     keywords,
                     default,
+                    accept,
                 )?;
             }
         }
@@ -89,6 +91,7 @@ fn rename_file(
     title: Option<&str>,
     keywords: Option<&str>,
     default: bool,
+    accept: bool,
 ) -> Result<()> {
     let mut io = Io::new();
 
@@ -147,7 +150,7 @@ fn rename_file(
         return Ok(());
     }
 
-    if !default {
+    if !accept {
         println!("Rename \"{}\" в \"{}\"", &file_name, new_file_name);
         let accepted = io.question("Accept?", true)?;
         if !accepted {

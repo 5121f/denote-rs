@@ -28,6 +28,9 @@ pub(crate) enum Cli {
         /// Use default value if not specified
         #[clap(long, short = 'f')]
         default: bool,
+        /// Don't ask confirmation to rename file
+        #[clap(long, short)]
+        accept: bool,
     },
     #[clap(about = "Create new file")]
     Touch {
