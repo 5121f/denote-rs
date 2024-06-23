@@ -43,13 +43,13 @@ fn main() -> Result<()> {
                 )?;
             }
         }
-        Cli::Touch { date } => touch(date.as_deref())?,
+        Cli::Touch { title, date } => touch(title.as_deref(), date.as_deref())?,
     }
 
     Ok(())
 }
 
-fn touch(date: Option<&str>) -> Result<()> {
+fn touch(title: Option<&str>, date: Option<&str>) -> Result<()> {
     let mut io = Io::new();
 
     let identifier = match date {
@@ -57,7 +57,13 @@ fn touch(date: Option<&str>) -> Result<()> {
         None => Identifier::now(),
     };
 
-    let file_name = name_scheme(identifier, io.title()?, io.keywords()?, io.extention()?);
+    let title = if let Some(title) = title {
+        Title::parse(title)?
+    } else {
+        io.title()?
+    };
+
+    let file_name = name_scheme(identifier, title, io.keywords()?, io.extention()?);
 
     let accepted = io.question(&format!("Create file \"{file_name}\"?"), true)?;
     if accepted {

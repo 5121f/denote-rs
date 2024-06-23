@@ -31,6 +31,8 @@ pub(crate) enum Cli {
     },
     #[clap(about = "Create new file")]
     Touch {
+        ///Specified title
+        title: Option<String>,
         /// Date of file creating. You can use "now" to use current system time
         #[clap(long, short)]
         date: Option<String>,
