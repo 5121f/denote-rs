@@ -49,13 +49,14 @@ fn main() -> Result<()> {
             title,
             date,
             default,
-        } => touch(title.as_deref(), date.as_deref(), default)?,
+            accept,
+        } => touch(title.as_deref(), date.as_deref(), default, accept)?,
     }
 
     Ok(())
 }
 
-fn touch(title: Option<&str>, date: Option<&str>, default: bool) -> Result<()> {
+fn touch(title: Option<&str>, date: Option<&str>, default: bool, accept: bool) -> Result<()> {
     let mut io = Io::new();
 
     let identifier = match date {
@@ -77,10 +78,15 @@ fn touch(title: Option<&str>, date: Option<&str>, default: bool) -> Result<()> {
 
     let file_name = name_scheme(identifier, title, keywords, extention);
 
-    let accepted = io.question(&format!("Create file \"{file_name}\"?"), true)?;
-    if accepted {
-        fs::File::create(file_name).context("Failed to file creation")?;
+    if !accept {
+        let accepted = io.question(&format!("Create file \"{file_name}\"?"), true)?;
+        if !accepted {
+            return Ok(());
+        }
     }
+
+    fs::File::create(file_name).context("Failed to file creation")?;
+
     Ok(())
 }
 

@@ -43,5 +43,8 @@ pub(crate) enum Cli {
         /// Use default values if not specified
         #[clap(long, short = 'f')]
         default: bool,
+        /// Don't ask confirmation to create file
+        #[clap(long, short)]
+        accept: bool,
     },
 }
