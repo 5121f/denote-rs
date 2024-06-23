@@ -37,5 +37,8 @@ pub(crate) enum Cli {
         /// Also you can use "now" to use current system time
         #[clap(long, short)]
         date: Option<String>,
+        /// Use default values if not specified
+        #[clap(long, short = 'f')]
+        default: bool,
     },
 }
