@@ -25,7 +25,7 @@ pub(crate) enum Cli {
         /// Specified keywords
         #[clap(long, short)]
         keywords: Option<String>,
-        /// Use default value if not specified
+        /// Use default values if not specified
         #[clap(long, short = 'f')]
         default: bool,
         /// Don't ask confirmation to rename file
