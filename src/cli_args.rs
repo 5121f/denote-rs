@@ -46,6 +46,9 @@ pub(crate) enum Cli {
         /// Specified keywords
         #[clap(long, short)]
         keywords: Option<String>,
+        /// Specified extention
+        #[clap(long, short)]
+        extention: Option<String>,
         /// Use default values if not specified
         #[clap(long, short = 'f')]
         default: bool,

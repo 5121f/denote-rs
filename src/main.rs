@@ -51,12 +51,14 @@ fn main() -> Result<()> {
             title,
             date,
             keywords,
+            extention,
             default,
             accept,
         } => touch(
             title.as_deref(),
             date.as_deref(),
             keywords.as_deref(),
+            extention.as_deref(),
             default,
             accept,
         )?,
@@ -69,6 +71,7 @@ fn touch(
     title: Option<&str>,
     date: Option<&str>,
     keywords: Option<&str>,
+    extention: Option<&str>,
     default: bool,
     accept: bool,
 ) -> Result<()> {
@@ -95,7 +98,13 @@ fn touch(
         io.keywords()?
     };
 
-    let extention = if default { None } else { io.extention()? };
+    let extention = if let Some(extention) = extention {
+        Extention::new(extention.to_string())
+    } else if default {
+        None
+    } else {
+        io.extention()?
+    };
 
     let file_name = name_scheme(identifier, title, keywords, extention);
 
