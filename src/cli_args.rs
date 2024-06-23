@@ -19,6 +19,9 @@ pub(crate) enum Cli {
         /// Use date from file metadata
         #[clap(long, short = 'm', conflicts_with("date"))]
         date_from_metadata: bool,
+        /// Specified keywords
+        #[clap(long, short)]
+        keywords: Option<String>,
         /// Use default value if not specified
         #[clap(long, short = 'f')]
         default: bool,

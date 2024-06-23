@@ -12,7 +12,9 @@ use anyhow::{bail, Context, Result};
 use clap::Parser;
 use cli_args::Cli;
 use io::Io;
-use name_scheme::{extention::Extention, identifier::Identifier, name_scheme, title::Title};
+use name_scheme::{
+    extention::Extention, identifier::Identifier, keywords::Keywords, name_scheme, title::Title,
+};
 use std::{fs, path::PathBuf};
 
 fn main() -> Result<()> {
@@ -23,11 +25,13 @@ fn main() -> Result<()> {
             file_names,
             date,
             date_from_metadata,
+            keywords,
             default,
         } => {
             for file_name in file_names {
                 let date = date.as_ref().map(|d| d.as_str());
-                rename_file(file_name, date, date_from_metadata, default)?;
+                let keywords = keywords.as_deref();
+                rename_file(file_name, date, date_from_metadata, keywords, default)?;
             }
         }
         Cli::Touch { date } => touch(date.as_deref())?,
@@ -57,6 +61,7 @@ fn rename_file(
     file_name: String,
     date: Option<&str>,
     date_from_metadata: bool,
+    keywords: Option<&str>,
     default: bool,
 ) -> Result<()> {
     let mut io = Io::new();
@@ -99,7 +104,13 @@ fn rename_file(
         io.title_with_old_title(&old_title)?
     };
 
-    let keywords = if default { None } else { io.keywords()? };
+    let keywords = if let Some(keywords) = keywords {
+        Keywords::from_string(&keywords)
+    } else if default {
+        None
+    } else {
+        io.keywords()?
+    };
 
     let new_file_name = name_scheme(identifier, title, keywords, extention);
 
