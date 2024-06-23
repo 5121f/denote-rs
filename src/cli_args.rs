@@ -33,7 +33,8 @@ pub(crate) enum Cli {
     Touch {
         ///Specified title
         title: Option<String>,
-        /// Date of file creating. You can use "now" to use current system time
+        /// Date of file creating. By default used curent system time.
+        /// Also you can use "now" to use current system time
         #[clap(long, short)]
         date: Option<String>,
     },
