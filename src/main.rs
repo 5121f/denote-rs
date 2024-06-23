@@ -25,13 +25,22 @@ fn main() -> Result<()> {
             file_names,
             date,
             date_from_metadata,
+            title,
             keywords,
             default,
         } => {
             for file_name in file_names {
                 let date = date.as_ref().map(|d| d.as_str());
                 let keywords = keywords.as_deref();
-                rename_file(file_name, date, date_from_metadata, keywords, default)?;
+                let title = title.as_deref();
+                rename_file(
+                    file_name,
+                    date,
+                    date_from_metadata,
+                    title,
+                    keywords,
+                    default,
+                )?;
             }
         }
         Cli::Touch { date } => touch(date.as_deref())?,
@@ -61,6 +70,7 @@ fn rename_file(
     file_name: String,
     date: Option<&str>,
     date_from_metadata: bool,
+    title: Option<&str>,
     keywords: Option<&str>,
     default: bool,
 ) -> Result<()> {
@@ -95,7 +105,9 @@ fn rename_file(
         Identifier::extract_from_string(&file_title).unwrap_or_else(|_| Identifier::now())
     };
 
-    let title = if default {
+    let title = if let Some(title) = title {
+        Title::parse(title)?
+    } else if default {
         Title::find_in_string(&file_title).or_else(|_| Title::parse(&file_title))?
     } else {
         let old_title = Title::find_in_string(&file_title)?
