@@ -23,11 +23,11 @@ fn main() -> Result<()> {
             file_names,
             date,
             date_from_metadata,
-            accept,
+            default,
         } => {
             for file_name in file_names {
                 let date = date.as_ref().map(|d| d.as_str());
-                rename_file(file_name, date, date_from_metadata, accept)?;
+                rename_file(file_name, date, date_from_metadata, default)?;
             }
         }
         Cli::Touch { date } => touch(date.as_deref())?,
@@ -57,7 +57,7 @@ fn rename_file(
     file_name: String,
     date: Option<&str>,
     date_from_metadata: bool,
-    accept: bool,
+    default: bool,
 ) -> Result<()> {
     let mut io = Io::new();
 
@@ -90,7 +90,7 @@ fn rename_file(
         Identifier::extract_from_string(&file_title).unwrap_or_else(|_| Identifier::now())
     };
 
-    let title = if accept {
+    let title = if default {
         Title::find_in_string(&file_title).or_else(|_| Title::parse(&file_title))?
     } else {
         let old_title = Title::find_in_string(&file_title)?
@@ -99,7 +99,7 @@ fn rename_file(
         io.title_with_old_title(&old_title)?
     };
 
-    let keywords = if accept { None } else { io.keywords()? };
+    let keywords = if default { None } else { io.keywords()? };
 
     let new_file_name = name_scheme(identifier, title, keywords, extention);
 
@@ -108,7 +108,7 @@ fn rename_file(
         return Ok(());
     }
 
-    if !accept {
+    if !default {
         println!("Rename \"{}\" в \"{}\"", &file_name, new_file_name);
         let accepted = io.question("Accept?", true)?;
         if !accepted {

@@ -19,9 +19,9 @@ pub(crate) enum Cli {
         /// Use date from file metadata
         #[clap(long, short = 'm', conflicts_with("date"))]
         date_from_metadata: bool,
-        /// Accept all questions
-        #[clap(long, short)]
-        accept: bool,
+        /// Use default value if not specified
+        #[clap(long, short = 'f')]
+        default: bool,
     },
     #[clap(about = "Create new file")]
     Touch {
