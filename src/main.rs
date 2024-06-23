@@ -27,6 +27,7 @@ fn main() -> Result<()> {
             date_from_metadata,
             title,
             keywords,
+            extention,
             default,
             accept,
         } => {
@@ -40,6 +41,7 @@ fn main() -> Result<()> {
                     date_from_metadata,
                     title,
                     keywords,
+                    extention.as_deref(),
                     default,
                     accept,
                 )?;
@@ -115,6 +117,7 @@ fn rename_file(
     date_from_metadata: bool,
     title: Option<&str>,
     keywords: Option<&str>,
+    extention: Option<&str>,
     default: bool,
     accept: bool,
 ) -> Result<()> {
@@ -129,12 +132,15 @@ fn rename_file(
         bail!("Renaming directories are not supported");
     }
 
-    let extention = path
-        .extension()
-        .and_then(|s| s.to_str())
-        .map(String::from)
-        .map(Extention::new)
-        .flatten();
+    let extention = if let Some(extention) = extention {
+        Extention::new(extention.to_string())
+    } else {
+        path.extension()
+            .and_then(|s| s.to_str())
+            .map(String::from)
+            .map(Extention::new)
+            .flatten()
+    };
 
     let file_title = path
         .file_stem()
