@@ -48,15 +48,28 @@ fn main() -> Result<()> {
         Cli::Touch {
             title,
             date,
+            keywords,
             default,
             accept,
-        } => touch(title.as_deref(), date.as_deref(), default, accept)?,
+        } => touch(
+            title.as_deref(),
+            date.as_deref(),
+            keywords.as_deref(),
+            default,
+            accept,
+        )?,
     }
 
     Ok(())
 }
 
-fn touch(title: Option<&str>, date: Option<&str>, default: bool, accept: bool) -> Result<()> {
+fn touch(
+    title: Option<&str>,
+    date: Option<&str>,
+    keywords: Option<&str>,
+    default: bool,
+    accept: bool,
+) -> Result<()> {
     let mut io = Io::new();
 
     let identifier = match date {
@@ -72,7 +85,13 @@ fn touch(title: Option<&str>, date: Option<&str>, default: bool, accept: bool) -
         io.title()?
     };
 
-    let keywords = if default { None } else { io.keywords()? };
+    let keywords = if let Some(keywords) = keywords {
+        Keywords::from_string(keywords)
+    } else if default {
+        None
+    } else {
+        io.keywords()?
+    };
 
     let extention = if default { None } else { io.extention()? };
 
