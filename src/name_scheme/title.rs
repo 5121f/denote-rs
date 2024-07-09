@@ -36,14 +36,18 @@ impl Title {
 
     pub(crate) fn desluggify(&self) -> String {
         let deslugify = self.0.clone().replace('-', " ");
-        let mut chars = deslugify.chars();
-        match chars.next() {
-            None => String::new(),
-            Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
-        }
+        first_letter_uppercase(&deslugify)
     }
 
     pub(crate) fn into_string(self) -> String {
         format!("--{}", self.0)
+    }
+}
+
+fn first_letter_uppercase(string: &str) -> String {
+    let mut chars = string.chars();
+    match chars.next() {
+        None => String::new(),
+        Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
     }
 }
