@@ -27,11 +27,11 @@ impl Title {
         let capture = Regex::new(TITLE_REGEXP)
             .context("Failed to regex compile")?
             .captures(string);
-        if let Some(capture) = capture {
-            let title = Self(capture[1].to_owned());
-            return Ok(Some(title));
-        }
-        Ok(None)
+        let Some(capture) = capture else {
+            return Ok(None);
+        };
+        let title = Self(capture[1].to_owned());
+        Ok(Some(title))
     }
 
     pub(crate) fn desluggify(&self) -> String {
