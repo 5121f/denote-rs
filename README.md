@@ -20,6 +20,5 @@ $ target/release/denote-rs --version
 
 ## TODO
 
-- Signatures
 - Changing front matter
 - Rename file based on it's front matter
