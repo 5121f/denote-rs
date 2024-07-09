@@ -2,7 +2,7 @@
 
 # denote-rs
 
-Rename and create files with [denote](https://github.com/protesilaos/denote) name shcheme.
+Create and rename files with [denote](https://github.com/protesilaos/denote) name shcheme.
 
 ## Building
 
