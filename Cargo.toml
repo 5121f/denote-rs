@@ -3,7 +3,7 @@ name = "denote-rs"
 version = "0.1.0"
 edition = "2021"
 
-description = "Rename and create files with denote name shcheme"
+description = "Create and rename files with denote name shcheme"
 authors = ["Artyom Kalin Vyacheslavovich <kalin.a.v20031@gmail.com>"]
 repository = "https://github.com/5121f/denote-rs"
 license = "MPL-2.0"
