@@ -8,14 +8,14 @@ use regex::Regex;
 
 use crate::utils;
 
-const TITLE_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
+const SIGNATURE_REGEXP: &str = r"==([\p{Alphabetic}\pN=]*)";
 
-pub(crate) struct Title(String);
+pub(crate) struct Signature(String);
 
-impl Title {
+impl Signature {
     pub(crate) fn parse(string: &str) -> Result<Option<Self>> {
         let string = utils::remove_punctuation(string)?;
-        let string = string.trim().to_lowercase().replace(' ', "-");
+        let string = string.trim().to_lowercase().replace(' ', "=");
         if string.is_empty() {
             return Ok(None);
         }
@@ -23,7 +23,7 @@ impl Title {
     }
 
     pub(crate) fn find_in_string(string: &str) -> Result<Option<Self>> {
-        let capture = Regex::new(TITLE_REGEXP)?.captures(string);
+        let capture = Regex::new(SIGNATURE_REGEXP)?.captures(string);
         let Some(capture) = capture else {
             return Ok(None);
         };
@@ -31,19 +31,14 @@ impl Title {
         Ok(Some(title))
     }
 
-    pub(crate) fn desluggify(&self) -> String {
-        let deslugify = self.0.clone().replace('-', " ");
-        utils::first_letter_uppercase(&deslugify)
-    }
-
-    pub(crate) fn into_string(self) -> String {
-        format!("--{}", self.0)
+    pub(crate) fn into_string(&self) -> String {
+        format!("=={}", self.0)
     }
 }
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("Regex")]
+    #[error(transparent)]
     Regex(#[from] regex::Error),
 }
 

@@ -7,13 +7,15 @@
 mod cli_args;
 mod io;
 mod name_scheme;
+mod utils;
 
 use anyhow::{bail, Context, Result};
 use clap::Parser;
 use cli_args::Cli;
 use io::Io;
 use name_scheme::{
-    extention::Extention, identifier::Identifier, keywords::Keywords, name_scheme, title::Title,
+    extention::Extention, identifier::Identifier, keywords::Keywords, name_scheme,
+    signature::Signature, title::Title,
 };
 use std::{fs, path::PathBuf};
 
@@ -25,6 +27,7 @@ fn main() -> Result<()> {
             file_names,
             date,
             date_from_metadata,
+            signature,
             title,
             keywords,
             extention,
@@ -39,6 +42,7 @@ fn main() -> Result<()> {
                     file_name,
                     date,
                     date_from_metadata,
+                    signature.as_deref(),
                     title,
                     keywords,
                     extention.as_deref(),
@@ -50,6 +54,7 @@ fn main() -> Result<()> {
         Cli::Touch {
             title,
             date,
+            signature,
             keywords,
             extention,
             default,
@@ -57,6 +62,7 @@ fn main() -> Result<()> {
         } => touch(
             title.as_deref(),
             date.as_deref(),
+            signature.as_deref(),
             keywords.as_deref(),
             extention.as_deref(),
             default,
@@ -70,6 +76,7 @@ fn main() -> Result<()> {
 fn touch(
     title: Option<&str>,
     date: Option<&str>,
+    signature: Option<&str>,
     keywords: Option<&str>,
     extention: Option<&str>,
     default: bool,
@@ -80,6 +87,12 @@ fn touch(
     let identifier = match date {
         Some(date) => Identifier::from_string(date)?,
         None => Identifier::now(),
+    };
+
+    let signature = if let Some(signature) = signature {
+        Signature::parse(signature)?
+    } else {
+        None
     };
 
     let title = if let Some(title) = title {
@@ -106,7 +119,7 @@ fn touch(
         io.extention()?
     };
 
-    let file_name = name_scheme(identifier, title, keywords, extention);
+    let file_name = name_scheme(identifier, signature, title, keywords, extention);
 
     if !accept {
         let accepted = io.question(&format!("Create file \"{file_name}\"?"), true)?;
@@ -124,6 +137,7 @@ fn rename_file(
     file_name: String,
     date: Option<&str>,
     date_from_metadata: bool,
+    signature: Option<&str>,
     title: Option<&str>,
     keywords: Option<&str>,
     extention: Option<&str>,
@@ -164,6 +178,14 @@ fn rename_file(
         Identifier::extract_from_string(&file_title).unwrap_or_else(|_| Identifier::now())
     };
 
+    let signature = if let Some(signature) = signature {
+        Signature::parse(signature)?
+    } else if default {
+        Signature::find_in_string(&file_title)?
+    } else {
+        None
+    };
+
     let title = if let Some(title) = title {
         Title::parse(title)?
     } else if default {
@@ -183,7 +205,7 @@ fn rename_file(
         io.keywords()?
     };
 
-    let new_file_name = name_scheme(identifier, title, keywords, extention);
+    let new_file_name = name_scheme(identifier, signature, title, keywords, extention);
 
     if file_name == new_file_name {
         println!("No action required");

@@ -19,6 +19,9 @@ pub(crate) enum Cli {
         /// Use date from file metadata
         #[clap(long, short = 'm', conflicts_with("date"))]
         date_from_metadata: bool,
+        /// Specified signature
+        #[clap(long, short)]
+        signature: Option<String>,
         /// Specified title
         #[clap(long, short)]
         title: Option<String>,
@@ -43,6 +46,9 @@ pub(crate) enum Cli {
         /// Also you can use "now" to use current system time
         #[clap(long, short)]
         date: Option<String>,
+        /// Specified signature
+        #[clap(long, short)]
+        signature: Option<String>,
         /// Specified keywords
         #[clap(long, short)]
         keywords: Option<String>,

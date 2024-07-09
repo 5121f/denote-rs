@@ -7,17 +7,24 @@
 pub(crate) mod extention;
 pub(crate) mod identifier;
 pub(crate) mod keywords;
+pub(crate) mod signature;
 pub(crate) mod title;
+
+use signature::Signature;
 
 use self::{extention::Extention, identifier::Identifier, keywords::Keywords, title::Title};
 
 pub(crate) fn name_scheme(
     identifier: Identifier,
+    signature: Option<Signature>,
     title: Option<Title>,
     keywords: Option<Keywords>,
     extention: Option<Extention>,
 ) -> String {
     let mut name_scheme = identifier.into_string();
+
+    let signature = signature.map(|signature| signature.into_string());
+    name_scheme = maybe_add(name_scheme, signature.as_deref());
 
     let title = title.map(|title| title.into_string());
     name_scheme = maybe_add(name_scheme, title.as_deref());
