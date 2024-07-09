@@ -6,7 +6,6 @@
 
 use std::{fs, path::Path};
 
-use anyhow::{Context, Result};
 use chrono::{DateTime, Duration, Local, NaiveDateTime};
 use regex::Regex;
 
@@ -44,17 +43,15 @@ impl Identifier {
         let date_time = match first_try {
             Some(date) => date,
             None => chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
-                .map(|d| d.and_time(currnet_time))
-                .context("Failed to convert date")?,
+                .map(|d| d.and_time(currnet_time))?,
         };
         Ok(Self::from_date_time(date_time))
     }
 
     pub(crate) fn extract_from_string(string: &str) -> Result<Self> {
-        let id = Regex::new(ID_REGEXP)
-            .context("Failed to regex compile")?
+        let id = Regex::new(ID_REGEXP)?
             .find(string)
-            .context("Failed to extract identifire")?;
+            .ok_or(Error::ExtractIdentifier)?;
         Ok(Self(id.as_str().to_owned()))
     }
 
@@ -68,3 +65,17 @@ impl Identifier {
         self.0
     }
 }
+
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("Regex: {0}")]
+    Regex(#[from] regex::Error),
+    #[error("Failed to extract edentifier")]
+    ExtractIdentifier,
+    #[error("Failed to convert date: {0}")]
+    ConvertDate(#[from] chrono::ParseError),
+    #[error("IO: {0}")]
+    IO(#[from] std::io::Error),
+}
+
+type Result<T> = std::result::Result<T, Error>;

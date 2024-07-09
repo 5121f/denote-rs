@@ -4,7 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use anyhow::{Context, Result};
 use regex::Regex;
 
 const TITLE_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
@@ -14,7 +13,7 @@ pub(crate) struct Title(String);
 
 impl Title {
     pub(crate) fn parse(string: &str) -> Result<Option<Self>> {
-        let punctuation = Regex::new(PUNCTUATION).context("Failed to regex compile")?;
+        let punctuation = Regex::new(PUNCTUATION)?;
         let string = punctuation.replace_all(string, "");
         let string = string.trim().to_lowercase().replace(' ', "-");
         if string.is_empty() {
@@ -24,9 +23,7 @@ impl Title {
     }
 
     pub(crate) fn find_in_string(string: &str) -> Result<Option<Self>> {
-        let capture = Regex::new(TITLE_REGEXP)
-            .context("Failed to regex compile")?
-            .captures(string);
+        let capture = Regex::new(TITLE_REGEXP)?.captures(string);
         let Some(capture) = capture else {
             return Ok(None);
         };
@@ -51,3 +48,11 @@ fn first_letter_uppercase(string: &str) -> String {
         Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
     }
 }
+
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("Regex: {0}")]
+    Regex(#[from] regex::Error),
+}
+
+type Result<T> = std::result::Result<T, Error>;

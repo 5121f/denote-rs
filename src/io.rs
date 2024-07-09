@@ -4,10 +4,13 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use anyhow::{Context, Result};
 use std::io::Write;
 
-use crate::name_scheme::{extention::Extention, keywords::Keywords, title::Title};
+use crate::name_scheme::{
+    extention::Extention,
+    keywords::Keywords,
+    title::{self, Title},
+};
 
 pub struct Io {
     stdout: std::io::Stdout,
@@ -44,13 +47,15 @@ impl Io {
         } else {
             input
         };
-        Title::parse(&title)
+        let title = Title::parse(&title)?;
+        Ok(title)
     }
 
     pub(crate) fn title(&mut self) -> Result<Option<Title>> {
         self.print("Title: ")?;
         let input = self.read_line()?;
-        Title::parse(&input)
+        let title = Title::parse(&input)?;
+        Ok(title)
     }
 
     pub(crate) fn keywords(&mut self) -> Result<Option<Keywords>> {
@@ -67,9 +72,7 @@ impl Io {
 
     fn read_line(&mut self) -> Result<String> {
         let mut buf = String::new();
-        self.stdin
-            .read_line(&mut buf)
-            .context("Failed to read user input")?;
+        self.stdin.read_line(&mut buf)?;
         Ok(buf.trim().to_owned())
     }
 
@@ -79,3 +82,13 @@ impl Io {
         Ok(())
     }
 }
+
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("Title: {0}")]
+    Title(#[from] title::Error),
+    #[error("IO: {0}")]
+    Io(#[from] std::io::Error),
+}
+
+type Result<T> = std::result::Result<T, Error>;

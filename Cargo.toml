@@ -12,6 +12,7 @@ clap = { version = "4.5.7", features = ["derive", "cargo"] }
 chrono = "0.4.38"
 anyhow = "1.0.86"
 regex = "1.10.5"
+thiserror = "1.0.61"
 
 [profile.release]
 lto = true
