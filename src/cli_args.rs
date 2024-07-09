@@ -13,22 +13,23 @@ pub(crate) enum Cli {
     Rename {
         #[clap(required = true)]
         file_names: Vec<String>,
-        /// Date of file creating. You can use "now" to use current system time
+        /// The date to be used as the identifier.
+        /// You can use "now" to use current system time
         #[clap(long, short, conflicts_with("date_from_metadata"))]
         date: Option<String>,
-        /// Use date from file metadata
+        /// Use creation file date from the file metadata
         #[clap(long, short = 'm', conflicts_with("date"))]
         date_from_metadata: bool,
-        /// Specified signature
+        /// Specify the signature
         #[clap(long, short)]
         signature: Option<String>,
-        /// Specified title
+        /// Specify the title
         #[clap(long, short)]
         title: Option<String>,
-        /// Specified keywords
+        /// Specify the keywords
         #[clap(long, short)]
         keywords: Option<String>,
-        /// Specified extention
+        /// Specify the extention
         #[clap(long, short)]
         extention: Option<String>,
         /// Use default values if not specified
@@ -40,19 +41,20 @@ pub(crate) enum Cli {
     },
     #[clap(about = "Create new file")]
     Touch {
-        ///Specified title
+        /// Specify the title
         title: Option<String>,
-        /// Date of file creating. By default used curent system time.
-        /// Also you can use "now" to use current system time
+        /// The date to be used as the identifier.
+        /// By default used curent system time.
+        /// Also you can use "now" to explicitly specify to use current system time
         #[clap(long, short)]
         date: Option<String>,
-        /// Specified signature
+        /// Specify the signature
         #[clap(long, short)]
         signature: Option<String>,
-        /// Specified keywords
+        /// Specify the keywords
         #[clap(long, short)]
         keywords: Option<String>,
-        /// Specified extention
+        /// Specify the extention
         #[clap(long, short)]
         extention: Option<String>,
         /// Use default values if not specified
