@@ -68,13 +68,13 @@ impl Identifier {
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("Regex: {0}")]
+    #[error("Regex")]
     Regex(#[from] regex::Error),
     #[error("Failed to extract edentifier")]
     ExtractIdentifier,
-    #[error("Failed to convert date: {0}")]
+    #[error("Failed to convert date")]
     ConvertDate(#[from] chrono::ParseError),
-    #[error("IO: {0}")]
+    #[error(transparent)]
     IO(#[from] std::io::Error),
 }
 

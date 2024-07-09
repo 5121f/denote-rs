@@ -51,7 +51,7 @@ fn first_letter_uppercase(string: &str) -> String {
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("Regex: {0}")]
+    #[error("Regex")]
     Regex(#[from] regex::Error),
 }
 

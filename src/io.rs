@@ -85,9 +85,9 @@ impl Io {
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("Title: {0}")]
+    #[error(transparent)]
     Title(#[from] title::Error),
-    #[error("IO: {0}")]
+    #[error(transparent)]
     Io(#[from] std::io::Error),
 }
 
