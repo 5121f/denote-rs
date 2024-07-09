@@ -14,7 +14,7 @@ pub(crate) enum Cli {
         #[clap(required = true)]
         file_names: Vec<String>,
         /// The date to be used as the identifier.
-        /// You can use "now" to use current system time
+        /// You can use "now" to explicitly specify to use current system time
         #[clap(long, short, conflicts_with("date_from_metadata"))]
         date: Option<String>,
         /// Use creation file date from the file metadata
