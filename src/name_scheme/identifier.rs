@@ -60,9 +60,11 @@ impl Identifier {
         let created: DateTime<Local> = metadata.created()?.into();
         Ok(Self::from_date_time(created.naive_local()))
     }
+}
 
-    pub(crate) fn into_string(self) -> String {
-        self.0
+impl ToString for Identifier {
+    fn to_string(&self) -> String {
+        self.0.clone()
     }
 }
 

@@ -14,8 +14,8 @@ use clap::Parser;
 use cli_args::Cli;
 use io::Io;
 use name_scheme::{
-    extention::Extention, identifier::Identifier, keywords::Keywords, name_scheme,
-    signature::Signature, title::Title,
+    extention::Extention, identifier::Identifier, keywords::Keywords, signature::Signature,
+    title::Title, NameScheme,
 };
 use std::{fs, path::PathBuf};
 
@@ -89,10 +89,13 @@ fn touch(
         None => Identifier::now(),
     };
 
-    let signature = if let Some(signature) = signature {
-        Signature::parse(signature)?
-    } else {
-        None
+    let mut name_scheme = NameScheme::new(identifier);
+
+    if let Some(signature) = signature {
+        let signature = Signature::parse(signature)?;
+        if let Some(signature) = signature {
+            name_scheme = name_scheme.signature(signature);
+        }
     };
 
     let title = if let Some(title) = title {
@@ -102,6 +105,9 @@ fn touch(
     } else {
         io.title()?
     };
+    if let Some(title) = title {
+        name_scheme = name_scheme.title(title)
+    }
 
     let keywords = if let Some(keywords) = keywords {
         Keywords::from_string(keywords)
@@ -110,6 +116,9 @@ fn touch(
     } else {
         io.keywords()?
     };
+    if let Some(keywords) = keywords {
+        name_scheme = name_scheme.keywords(keywords);
+    }
 
     let extention = if let Some(extention) = extention {
         Extention::new(extention.to_string())
@@ -118,8 +127,11 @@ fn touch(
     } else {
         io.extention()?
     };
+    if let Some(extention) = extention {
+        name_scheme = name_scheme.extention(extention);
+    }
 
-    let file_name = name_scheme(identifier, signature, title, keywords, extention);
+    let file_name = name_scheme.to_string();
 
     if !accept {
         let accepted = io.question(&format!("Create file \"{file_name}\"?"), true)?;
@@ -155,16 +167,6 @@ fn rename_file(
         bail!("Renaming directories are not supported");
     }
 
-    let extention = if let Some(extention) = extention {
-        Extention::new(extention.to_string())
-    } else {
-        path.extension()
-            .and_then(|s| s.to_str())
-            .map(String::from)
-            .map(Extention::new)
-            .flatten()
-    };
-
     let file_title = path
         .file_stem()
         .map(|s| s.to_string_lossy().to_string())
@@ -178,6 +180,8 @@ fn rename_file(
         Identifier::extract_from_string(&file_title).unwrap_or_else(|_| Identifier::now())
     };
 
+    let mut name_scheme = NameScheme::new(identifier);
+
     let signature = if let Some(signature) = signature {
         Signature::parse(signature)?
     } else if default {
@@ -185,6 +189,9 @@ fn rename_file(
     } else {
         None
     };
+    if let Some(signature) = signature {
+        name_scheme = name_scheme.signature(signature);
+    }
 
     let title = if let Some(title) = title {
         Title::parse(title)?
@@ -196,6 +203,9 @@ fn rename_file(
             .unwrap_or(file_title);
         io.title_with_old_title(&old_title)?
     };
+    if let Some(title) = title {
+        name_scheme = name_scheme.title(title);
+    }
 
     let keywords = if let Some(keywords) = keywords {
         Keywords::from_string(&keywords)
@@ -204,8 +214,24 @@ fn rename_file(
     } else {
         io.keywords()?
     };
+    if let Some(keywords) = keywords {
+        name_scheme = name_scheme.keywords(keywords);
+    }
 
-    let new_file_name = name_scheme(identifier, signature, title, keywords, extention);
+    let extention = if let Some(extention) = extention {
+        Extention::new(extention.to_string())
+    } else {
+        path.extension()
+            .and_then(|s| s.to_str())
+            .map(String::from)
+            .map(Extention::new)
+            .flatten()
+    };
+    if let Some(extention) = extention {
+        name_scheme = name_scheme.extention(extention);
+    }
+
+    let new_file_name = name_scheme.to_string();
 
     if file_name == new_file_name {
         println!("No action required");

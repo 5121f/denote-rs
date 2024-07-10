@@ -35,8 +35,10 @@ impl Title {
         let deslugify = self.0.clone().replace('-', " ");
         utils::first_letter_uppercase(&deslugify)
     }
+}
 
-    pub(crate) fn into_string(self) -> String {
+impl ToString for Title {
+    fn to_string(&self) -> String {
         format!("--{}", self.0)
     }
 }
