@@ -15,11 +15,11 @@ use signature::Signature;
 use self::{extention::Extention, identifier::Identifier, keywords::Keywords, title::Title};
 
 pub struct NameScheme {
-    identifier: Identifier,
-    signature: Option<Signature>,
-    title: Option<Title>,
-    keywords: Option<Keywords>,
-    extention: Option<Extention>,
+    pub identifier: Identifier,
+    pub signature: Option<Signature>,
+    pub title: Option<Title>,
+    pub keywords: Option<Keywords>,
+    pub extention: Option<Extention>,
 }
 
 impl NameScheme {
@@ -28,26 +28,6 @@ impl NameScheme {
             identifier,
             ..Default::default()
         }
-    }
-
-    pub fn signature(mut self, signature: Signature) -> Self {
-        self.signature = Some(signature);
-        self
-    }
-
-    pub fn title(mut self, title: Title) -> Self {
-        self.title = Some(title);
-        self
-    }
-
-    pub fn keywords(mut self, keywords: Keywords) -> Self {
-        self.keywords = Some(keywords);
-        self
-    }
-
-    pub fn extention(mut self, extention: Extention) -> Self {
-        self.extention = Some(extention);
-        self
     }
 }
 

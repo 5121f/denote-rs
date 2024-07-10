@@ -93,43 +93,32 @@ fn touch(
 
     if let Some(signature) = signature {
         let signature = Signature::parse(signature)?;
-        if let Some(signature) = signature {
-            name_scheme = name_scheme.signature(signature);
-        }
+        name_scheme.signature = signature;
     };
 
-    let title = if let Some(title) = title {
+    name_scheme.title = if let Some(title) = title {
         Title::parse(title)?
     } else if default {
         None
     } else {
         io.title()?
     };
-    if let Some(title) = title {
-        name_scheme = name_scheme.title(title)
-    }
 
-    let keywords = if let Some(keywords) = keywords {
+    name_scheme.keywords = if let Some(keywords) = keywords {
         Keywords::from_string(keywords)
     } else if default {
         None
     } else {
         io.keywords()?
     };
-    if let Some(keywords) = keywords {
-        name_scheme = name_scheme.keywords(keywords);
-    }
 
-    let extention = if let Some(extention) = extention {
+    name_scheme.extention = if let Some(extention) = extention {
         Extention::new(extention.to_string())
     } else if default {
         None
     } else {
         io.extention()?
     };
-    if let Some(extention) = extention {
-        name_scheme = name_scheme.extention(extention);
-    }
 
     let file_name = name_scheme.to_string();
 
@@ -182,18 +171,15 @@ fn rename_file(
 
     let mut name_scheme = NameScheme::new(identifier);
 
-    let signature = if let Some(signature) = signature {
+    name_scheme.signature = if let Some(signature) = signature {
         Signature::parse(signature)?
     } else if default {
         Signature::find_in_string(&file_title)?
     } else {
         None
     };
-    if let Some(signature) = signature {
-        name_scheme = name_scheme.signature(signature);
-    }
 
-    let title = if let Some(title) = title {
+    name_scheme.title = if let Some(title) = title {
         Title::parse(title)?
     } else if default {
         Title::find_in_string(&file_title).or_else(|_| Title::parse(&file_title))?
@@ -203,22 +189,16 @@ fn rename_file(
             .unwrap_or(file_title);
         io.title_with_old_title(&old_title)?
     };
-    if let Some(title) = title {
-        name_scheme = name_scheme.title(title);
-    }
 
-    let keywords = if let Some(keywords) = keywords {
+    name_scheme.keywords = if let Some(keywords) = keywords {
         Keywords::from_string(&keywords)
     } else if default {
         None
     } else {
         io.keywords()?
     };
-    if let Some(keywords) = keywords {
-        name_scheme = name_scheme.keywords(keywords);
-    }
 
-    let extention = if let Some(extention) = extention {
+    name_scheme.extention = if let Some(extention) = extention {
         Extention::new(extention.to_string())
     } else {
         path.extension()
@@ -227,9 +207,6 @@ fn rename_file(
             .map(Extention::new)
             .flatten()
     };
-    if let Some(extention) = extention {
-        name_scheme = name_scheme.extention(extention);
-    }
 
     let new_file_name = name_scheme.to_string();
 
