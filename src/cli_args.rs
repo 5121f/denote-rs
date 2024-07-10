@@ -54,7 +54,7 @@ pub(crate) enum Cli {
         /// Specify the keywords
         #[clap(long, short)]
         keywords: Option<String>,
-        /// Specify the extention
+        /// Specify the file extention
         #[clap(long, short)]
         extention: Option<String>,
         /// Use default values if not specified
