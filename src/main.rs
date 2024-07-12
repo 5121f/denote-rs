@@ -61,7 +61,7 @@ fn main() -> Result<()> {
             accept,
         } => touch(
             title.as_deref(),
-            date.as_deref(),
+            date.as_str(),
             signature.as_deref(),
             keywords.as_deref(),
             extention.as_deref(),
@@ -75,7 +75,7 @@ fn main() -> Result<()> {
 
 fn touch(
     title: Option<&str>,
-    date: Option<&str>,
+    date: &str,
     signature: Option<&str>,
     keywords: Option<&str>,
     extention: Option<&str>,
@@ -84,10 +84,7 @@ fn touch(
 ) -> Result<()> {
     let mut io = Io::new();
 
-    let identifier = match date {
-        Some(date) => Identifier::from_string(date)?,
-        None => Identifier::now(),
-    };
+    let identifier = Identifier::from_string(date)?;
 
     let mut name_scheme = NameScheme::new(identifier);
 
