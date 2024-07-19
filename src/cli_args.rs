@@ -9,12 +9,12 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(version = clap::crate_version!(), about = clap::crate_description!())]
 pub(crate) enum Cli {
-    #[clap(about = "Rename existing file")]
+    /// Rename existing file
     Rename {
         #[clap(required = true)]
         file_names: Vec<String>,
         /// The date to be used as the identifier.
-        /// Can be used a date like 2022-06-30 or a date and time like 2022-06-16 14:30.\n
+        /// Can be used a date like 2022-06-30 or a date and time like 2022-06-16 14:30.
         /// Can be used "now" to use current system date and time.
         #[clap(long, short, conflicts_with("date_from_metadata"))]
         date: Option<String>,
@@ -40,7 +40,7 @@ pub(crate) enum Cli {
         #[clap(long, short)]
         accept: bool,
     },
-    #[clap(about = "Create new file")]
+    /// Create new file
     Touch {
         /// Specify the title
         title: Option<String>,
