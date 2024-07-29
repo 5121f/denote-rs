@@ -31,7 +31,7 @@ fn main() -> Result<()> {
             title,
             keywords,
             extention,
-            default,
+            non_interactive,
             accept,
         } => {
             for file_name in file_names {
@@ -46,7 +46,7 @@ fn main() -> Result<()> {
                     title,
                     keywords,
                     extention.as_deref(),
-                    default,
+                    non_interactive,
                     accept,
                 )?;
             }
@@ -57,7 +57,7 @@ fn main() -> Result<()> {
             signature,
             keywords,
             extention,
-            default,
+            non_interactive,
             accept,
         } => touch(
             title.as_deref(),
@@ -65,7 +65,7 @@ fn main() -> Result<()> {
             signature.as_deref(),
             keywords.as_deref(),
             extention.as_deref(),
-            default,
+            non_interactive,
             accept,
         )?,
     }
@@ -79,7 +79,7 @@ fn touch(
     signature: Option<&str>,
     keywords: Option<&str>,
     extention: Option<&str>,
-    default: bool,
+    non_interactive: bool,
     accept: bool,
 ) -> Result<()> {
     let mut io = Io::new();
@@ -95,7 +95,7 @@ fn touch(
 
     name_scheme.title = if let Some(title) = title {
         Title::parse(title)?
-    } else if default {
+    } else if non_interactive {
         None
     } else {
         io.title()?
@@ -103,7 +103,7 @@ fn touch(
 
     name_scheme.keywords = if let Some(keywords) = keywords {
         Keywords::from_string(keywords)
-    } else if default {
+    } else if non_interactive {
         None
     } else {
         io.keywords()?
@@ -111,7 +111,7 @@ fn touch(
 
     name_scheme.extention = if let Some(extention) = extention {
         Extention::new(extention.to_string())
-    } else if default {
+    } else if non_interactive {
         None
     } else {
         io.extention()?
@@ -139,7 +139,7 @@ fn rename_file(
     title: Option<&str>,
     keywords: Option<&str>,
     extention: Option<&str>,
-    default: bool,
+    non_interactive: bool,
     accept: bool,
 ) -> Result<()> {
     let mut io = Io::new();
@@ -170,7 +170,7 @@ fn rename_file(
 
     name_scheme.signature = if let Some(signature) = signature {
         Signature::parse(signature)?
-    } else if default {
+    } else if non_interactive {
         Signature::find_in_string(&file_title)?
     } else {
         None
@@ -178,7 +178,7 @@ fn rename_file(
 
     name_scheme.title = if let Some(title) = title {
         Title::parse(title)?
-    } else if default {
+    } else if non_interactive {
         Title::find_in_string(&file_title).or_else(|_| Title::parse(&file_title))?
     } else {
         let old_title = Title::find_in_string(&file_title)?
@@ -189,7 +189,7 @@ fn rename_file(
 
     name_scheme.keywords = if let Some(keywords) = keywords {
         Keywords::from_string(&keywords)
-    } else if default {
+    } else if non_interactive {
         None
     } else {
         io.keywords()?
