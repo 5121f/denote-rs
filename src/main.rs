@@ -179,7 +179,11 @@ fn rename_file(
     name_scheme.title = if let Some(title) = title {
         Title::parse(title)?
     } else if non_interactive {
-        Title::find_in_string(&file_title).or_else(|_| Title::parse(&file_title))?
+        if let Some(title) = Title::find_in_string(&file_title)? {
+            Some(title)
+        } else {
+            Title::parse(&file_title)?
+        }
     } else {
         let old_title = Title::find_in_string(&file_title)?
             .map(|title| title.desluggify())
