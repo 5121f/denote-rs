@@ -217,7 +217,7 @@ fn rename_file(
     }
 
     if !accept {
-        println!("Rename \"{}\" в \"{}\"", &file_name, new_file_name);
+        println!("Rename \"{}\" in \"{}\"", &file_name, new_file_name);
         let accepted = io.question("Accept?", true)?;
         if !accepted {
             return Ok(());
