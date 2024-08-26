@@ -14,6 +14,7 @@ use signature::Signature;
 
 use self::{extention::Extention, identifier::Identifier, keywords::Keywords, title::Title};
 
+#[derive(Default)]
 pub struct NameScheme {
     pub identifier: Identifier,
     pub signature: Option<Signature>,
@@ -51,18 +52,6 @@ impl ToString for NameScheme {
         maybe_add(&mut name_scheme, extention.as_deref());
 
         name_scheme
-    }
-}
-
-impl Default for NameScheme {
-    fn default() -> Self {
-        Self {
-            identifier: Identifier::now(),
-            signature: Default::default(),
-            title: Default::default(),
-            keywords: Default::default(),
-            extention: Default::default(),
-        }
     }
 }
 
