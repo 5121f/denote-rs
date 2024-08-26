@@ -168,19 +168,18 @@ fn rename_file(
 
     let mut name_scheme = NameScheme::new(identifier);
 
-    name_scheme.signature = if let Some(signature) = signature {
-        Signature::parse(signature)?
+    if let Some(signature) = signature {
+        name_scheme.signature = Signature::parse(signature)?;
     } else if non_interactive {
-        Signature::find_in_string(&file_title)?
-    } else {
-        None
+        name_scheme.signature = Signature::find_in_string(&file_title)?;
     };
 
     name_scheme.title = if let Some(title) = title {
         Title::parse(title)?
     } else if non_interactive {
-        if let Some(title) = Title::find_in_string(&file_title)? {
-            Some(title)
+        let title = Title::find_in_string(&file_title)?;
+        if title.is_some() {
+            title
         } else {
             Title::parse(&file_title)?
         }
@@ -191,12 +190,10 @@ fn rename_file(
         io.title_with_old_title(&old_title)?
     };
 
-    name_scheme.keywords = if let Some(keywords) = keywords {
-        Keywords::from_string(&keywords)
-    } else if non_interactive {
-        None
-    } else {
-        io.keywords()?
+    if let Some(keywords) = keywords {
+        name_scheme.keywords = Keywords::from_string(&keywords);
+    } else if !non_interactive {
+        name_scheme.keywords = io.keywords()?;
     };
 
     name_scheme.extention = if let Some(extention) = extention {
