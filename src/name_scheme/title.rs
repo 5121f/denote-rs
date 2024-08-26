@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+use std::path::Path;
+
 use regex::Regex;
 
 use crate::utils;
@@ -29,6 +31,17 @@ impl Title {
         };
         let title = Self(capture[1].to_owned());
         Ok(Some(title))
+    }
+
+    pub(crate) fn find_in_file_name(path: &Path) -> Result<Option<Self>> {
+        let Some(file_stem) = path.file_stem().and_then(|s| s.to_str()) else {
+            return Ok(None);
+        };
+        let title = Title::find_in_string(file_stem)?;
+        if title.is_some() {
+            return Ok(title);
+        }
+        Title::parse(&file_stem)
     }
 
     pub(crate) fn desluggify(&self) -> String {

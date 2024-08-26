@@ -177,12 +177,7 @@ fn rename_file(
     name_scheme.title = if let Some(title) = title {
         Title::parse(title)?
     } else if non_interactive {
-        let title = Title::find_in_string(&file_title)?;
-        if title.is_some() {
-            title
-        } else {
-            Title::parse(&file_title)?
-        }
+        Title::find_in_file_name(&path)?
     } else {
         let old_title = Title::find_in_string(&file_title)?
             .map(|title| title.desluggify())
@@ -199,11 +194,7 @@ fn rename_file(
     name_scheme.extention = if let Some(extention) = extention {
         Extention::new(extention.to_string())
     } else {
-        path.extension()
-            .and_then(|s| s.to_str())
-            .map(String::from)
-            .map(Extention::new)
-            .flatten()
+        Extention::from_file_name(&path)
     };
 
     let new_file_name = name_scheme.to_string();
