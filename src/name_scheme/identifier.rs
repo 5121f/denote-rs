@@ -62,6 +62,12 @@ impl Identifier {
     }
 }
 
+impl Default for Identifier {
+    fn default() -> Self {
+        Self::now()
+    }
+}
+
 impl ToString for Identifier {
     fn to_string(&self) -> String {
         self.0.clone()
