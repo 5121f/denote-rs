@@ -33,7 +33,7 @@ impl Title {
         Ok(Some(title))
     }
 
-    pub(crate) fn find_in_file_name(path: &Path) -> Result<Option<Self>> {
+    pub(crate) fn from_file_name(path: &Path) -> Result<Option<Self>> {
         let Some(file_stem) = path.file_stem().and_then(|s| s.to_str()) else {
             return Ok(None);
         };
