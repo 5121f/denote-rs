@@ -90,31 +90,25 @@ fn touch(
 
     if let Some(signature) = signature {
         name_scheme.signature = Signature::parse(signature);
-    };
+    }
 
-    name_scheme.title = if let Some(title) = title {
-        Title::parse(title)
-    } else if non_interactive {
-        None
-    } else {
-        io.title()?
-    };
+    if let Some(title) = title {
+        name_scheme.title = Title::parse(title);
+    } else if !non_interactive {
+        name_scheme.title = io.title()?;
+    }
 
-    name_scheme.keywords = if let Some(keywords) = keywords {
-        Keywords::from_string(keywords)
-    } else if non_interactive {
-        None
-    } else {
-        io.keywords()?
-    };
+    if let Some(keywords) = keywords {
+        name_scheme.keywords = Keywords::from_string(keywords);
+    } else if !non_interactive {
+        name_scheme.keywords = io.keywords()?;
+    }
 
-    name_scheme.extention = if let Some(extention) = extention {
-        Extention::new(extention.to_string())
-    } else if non_interactive {
-        None
-    } else {
-        io.extention()?
-    };
+    if let Some(extention) = extention {
+        name_scheme.extention = Extention::new(extention.to_string());
+    } else if !non_interactive {
+        name_scheme.extention = io.extention()?;
+    }
 
     let file_name = name_scheme.to_string();
 
@@ -171,7 +165,7 @@ fn rename_file(
         name_scheme.signature = Signature::parse(signature);
     } else if non_interactive {
         name_scheme.signature = Signature::find_in_string(&file_title);
-    };
+    }
 
     name_scheme.title = if let Some(title) = title {
         Title::parse(title)
