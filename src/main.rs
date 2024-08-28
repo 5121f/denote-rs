@@ -83,6 +83,8 @@ fn touch(
 
     let identifier = Identifier::from_string(&date)?;
 
+    let interactive = !non_interactive;
+
     let mut name_scheme = NameScheme::new(identifier);
 
     if let Some(signature) = signature {
@@ -91,19 +93,19 @@ fn touch(
 
     if let Some(title) = title {
         name_scheme.title = Title::parse(&title);
-    } else if !non_interactive {
+    } else if interactive {
         name_scheme.title = io.title()?;
     }
 
     if let Some(keywords) = keywords {
         name_scheme.keywords = Keywords::from_string(&keywords);
-    } else if !non_interactive {
+    } else if interactive {
         name_scheme.keywords = io.keywords()?;
     }
 
     if let Some(extention) = extention {
         name_scheme.extention = Extention::new(extention);
-    } else if !non_interactive {
+    } else if interactive {
         name_scheme.extention = io.extention()?;
     }
 
@@ -156,17 +158,19 @@ fn rename_file(
         Identifier::find(&file_title).unwrap_or_default()
     };
 
+    let interactive = !non_interactive;
+
     let mut name_scheme = NameScheme::new(identifier);
 
     if let Some(signature) = signature {
         name_scheme.signature = Signature::parse(signature);
-    } else if non_interactive {
+    } else if !interactive {
         name_scheme.signature = Signature::find_in_string(&file_title);
     }
 
     name_scheme.title = if let Some(title) = title {
         Title::parse(title)
-    } else if non_interactive {
+    } else if !interactive {
         Title::from_file_name(&path)
     } else {
         let old_title = Title::find_in_string(&file_title)
@@ -177,7 +181,7 @@ fn rename_file(
 
     if let Some(keywords) = keywords {
         name_scheme.keywords = Keywords::from_string(&keywords);
-    } else if !non_interactive {
+    } else if interactive {
         name_scheme.keywords = io.keywords()?;
     };
 
