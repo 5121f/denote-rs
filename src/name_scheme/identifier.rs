@@ -4,7 +4,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::{fs, path::Path};
+use std::{
+    fmt::{self, Display},
+    fs,
+    path::Path,
+};
 
 use chrono::{DateTime, Duration, Local, NaiveDateTime};
 use regex::Regex;
@@ -68,9 +72,9 @@ impl Default for Identifier {
     }
 }
 
-impl ToString for Identifier {
-    fn to_string(&self) -> String {
-        self.0.clone()
+impl Display for Identifier {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 

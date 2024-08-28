@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+use std::fmt::{self, Display};
+
 use regex::Regex;
 
 use crate::utils;
@@ -32,9 +34,9 @@ impl Signature {
     }
 }
 
-impl ToString for Signature {
-    fn to_string(&self) -> String {
-        format!("=={}", self.0)
+impl Display for Signature {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "=={}", self.0)
     }
 }
 

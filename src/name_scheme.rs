@@ -10,6 +10,8 @@ pub(crate) mod keywords;
 pub(crate) mod signature;
 pub(crate) mod title;
 
+use std::fmt::{self, Display};
+
 use signature::Signature;
 
 use self::{extention::Extention, identifier::Identifier, keywords::Keywords, title::Title};
@@ -32,26 +34,26 @@ impl NameScheme {
     }
 }
 
-impl ToString for NameScheme {
-    fn to_string(&self) -> String {
-        let mut name_scheme = self.identifier.to_string();
+impl Display for NameScheme {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.identifier)?;
 
         if let Some(signature) = &self.signature {
-            name_scheme.push_str(&signature.to_string());
+            write!(f, "{signature}")?;
         }
 
         if let Some(title) = &self.title {
-            name_scheme.push_str(&title.to_string());
+            write!(f, "{title}")?;
         }
 
         if let Some(keywords) = &self.keywords {
-            name_scheme.push_str(&keywords.to_string());
+            write!(f, "{keywords}")?;
         }
 
         if let Some(extention) = &self.extention {
-            name_scheme.push_str(&extention.to_string());
+            write!(f, "{extention}")?;
         }
 
-        name_scheme
+        fmt::Result::Ok(())
     }
 }

@@ -4,7 +4,10 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::path::Path;
+use std::{
+    fmt::{self, Display},
+    path::Path,
+};
 
 use regex::Regex;
 
@@ -50,9 +53,9 @@ impl Title {
     }
 }
 
-impl ToString for Title {
-    fn to_string(&self) -> String {
-        format!("--{}", self.0)
+impl Display for Title {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "--{}", self.0)
     }
 }
 

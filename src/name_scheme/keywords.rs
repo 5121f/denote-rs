@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+use std::fmt::{self, Display};
+
 #[derive(Default)]
 pub(crate) struct Keywords(Vec<String>);
 
@@ -23,8 +25,8 @@ impl Keywords {
     }
 }
 
-impl ToString for Keywords {
-    fn to_string(&self) -> String {
-        format!("__{}", self.0.join("_"))
+impl Display for Keywords {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "__{}", self.0.join("_"))
     }
 }
