@@ -21,8 +21,10 @@ impl Keywords {
         };
         Some(Self(keywords))
     }
+}
 
-    pub(crate) fn to_string(&self) -> String {
+impl ToString for Keywords {
+    fn to_string(&self) -> String {
         format!("__{}", self.0.join("_"))
     }
 }

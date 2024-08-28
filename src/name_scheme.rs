@@ -39,7 +39,7 @@ impl ToString for NameScheme {
         let signature = self
             .signature
             .as_ref()
-            .map(|signature| signature.into_string());
+            .map(|signature| signature.to_string());
         maybe_add(&mut name_scheme, signature.as_deref());
 
         let title = self.title.as_ref().map(|title| title.to_string());

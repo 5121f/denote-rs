@@ -30,8 +30,10 @@ impl Signature {
         let title = Self(capture[1].to_owned());
         Ok(Some(title))
     }
+}
 
-    pub(crate) fn into_string(&self) -> String {
+impl ToString for Signature {
+    fn to_string(&self) -> String {
         format!("=={}", self.0)
     }
 }

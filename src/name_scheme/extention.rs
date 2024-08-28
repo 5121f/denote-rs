@@ -21,8 +21,10 @@ impl Extention {
         let ext = path.extension()?.to_str()?.to_string();
         Extention::new(ext)
     }
+}
 
-    pub(crate) fn to_string(&self) -> String {
+impl ToString for Extention {
+    fn to_string(&self) -> String {
         format!(".{}", self.0)
     }
 }
