@@ -53,7 +53,8 @@ impl Identifier {
     }
 
     pub(crate) fn extract_from_string(string: &str) -> Result<Self> {
-        let id = Regex::new(ID_REGEXP)?
+        let id = Regex::new(ID_REGEXP)
+            .unwrap()
             .find(string)
             .ok_or(Error::ExtractIdentifier)?;
         Ok(Self(id.as_str().to_owned()))
@@ -80,8 +81,6 @@ impl Display for Identifier {
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("Regex")]
-    Regex(#[from] regex::Error),
     #[error("Failed to extract edentifier")]
     ExtractIdentifier,
     #[error("Failed to convert date")]

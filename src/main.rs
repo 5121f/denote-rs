@@ -89,12 +89,11 @@ fn touch(
     let mut name_scheme = NameScheme::new(identifier);
 
     if let Some(signature) = signature {
-        let signature = Signature::parse(signature)?;
-        name_scheme.signature = signature;
+        name_scheme.signature = Signature::parse(signature);
     };
 
     name_scheme.title = if let Some(title) = title {
-        Title::parse(title)?
+        Title::parse(title)
     } else if non_interactive {
         None
     } else {
@@ -169,17 +168,17 @@ fn rename_file(
     let mut name_scheme = NameScheme::new(identifier);
 
     if let Some(signature) = signature {
-        name_scheme.signature = Signature::parse(signature)?;
+        name_scheme.signature = Signature::parse(signature);
     } else if non_interactive {
-        name_scheme.signature = Signature::find_in_string(&file_title)?;
+        name_scheme.signature = Signature::find_in_string(&file_title);
     };
 
     name_scheme.title = if let Some(title) = title {
-        Title::parse(title)?
+        Title::parse(title)
     } else if non_interactive {
-        Title::from_file_name(&path)?
+        Title::from_file_name(&path)
     } else {
-        let old_title = Title::find_in_string(&file_title)?
+        let old_title = Title::find_in_string(&file_title)
             .map(|title| title.desluggify())
             .unwrap_or(file_title);
         io.title_with_old_title(&old_title)?

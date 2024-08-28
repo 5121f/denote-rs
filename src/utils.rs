@@ -8,9 +8,9 @@ use regex::Regex;
 
 const PUNCTUATION: &str = r"\p{P}";
 
-pub(crate) fn remove_punctuation(string: &str) -> Result<String, regex::Error> {
-    let punctuation = Regex::new(PUNCTUATION)?;
-    Ok(punctuation.replace_all(string, "").to_string())
+pub(crate) fn remove_punctuation(string: &str) -> String {
+    let punctuation = Regex::new(PUNCTUATION).unwrap();
+    punctuation.replace_all(string, "").to_string()
 }
 
 pub(crate) fn first_letter_uppercase(string: &str) -> String {
@@ -21,11 +21,8 @@ pub(crate) fn first_letter_uppercase(string: &str) -> String {
     }
 }
 
-pub(crate) fn format(string: &str, separator: &str) -> Result<Option<String>, regex::Error> {
-    let string = remove_punctuation(string)?;
+pub(crate) fn format(string: &str, separator: &str) -> Option<String> {
+    let string = remove_punctuation(string);
     let string = string.trim();
-    if string.is_empty() {
-        return Ok(None);
-    }
-    Ok(Some(string.replace(' ', separator).to_string()))
+    (!string.is_empty()).then(|| string.replace(' ', separator).to_string())
 }

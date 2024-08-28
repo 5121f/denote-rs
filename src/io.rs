@@ -4,13 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::io::Write;
+use std::io::{self, Write};
 
-use crate::name_scheme::{
-    extention::Extention,
-    keywords::Keywords,
-    title::{self, Title},
-};
+use crate::name_scheme::{extention::Extention, keywords::Keywords, title::Title};
 
 pub struct Io {
     stdout: std::io::Stdout,
@@ -47,14 +43,14 @@ impl Io {
         } else {
             input
         };
-        let title = Title::parse(&title)?;
+        let title = Title::parse(&title);
         Ok(title)
     }
 
     pub(crate) fn title(&mut self) -> Result<Option<Title>> {
         self.print("Title: ")?;
         let input = self.read_line()?;
-        let title = Title::parse(&input)?;
+        let title = Title::parse(&input);
         Ok(title)
     }
 
@@ -83,12 +79,4 @@ impl Io {
     }
 }
 
-#[derive(Debug, thiserror::Error)]
-pub enum Error {
-    #[error(transparent)]
-    Title(#[from] title::Error),
-    #[error(transparent)]
-    Io(#[from] std::io::Error),
-}
-
-type Result<T> = std::result::Result<T, Error>;
+type Result<T> = std::result::Result<T, io::Error>;

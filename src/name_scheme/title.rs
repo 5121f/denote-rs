@@ -18,26 +18,20 @@ const TITLE_REGEXP: &str = r"--([\p{Alphabetic}\pN-]*)";
 pub(crate) struct Title(String);
 
 impl Title {
-    pub(crate) fn parse(string: &str) -> Result<Option<Self>> {
-        Ok(utils::format(string, "-")?.map(Self))
+    pub(crate) fn parse(string: &str) -> Option<Self> {
+        utils::format(string, "-").map(Self)
     }
 
-    pub(crate) fn find_in_string(string: &str) -> Result<Option<Self>> {
-        let capture = Regex::new(TITLE_REGEXP)?.captures(string);
-        let Some(capture) = capture else {
-            return Ok(None);
-        };
-        let title = Self(capture[1].to_owned());
-        Ok(Some(title))
+    pub(crate) fn find_in_string(string: &str) -> Option<Self> {
+        let regex = Regex::new(TITLE_REGEXP).unwrap();
+        let capture = regex.captures(string)?;
+        Some(Self(capture[1].to_owned()))
     }
 
-    pub(crate) fn from_file_name(path: &Path) -> Result<Option<Self>> {
-        let Some(file_stem) = path.file_stem().and_then(|s| s.to_str()) else {
-            return Ok(None);
-        };
-        let title = Title::find_in_string(file_stem)?;
-        if title.is_some() {
-            return Ok(title);
+    pub(crate) fn from_file_name(path: &Path) -> Option<Self> {
+        let file_stem = path.file_stem().and_then(|s| s.to_str())?;
+        if let Some(title) = Title::find_in_string(file_stem) {
+            return Some(title);
         }
         Title::parse(&file_stem)
     }
@@ -53,11 +47,3 @@ impl Display for Title {
         write!(f, "--{}", self.0)
     }
 }
-
-#[derive(Debug, thiserror::Error)]
-pub enum Error {
-    #[error("Regex")]
-    Regex(#[from] regex::Error),
-}
-
-type Result<T> = std::result::Result<T, Error>;
