@@ -18,11 +18,8 @@ impl Extention {
     }
 
     pub(crate) fn from_file_name(path: &Path) -> Option<Self> {
-        path.extension()
-            .and_then(|s| s.to_str())
-            .map(String::from)
-            .map(Extention::new)
-            .flatten()
+        let ext = path.extension()?.to_str()?.to_string();
+        Extention::new(ext)
     }
 
     pub(crate) fn to_string(&self) -> String {
