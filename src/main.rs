@@ -116,7 +116,7 @@ fn touch(
         }
     }
 
-    fs::File::create(file_name).context("Failed to file creation")?;
+    fs::File::create(file_name).context("Failed to create file")?;
 
     Ok(())
 }
