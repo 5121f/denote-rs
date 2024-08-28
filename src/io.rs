@@ -36,7 +36,7 @@ impl Io {
     }
 
     pub(crate) fn title_with_old_title(&mut self, old_title: &str) -> Result<Option<Title>> {
-        self.print(&format!("Title [{}]: ", &old_title))?;
+        self.print(&format!("Title [{old_title}]: "))?;
         let input = self.read_line()?;
         let title = if input.trim().is_empty() {
             old_title.to_owned()
@@ -73,7 +73,7 @@ impl Io {
     }
 
     fn print(&mut self, value: &str) -> Result<()> {
-        print!("{}", value);
+        print!("{value}");
         self.stdout.flush()?;
         Ok(())
     }
