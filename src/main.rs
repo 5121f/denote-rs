@@ -5,19 +5,19 @@
  */
 
 mod cli_args;
-mod io;
 mod name_scheme;
+mod user_interaction;
 mod utils;
 
 use anyhow::{bail, Context, Result};
 use clap::Parser;
 use cli_args::Cli;
-use io::Io;
 use name_scheme::{
     extention::Extention, identifier::Identifier, keywords::Keywords, signature::Signature,
     title::Title, NameScheme,
 };
 use std::{fs, path::PathBuf};
+use user_interaction::UserInteraction;
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
@@ -79,7 +79,7 @@ fn touch(
     non_interactive: bool,
     accept: bool,
 ) -> Result<()> {
-    let mut io = Io::new();
+    let mut ui = UserInteraction::new();
 
     let identifier = Identifier::from_string(&date)?;
 
@@ -94,27 +94,27 @@ fn touch(
     if let Some(title) = title {
         name_scheme.title = Title::parse(&title);
     } else if interactive {
-        name_scheme.title = io.title()?;
+        name_scheme.title = ui.take_title()?;
     }
 
     if let Some(keywords) = keywords {
         name_scheme.keywords = Keywords::from_string(&keywords);
     } else if interactive {
-        name_scheme.keywords = io.keywords()?;
+        name_scheme.keywords = ui.take_keywords()?;
     }
 
     if let Some(extention) = extention {
         name_scheme.extention = Extention::new(extention);
     } else if interactive {
-        name_scheme.extention = io.extention()?;
+        name_scheme.extention = ui.take_extention()?;
     }
 
     let file_name = name_scheme.to_string();
 
     if !accept {
-        let accepted = io.question(&format!("Create file \"{file_name}\"?"), true)?;
+        let accepted = ui.question(&format!("Create file \"{file_name}\"?"), true)?;
         if !accepted {
-            Io::no_action_needed();
+            UserInteraction::no_action_needed();
             return Ok(());
         }
     }
@@ -135,7 +135,7 @@ fn rename_file(
     non_interactive: bool,
     accept: bool,
 ) -> Result<()> {
-    let mut io = Io::new();
+    let mut io = UserInteraction::new();
 
     let path = PathBuf::from(&file_name);
 
@@ -183,7 +183,7 @@ fn rename_file(
     if let Some(keywords) = keywords {
         name_scheme.keywords = Keywords::from_string(&keywords);
     } else if interactive {
-        name_scheme.keywords = io.keywords()?;
+        name_scheme.keywords = io.take_keywords()?;
     };
 
     name_scheme.extention = if let Some(extention) = extention {
@@ -195,7 +195,7 @@ fn rename_file(
     let new_file_name = name_scheme.to_string();
 
     if file_name == new_file_name {
-        Io::no_action_needed();
+        UserInteraction::no_action_needed();
         return Ok(());
     }
 
@@ -203,7 +203,7 @@ fn rename_file(
         println!("Old name \"{file_name}\"\nNew name \"{new_file_name}\"");
         let accepted = io.question("Accept?", true)?;
         if !accepted {
-            Io::no_action_needed();
+            UserInteraction::no_action_needed();
             return Ok(());
         }
     }

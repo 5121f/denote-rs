@@ -8,22 +8,22 @@ use std::io::{self, Write};
 
 use crate::name_scheme::{extention::Extention, keywords::Keywords, title::Title};
 
-pub struct Io {
-    stdout: std::io::Stdout,
-    stdin: std::io::Stdin,
+pub struct UserInteraction {
+    stdout: io::Stdout,
+    stdin: io::Stdin,
 }
 
-impl Io {
+impl UserInteraction {
     pub(crate) fn new() -> Self {
         Self {
-            stdin: std::io::stdin(),
-            stdout: std::io::stdout(),
+            stdin: io::stdin(),
+            stdout: io::stdout(),
         }
     }
 
-    pub(crate) fn question(&mut self, text: &str, default_ansfer: bool) -> Result<bool> {
+    pub(crate) fn question(&mut self, question: &str, default_ansfer: bool) -> Result<bool> {
         let prompt = if default_ansfer { "[Y/n]" } else { "[y/N]" };
-        self.print(&format!("{text} {prompt} "))?;
+        self.print(&format!("{question} {prompt} "))?;
         let response = self.read_line()?;
         let response = if response.is_empty() {
             default_ansfer
@@ -49,20 +49,20 @@ impl Io {
         println!("No action needed")
     }
 
-    pub(crate) fn title(&mut self) -> Result<Option<Title>> {
+    pub(crate) fn take_title(&mut self) -> Result<Option<Title>> {
         self.print("Title: ")?;
         let input = self.read_line()?;
         let title = Title::parse(&input);
         Ok(title)
     }
 
-    pub(crate) fn keywords(&mut self) -> Result<Option<Keywords>> {
+    pub(crate) fn take_keywords(&mut self) -> Result<Option<Keywords>> {
         self.print("Keywords: ")?;
         let input = self.read_line()?;
         Ok(Keywords::from_string(&input))
     }
 
-    pub(crate) fn extention(&mut self) -> Result<Option<Extention>> {
+    pub(crate) fn take_extention(&mut self) -> Result<Option<Extention>> {
         self.print("Extention: ")?;
         let input = self.read_line()?;
         Ok(Extention::new(input))
