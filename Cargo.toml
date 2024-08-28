@@ -9,11 +9,11 @@ repository = "https://github.com/5121f/denote-rs"
 license = "MPL-2.0"
 
 [dependencies]
-clap = { version = "4.5.7", features = ["derive", "cargo"] }
+clap = { version = "4.5.16", features = ["derive", "cargo"] }
 chrono = "0.4.38"
 anyhow = "1.0.86"
-regex = "1.10.5"
-thiserror = "1.0.61"
+regex = "1.10.6"
+thiserror = "1.0.63"
 
 [profile.release]
 lto = true
