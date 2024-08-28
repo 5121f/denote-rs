@@ -6,21 +6,20 @@
 
 use std::fmt::{self, Display};
 
+use crate::utils;
+
 #[derive(Default)]
 pub(crate) struct Keywords(Vec<String>);
 
 impl Keywords {
     pub(crate) fn from_string(string: &str) -> Option<Self> {
         let keywords: Vec<_> = string
-            .trim()
-            .to_lowercase()
             .split(',')
-            .map(ToOwned::to_owned)
+            .filter_map(|s| utils::format(s, "-"))
             .collect();
-        let keywords = match keywords.first() {
-            Some(first) if first.is_empty() => return None,
-            _ => keywords,
-        };
+        if keywords.is_empty() {
+            return None;
+        }
         Some(Self(keywords))
     }
 }
