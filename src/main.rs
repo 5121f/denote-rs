@@ -162,7 +162,7 @@ fn rename_file(
     } else if let Some(date) = date {
         Identifier::from_string(&date)?
     } else {
-        Identifier::extract_from_string(&file_title).unwrap_or_default()
+        Identifier::find(&file_title).unwrap_or_default()
     };
 
     let mut name_scheme = NameScheme::new(identifier);

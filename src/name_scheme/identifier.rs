@@ -52,12 +52,9 @@ impl Identifier {
         Ok(Self::from_date_time(date_time))
     }
 
-    pub(crate) fn extract_from_string(string: &str) -> Result<Self> {
-        let id = Regex::new(ID_REGEXP)
-            .unwrap()
-            .find(string)
-            .ok_or(Error::ExtractIdentifier)?;
-        Ok(Self(id.as_str().to_owned()))
+    pub(crate) fn find(string: &str) -> Option<Self> {
+        let id = Regex::new(ID_REGEXP).unwrap().find(string)?;
+        Some(Self(id.as_str().to_owned()))
     }
 
     pub(crate) fn from_file_metadata(path: &Path) -> Result<Self> {
@@ -81,8 +78,6 @@ impl Display for Identifier {
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("Failed to extract edentifier")]
-    ExtractIdentifier,
     #[error("Failed to convert date")]
     ConvertDate(#[from] chrono::ParseError),
     #[error(transparent)]
