@@ -114,6 +114,7 @@ fn touch(
     if !accept {
         let accepted = io.question(&format!("Create file \"{file_name}\"?"), true)?;
         if !accepted {
+            Io::no_action_needed();
             return Ok(());
         }
     }
@@ -194,7 +195,7 @@ fn rename_file(
     let new_file_name = name_scheme.to_string();
 
     if file_name == new_file_name {
-        println!("No action required");
+        Io::no_action_needed();
         return Ok(());
     }
 
@@ -202,6 +203,7 @@ fn rename_file(
         println!("Old name \"{file_name}\"\nNew name \"{new_file_name}\"");
         let accepted = io.question("Accept?", true)?;
         if !accepted {
+            Io::no_action_needed();
             return Ok(());
         }
     }

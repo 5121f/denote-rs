@@ -45,6 +45,10 @@ impl Io {
         Ok(title)
     }
 
+    pub(crate) fn no_action_needed() {
+        println!("No action needed")
+    }
+
     pub(crate) fn title(&mut self) -> Result<Option<Title>> {
         self.print("Title: ")?;
         let input = self.read_line()?;
