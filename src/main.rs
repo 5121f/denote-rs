@@ -170,13 +170,13 @@ fn rename_file(
 
     name_scheme.title = if let Some(title) = title {
         Title::parse(title)
-    } else if !interactive {
-        Title::from_file_name(&path)
-    } else {
+    } else if interactive {
         let old_title = Title::find_in_string(&file_title)
             .map(|title| title.desluggify())
             .unwrap_or(file_title);
         io.title_with_old_title(&old_title)?
+    } else {
+        Title::from_file_name(&path)
     };
 
     if let Some(keywords) = keywords {
