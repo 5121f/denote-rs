@@ -16,14 +16,7 @@ pub(crate) enum Cli {
         /// The date to be used as the identifier.
         /// Can be used a date like 2022-06-30 or a date and time like 2022-06-16 14:30.
         /// Can be used "now" to use current system date and time.
-        #[clap(
-            long,
-            short,
-            conflicts_with("date_from_metadata"),
-            help = "The date to be used as the identifier.\n\
-                Can be used a date like 2022-06-30 or a date and time like 2022-06-16 14:30.\n\
-                Can be used \"now\" to use current system date and time."
-        )]
+        #[clap(long, short, conflicts_with("date_from_metadata"))]
         date: Option<String>,
         /// Use creation file date from the file metadata
         #[clap(long, short = 'm', conflicts_with("date"))]
@@ -54,14 +47,7 @@ pub(crate) enum Cli {
         /// The date to be used as the identifier.
         /// Can be used a date like 2022-06-30 or a date and time like 2022-06-16 14:30.
         /// Can be used "now" to use current system date and time.
-        #[clap(
-            long,
-            short,
-            default_value = "now",
-            help = "The date to be used as the identifier.\n\
-                Can be used a date like 2022-06-30 or a date and time like 2022-06-16 14:30.\n\
-                Can be used \"now\" to use current system date and time."
-        )]
+        #[clap(long, short, default_value = "now")]
         date: String,
         /// Specify the signature
         #[clap(long, short)]
