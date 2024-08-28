@@ -22,10 +22,8 @@ impl Io {
     }
 
     pub(crate) fn question(&mut self, text: &str, default_ansfer: bool) -> Result<bool> {
-        print!("{}", text);
-        let prompt = if default_ansfer { " [Y/n] " } else { " [y/N] " };
-        print!("{}", prompt);
-        self.stdout.flush()?;
+        let prompt = if default_ansfer { "[Y/n]" } else { "[y/N]" };
+        self.print(&format!("{text} {prompt} "))?;
         let response = self.read_line()?;
         let response = if response.is_empty() {
             default_ansfer
