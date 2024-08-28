@@ -26,3 +26,8 @@ pub(crate) fn format(string: &str, separator: &str) -> Option<String> {
     let string = string.trim();
     (!string.is_empty()).then(|| string.replace(' ', separator).to_string())
 }
+
+#[test]
+fn punctuation_regexp() {
+    Regex::new(PUNCTUATION).unwrap();
+}

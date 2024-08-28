@@ -90,3 +90,8 @@ pub enum Error {
 }
 
 type Result<T> = std::result::Result<T, Error>;
+
+#[test]
+fn id_regexp() {
+    Regex::new(ID_REGEXP).unwrap();
+}

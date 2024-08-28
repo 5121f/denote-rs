@@ -32,3 +32,8 @@ impl Display for Signature {
         write!(f, "=={}", self.0)
     }
 }
+
+#[test]
+fn signature_regexp() {
+    Regex::new(SIGNATURE_REGEXP).unwrap();
+}

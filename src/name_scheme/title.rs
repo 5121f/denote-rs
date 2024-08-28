@@ -47,3 +47,8 @@ impl Display for Title {
         write!(f, "--{}", self.0)
     }
 }
+
+#[test]
+fn title_regexp() {
+    Regex::new(TITLE_REGEXP).unwrap();
+}
