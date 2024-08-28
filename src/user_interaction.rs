@@ -28,7 +28,8 @@ impl UserInteraction {
         let response = if response.is_empty() {
             default_ansfer
         } else {
-            response.to_lowercase() == "y"
+            let response = response.to_lowercase();
+            response == "y" || response == "yes"
         };
         Ok(response)
     }
