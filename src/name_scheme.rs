@@ -36,27 +36,22 @@ impl ToString for NameScheme {
     fn to_string(&self) -> String {
         let mut name_scheme = self.identifier.to_string();
 
-        let signature = self
-            .signature
-            .as_ref()
-            .map(|signature| signature.to_string());
-        maybe_add(&mut name_scheme, signature.as_deref());
+        if let Some(signature) = &self.signature {
+            name_scheme.push_str(&signature.to_string());
+        }
 
-        let title = self.title.as_ref().map(|title| title.to_string());
-        maybe_add(&mut name_scheme, title.as_deref());
+        if let Some(title) = &self.title {
+            name_scheme.push_str(&title.to_string());
+        }
 
-        let keywords = self.keywords.as_ref().map(|keywrds| keywrds.to_string());
-        maybe_add(&mut name_scheme, keywords.as_deref());
+        if let Some(keywords) = &self.keywords {
+            name_scheme.push_str(&keywords.to_string());
+        }
 
-        let extention = self.extention.as_ref().map(|ext| ext.to_string());
-        maybe_add(&mut name_scheme, extention.as_deref());
+        if let Some(extention) = &self.extention {
+            name_scheme.push_str(&extention.to_string());
+        }
 
         name_scheme
-    }
-}
-
-fn maybe_add<'a, 'b>(base: &mut String, added: Option<&str>) {
-    if let Some(added) = added {
-        base.push_str(added);
     }
 }
