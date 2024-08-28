@@ -35,16 +35,13 @@ fn main() -> Result<()> {
             accept,
         } => {
             for file_name in file_names {
-                let date = date.as_ref().map(|d| d.as_str());
-                let keywords = keywords.as_deref();
-                let title = title.as_deref();
                 rename_file(
                     file_name,
-                    date,
+                    date.as_deref(),
                     date_from_metadata,
                     signature.as_deref(),
-                    title,
-                    keywords,
+                    title.as_deref(),
+                    keywords.as_deref(),
                     extention.as_deref(),
                     non_interactive,
                     accept,
@@ -60,11 +57,11 @@ fn main() -> Result<()> {
             non_interactive,
             accept,
         } => touch(
-            title.as_deref(),
-            date.as_str(),
-            signature.as_deref(),
-            keywords.as_deref(),
-            extention.as_deref(),
+            title,
+            date,
+            signature,
+            keywords,
+            extention,
             non_interactive,
             accept,
         )?,
@@ -74,38 +71,38 @@ fn main() -> Result<()> {
 }
 
 fn touch(
-    title: Option<&str>,
-    date: &str,
-    signature: Option<&str>,
-    keywords: Option<&str>,
-    extention: Option<&str>,
+    title: Option<String>,
+    date: String,
+    signature: Option<String>,
+    keywords: Option<String>,
+    extention: Option<String>,
     non_interactive: bool,
     accept: bool,
 ) -> Result<()> {
     let mut io = Io::new();
 
-    let identifier = Identifier::from_string(date)?;
+    let identifier = Identifier::from_string(&date)?;
 
     let mut name_scheme = NameScheme::new(identifier);
 
     if let Some(signature) = signature {
-        name_scheme.signature = Signature::parse(signature);
+        name_scheme.signature = Signature::parse(&signature);
     }
 
     if let Some(title) = title {
-        name_scheme.title = Title::parse(title);
+        name_scheme.title = Title::parse(&title);
     } else if !non_interactive {
         name_scheme.title = io.title()?;
     }
 
     if let Some(keywords) = keywords {
-        name_scheme.keywords = Keywords::from_string(keywords);
+        name_scheme.keywords = Keywords::from_string(&keywords);
     } else if !non_interactive {
         name_scheme.keywords = io.keywords()?;
     }
 
     if let Some(extention) = extention {
-        name_scheme.extention = Extention::new(extention.to_string());
+        name_scheme.extention = Extention::new(extention);
     } else if !non_interactive {
         name_scheme.extention = io.extention()?;
     }
