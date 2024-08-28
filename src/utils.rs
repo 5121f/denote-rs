@@ -20,3 +20,12 @@ pub(crate) fn first_letter_uppercase(string: &str) -> String {
         Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
     }
 }
+
+pub(crate) fn format(string: &str, separator: &str) -> Result<Option<String>, regex::Error> {
+    let string = remove_punctuation(string)?;
+    let string = string.trim();
+    if string.is_empty() {
+        return Ok(None);
+    }
+    Ok(Some(string.replace(' ', separator).to_string()))
+}

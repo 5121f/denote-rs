@@ -16,12 +16,7 @@ pub(crate) struct Signature(String);
 
 impl Signature {
     pub(crate) fn parse(string: &str) -> Result<Option<Self>> {
-        let string = utils::remove_punctuation(string)?;
-        let string = string.trim().to_lowercase().replace(' ', "=");
-        if string.is_empty() {
-            return Ok(None);
-        }
-        Ok(Some(Self(string)))
+        Ok(utils::format(string, "=")?.map(Self))
     }
 
     pub(crate) fn find_in_string(string: &str) -> Result<Option<Self>> {
