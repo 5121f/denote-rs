@@ -8,12 +8,13 @@ use std::io::{self, Write};
 
 use crate::name_scheme::{extention::Extention, keywords::Keywords, title::Title};
 
-pub struct UserInteraction {
+/// User Interface
+pub struct UI {
     stdout: io::Stdout,
     stdin: io::Stdin,
 }
 
-impl UserInteraction {
+impl UI {
     pub(crate) fn new() -> Self {
         Self {
             stdin: io::stdin(),

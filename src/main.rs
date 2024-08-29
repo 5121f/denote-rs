@@ -6,7 +6,7 @@
 
 mod cli_args;
 mod name_scheme;
-mod user_interaction;
+mod ui;
 mod utils;
 
 use anyhow::{bail, Context, Result};
@@ -17,7 +17,7 @@ use name_scheme::{
     title::Title, NameScheme,
 };
 use std::{fs, path::PathBuf};
-use user_interaction::UserInteraction;
+use ui::UI;
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
@@ -79,7 +79,7 @@ fn touch(
     non_interactive: bool,
     accept: bool,
 ) -> Result<()> {
-    let mut ui = UserInteraction::new();
+    let mut ui = UI::new();
 
     let identifier = Identifier::from_string(&date)?;
 
@@ -114,7 +114,7 @@ fn touch(
     if !accept {
         let accepted = ui.question(&format!("Create file \"{file_name}\"?"), true)?;
         if !accepted {
-            UserInteraction::no_action_needed();
+            UI::no_action_needed();
             return Ok(());
         }
     }
@@ -135,7 +135,7 @@ fn rename_file(
     non_interactive: bool,
     accept: bool,
 ) -> Result<()> {
-    let mut io = UserInteraction::new();
+    let mut io = UI::new();
 
     let path = PathBuf::from(&file_name);
 
@@ -195,7 +195,7 @@ fn rename_file(
     let new_file_name = name_scheme.to_string();
 
     if file_name == new_file_name {
-        UserInteraction::no_action_needed();
+        UI::no_action_needed();
         return Ok(());
     }
 
@@ -203,7 +203,7 @@ fn rename_file(
         println!("Old name \"{file_name}\"\nNew name \"{new_file_name}\"");
         let accepted = io.question("Accept?", true)?;
         if !accepted {
-            UserInteraction::no_action_needed();
+            UI::no_action_needed();
             return Ok(());
         }
     }
