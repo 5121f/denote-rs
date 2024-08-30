@@ -11,10 +11,8 @@ use std::{
 };
 
 use chrono::{DateTime, Duration, Local, NaiveDateTime};
-use regex::Regex;
 
-const ID_REGEXP: &str = r"\d{8}T\d{8}";
-
+#[derive(Clone)]
 pub(crate) struct Identifier(String);
 
 impl Identifier {
@@ -29,6 +27,10 @@ impl Identifier {
     pub(crate) fn now() -> Self {
         let now = chrono::offset::Local::now().naive_local();
         Self::from_date_time(now)
+    }
+
+    pub(crate) fn new(string: String) -> Self {
+        Self(string)
     }
 
     pub(crate) fn from_string(string: &str) -> Result<Self> {
@@ -50,11 +52,6 @@ impl Identifier {
                 .map(|d| d.and_time(currnet_time))?,
         };
         Ok(Self::from_date_time(date_time))
-    }
-
-    pub(crate) fn find(string: &str) -> Option<Self> {
-        let id = Regex::new(ID_REGEXP).unwrap().find(string)?;
-        Some(Self(id.as_str().to_owned()))
     }
 
     pub(crate) fn from_file_metadata(path: &Path) -> Result<Self> {
@@ -85,8 +82,3 @@ pub enum Error {
 }
 
 type Result<T> = std::result::Result<T, Error>;
-
-#[test]
-fn id_regexp() {
-    Regex::new(ID_REGEXP).unwrap();
-}

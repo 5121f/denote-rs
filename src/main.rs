@@ -16,7 +16,9 @@ use name_scheme::{
     extention::Extention, identifier::Identifier, keywords::Keywords, signature::Signature,
     title::Title, NameScheme,
 };
+
 use std::{fs, path::PathBuf};
+
 use ui::UI;
 
 fn main() -> Result<()> {
@@ -151,12 +153,17 @@ fn rename_file(
         .map(|s| s.to_string_lossy().to_string())
         .unwrap_or_default();
 
+    let current_name_scheme = NameScheme::from_path(&path);
+
     let identifier = if date_from_metadata {
         Identifier::from_file_metadata(&path)?
     } else if let Some(date) = date {
         Identifier::from_string(&date)?
     } else {
-        Identifier::find(&file_title).unwrap_or_default()
+        current_name_scheme
+            .as_ref()
+            .map(|ns| ns.identifier.clone())
+            .unwrap_or_default()
     };
 
     let interactive = !non_interactive;
@@ -166,18 +173,22 @@ fn rename_file(
     if let Some(signature) = signature {
         name_scheme.signature = Signature::parse(signature);
     } else if !interactive {
-        name_scheme.signature = Signature::find_in_string(&file_title);
+        name_scheme.signature = current_name_scheme
+            .as_ref()
+            .and_then(|ns| ns.signature.clone());
     }
 
     name_scheme.title = if let Some(title) = title {
         Title::parse(title)
     } else if interactive {
-        let old_title = Title::find_in_string(&file_title)
+        let old_title = current_name_scheme
+            .as_ref()
+            .and_then(|ns| ns.title.clone())
             .map(|title| title.desluggify())
             .unwrap_or(file_title);
         io.title_with_old_title(&old_title)?
     } else {
-        Title::from_file_name(&path)
+        current_name_scheme.as_ref().and_then(|ns| ns.title.clone())
     };
 
     if let Some(keywords) = keywords {
@@ -189,7 +200,9 @@ fn rename_file(
     name_scheme.extention = if let Some(extention) = extention {
         Extention::new(extention.to_string())
     } else {
-        Extention::from_file_name(&path)
+        current_name_scheme
+            .as_ref()
+            .and_then(|ns| ns.extention.clone())
     };
 
     let new_file_name = name_scheme.to_string();

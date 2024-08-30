@@ -4,12 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::{
-    fmt::{self, Display},
-    path::Path,
-};
+use std::fmt::{self, Display};
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub(crate) struct Extention(String);
 
 impl Extention {
@@ -18,11 +15,6 @@ impl Extention {
             return None;
         }
         Some(Self(ext))
-    }
-
-    pub(crate) fn from_file_name(path: &Path) -> Option<Self> {
-        let ext = path.extension()?.to_str()?.to_string();
-        Extention::new(ext)
     }
 }
 
