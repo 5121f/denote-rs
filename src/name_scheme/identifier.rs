@@ -29,11 +29,11 @@ impl Identifier {
         Self::from_date_time(now)
     }
 
-    pub(crate) fn new(string: String) -> Self {
+    pub(crate) fn from_string(string: String) -> Self {
         Self(string)
     }
 
-    pub(crate) fn from_string(string: &str) -> Result<Self> {
+    pub(crate) fn parse(string: &str) -> Result<Self> {
         if string == "now" {
             return Ok(Self::now());
         }

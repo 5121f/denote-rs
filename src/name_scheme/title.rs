@@ -12,6 +12,10 @@ use crate::utils;
 pub(crate) struct Title(String);
 
 impl Title {
+    pub(crate) fn from_string(string: String) -> Self {
+        Self(string)
+    }
+
     pub(crate) fn parse(string: &str) -> Option<Self> {
         utils::format(string, "-").map(Self)
     }

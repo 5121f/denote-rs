@@ -83,7 +83,7 @@ fn touch(
 ) -> Result<()> {
     let mut ui = UI::new();
 
-    let identifier = Identifier::from_string(&date)?;
+    let identifier = Identifier::parse(&date)?;
 
     let interactive = !non_interactive;
 
@@ -100,13 +100,13 @@ fn touch(
     }
 
     if let Some(keywords) = keywords {
-        name_scheme.keywords = Keywords::from_string(&keywords);
+        name_scheme.keywords = Keywords::parse_from_user_input(&keywords);
     } else if interactive {
         name_scheme.keywords = ui.take_keywords()?;
     }
 
     if let Some(extention) = extention {
-        name_scheme.extention = Extention::new(extention);
+        name_scheme.extention = Extention::from_string(extention);
     } else if interactive {
         name_scheme.extention = ui.take_extention()?;
     }
@@ -158,7 +158,7 @@ fn rename_file(
     let identifier = if date_from_metadata {
         Identifier::from_file_metadata(&path)?
     } else if let Some(date) = date {
-        Identifier::from_string(&date)?
+        Identifier::parse(&date)?
     } else {
         current_name_scheme
             .as_ref()
@@ -192,13 +192,13 @@ fn rename_file(
     };
 
     if let Some(keywords) = keywords {
-        name_scheme.keywords = Keywords::from_string(&keywords);
+        name_scheme.keywords = Keywords::parse_from_user_input(&keywords);
     } else if interactive {
         name_scheme.keywords = io.take_keywords()?;
     };
 
     name_scheme.extention = if let Some(extention) = extention {
-        Extention::new(extention.to_string())
+        Extention::from_string(extention.to_string())
     } else {
         current_name_scheme
             .as_ref()

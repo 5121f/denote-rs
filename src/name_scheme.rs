@@ -55,30 +55,30 @@ impl NameScheme {
 
         let id = {
             let capture = captures.name("id")?;
-            Identifier::new(capture.as_str().to_string())
+            Identifier::from_string(capture.as_str().to_string())
         };
 
         let mut name_scheme = Self::new(id);
 
         name_scheme.signature = captures
             .name("signature")
-            .map(|c| c.as_str())
-            .and_then(Signature::parse);
+            .map(|c| c.as_str().to_string())
+            .map(Signature::from_string);
 
         name_scheme.title = captures
             .name("title")
-            .map(|c| c.as_str())
-            .and_then(Title::parse);
+            .map(|c| c.as_str().to_string())
+            .map(Title::from_string);
 
         name_scheme.keywords = captures
             .name("keywords")
             .map(|c| c.as_str())
-            .and_then(Keywords::from_string);
+            .and_then(Keywords::parse);
 
         name_scheme.extention = captures
             .name("ext")
             .map(|c| c.as_str().to_string())
-            .and_then(Extention::new);
+            .and_then(Extention::from_string);
 
         Some(name_scheme)
     }
