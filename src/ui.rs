@@ -67,7 +67,7 @@ impl UI {
     pub(crate) fn take_extention(&mut self) -> Result<Option<Extention>> {
         self.print("Extention: ")?;
         let input = self.read_line()?;
-        Ok(Extention::from_string(input))
+        Ok(Extention::new(input))
     }
 
     fn read_line(&mut self) -> Result<String> {

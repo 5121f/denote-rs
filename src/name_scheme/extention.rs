@@ -10,7 +10,11 @@ use std::fmt::{self, Display};
 pub(crate) struct Extention(String);
 
 impl Extention {
-    pub(crate) fn from_string(ext: String) -> Option<Self> {
+    pub(crate) fn from_string(string: String) -> Self {
+        Self(string)
+    }
+
+    pub(crate) fn new(ext: String) -> Option<Self> {
         if ext.is_empty() {
             return None;
         }

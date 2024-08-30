@@ -78,7 +78,7 @@ impl NameScheme {
         name_scheme.extention = captures
             .name("ext")
             .map(|c| c.as_str().to_string())
-            .and_then(Extention::from_string);
+            .map(Extention::from_string);
 
         Some(name_scheme)
     }

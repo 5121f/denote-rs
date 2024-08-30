@@ -106,7 +106,7 @@ fn touch(
     }
 
     if let Some(extention) = extention {
-        name_scheme.extention = Extention::from_string(extention);
+        name_scheme.extention = Extention::new(extention);
     } else if interactive {
         name_scheme.extention = ui.take_extention()?;
     }
@@ -198,7 +198,7 @@ fn rename_file(
     };
 
     name_scheme.extention = if let Some(extention) = extention {
-        Extention::from_string(extention.to_string())
+        Extention::new(extention.to_string())
     } else {
         current_name_scheme
             .as_ref()
