@@ -22,18 +22,12 @@ use std::{
 use self::{extention::Extention, identifier::Identifier, keywords::Keywords, title::Title};
 
 const NAME_SHCHEME_REGEXP: &str = pomsky!(
-    let id = [digit]{8} 'T' [digit]{8};
-    let signature = [Alphabetic] ([Alphabetic '='])*;
-    let title = [Alphabetic] ([Alphabetic '-']*);
-    let keywords = [Alphabetic] ([Alphabetic '_']*);
-    let ext = [Alphabetic]+;
-
     ^
-    :id(id)
-    ("==" :signature(signature))?
-    ("--" :title(title))?
-    ("__" :keywords(keywords))?
-    ('.' :ext(ext))?
+    :id([digit]{8} 'T' [digit]{8})
+    ("==" :signature([Alphabetic] ([Alphabetic '='])*))?
+    ("--" :title([Alphabetic] ([Alphabetic '-']*)))?
+    ("__" :keywords([Alphabetic] ([Alphabetic '_']*)))?
+    ('.' :ext([Alphabetic]+))?
     $
 );
 
