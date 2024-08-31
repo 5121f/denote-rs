@@ -100,7 +100,7 @@ fn touch(
     }
 
     if let Some(keywords) = keywords {
-        name_scheme.keywords = Keywords::parse_from_user_input(&keywords);
+        name_scheme.keywords = Keywords::parse_user_input(&keywords);
     } else if interactive {
         name_scheme.keywords = ui.take_keywords()?;
     }
@@ -192,7 +192,7 @@ fn rename_file(
     };
 
     if let Some(keywords) = keywords {
-        name_scheme.keywords = Keywords::parse_from_user_input(&keywords);
+        name_scheme.keywords = Keywords::parse_user_input(&keywords);
     } else if interactive {
         name_scheme.keywords = io.take_keywords()?;
     };

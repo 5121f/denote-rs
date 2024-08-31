@@ -61,7 +61,7 @@ impl UI {
     pub(crate) fn take_keywords(&mut self) -> Result<Option<Keywords>> {
         self.print("Keywords: ")?;
         let input = self.read_line()?;
-        Ok(Keywords::parse_from_user_input(&input))
+        Ok(Keywords::parse_user_input(&input))
     }
 
     pub(crate) fn take_extention(&mut self) -> Result<Option<Extention>> {

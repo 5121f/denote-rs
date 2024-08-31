@@ -12,22 +12,18 @@ use crate::utils;
 pub(crate) struct Keywords(Vec<String>);
 
 impl Keywords {
-    pub(crate) fn parse_from_user_input(string: &str) -> Option<Self> {
-        let keywords: Vec<_> = string
-            .split(',')
-            .filter_map(|s| utils::format(s, ""))
-            .collect();
-        if keywords.is_empty() {
-            return None;
-        }
-        Some(Self(keywords))
+    pub(crate) fn parse_user_input(string: &str) -> Option<Self> {
+        Self::parse(string, ",")
     }
 
-    pub(crate) fn parse(string: &str) -> Option<Self> {
+    pub(crate) fn parse_schemed_string(string: &str) -> Option<Self> {
+        Self::parse(string, "_")
+    }
+
+    pub(crate) fn parse(string: &str, separator: &str) -> Option<Self> {
         let keywords: Vec<_> = string
-            .split("_")
+            .split(separator)
             .filter_map(|s| utils::format(s, ""))
-            .filter(|k| !k.is_empty())
             .collect();
         if keywords.is_empty() {
             return None;

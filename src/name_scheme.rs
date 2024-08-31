@@ -73,7 +73,7 @@ impl NameScheme {
         name_scheme.keywords = captures
             .name("keywords")
             .map(|c| c.as_str())
-            .and_then(Keywords::parse);
+            .and_then(Keywords::parse_schemed_string);
 
         name_scheme.extention = captures
             .name("ext")
