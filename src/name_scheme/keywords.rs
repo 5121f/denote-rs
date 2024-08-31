@@ -26,8 +26,8 @@ impl Keywords {
     pub(crate) fn parse(string: &str) -> Option<Self> {
         let keywords: Vec<_> = string
             .split("_")
-            .filter(|k| k.is_empty())
-            .map(ToString::to_string)
+            .filter_map(|s| utils::format(s, ""))
+            .filter(|k| !k.is_empty())
             .collect();
         if keywords.is_empty() {
             return None;
