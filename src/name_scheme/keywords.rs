@@ -15,7 +15,7 @@ impl Keywords {
     pub(crate) fn parse_from_user_input(string: &str) -> Option<Self> {
         let keywords: Vec<_> = string
             .split(',')
-            .filter_map(|s| utils::format(s, "-"))
+            .filter_map(|s| utils::format(s, ""))
             .collect();
         if keywords.is_empty() {
             return None;
