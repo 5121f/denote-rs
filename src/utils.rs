@@ -23,7 +23,7 @@ pub(crate) fn first_letter_uppercase(string: &str) -> String {
 
 pub(crate) fn format(string: &str, separator: &str) -> Option<String> {
     let string = remove_punctuation(string);
-    let string = string.trim();
+    let string = string.trim().to_lowercase();
     (!string.is_empty()).then(|| string.replace(' ', separator).to_string())
 }
 
