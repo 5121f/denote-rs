@@ -9,17 +9,19 @@ mod name_scheme;
 mod ui;
 mod utils;
 
-use anyhow::{bail, Context, Result};
-use clap::Parser;
-use cli_args::Cli;
-use name_scheme::{
-    extention::Extention, identifier::Identifier, keywords::Keywords, signature::Signature,
-    title::Title, NameScheme,
-};
-
 use std::{fs, path::PathBuf};
 
-use ui::UI;
+use anyhow::{bail, Context, Result};
+use clap::Parser;
+
+use crate::{
+    cli_args::Cli,
+    name_scheme::{
+        extention::Extention, identifier::Identifier, keywords::Keywords, signature::Signature,
+        title::Title, NameScheme,
+    },
+    ui::UI,
+};
 
 fn main() -> Result<()> {
     let cli = Cli::parse();

@@ -13,7 +13,7 @@ use std::{
 use chrono::{DateTime, Duration, Local, NaiveDateTime};
 
 #[derive(Clone)]
-pub(crate) struct Identifier(String);
+pub struct Identifier(String);
 
 impl Identifier {
     fn from_date_time(date_time: NaiveDateTime) -> Self {
@@ -24,16 +24,16 @@ impl Identifier {
         Self(format!("{date}T{time}{milliseconds}"))
     }
 
-    pub(crate) fn now() -> Self {
+    pub fn now() -> Self {
         let now = chrono::offset::Local::now().naive_local();
         Self::from_date_time(now)
     }
 
-    pub(crate) fn from_string(string: String) -> Self {
+    pub fn from_string(string: String) -> Self {
         Self(string)
     }
 
-    pub(crate) fn parse(string: &str) -> Result<Self> {
+    pub fn parse(string: &str) -> Result<Self> {
         if string == "now" {
             return Ok(Self::now());
         }
@@ -54,7 +54,7 @@ impl Identifier {
         Ok(Self::from_date_time(date_time))
     }
 
-    pub(crate) fn from_file_metadata(path: &Path) -> Result<Self> {
+    pub fn from_file_metadata(path: &Path) -> Result<Self> {
         let metadata = fs::metadata(path)?;
         let created: DateTime<Local> = metadata.created()?.into();
         Ok(Self::from_date_time(created.naive_local()))

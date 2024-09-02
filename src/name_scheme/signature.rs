@@ -9,14 +9,14 @@ use std::fmt::{self, Display};
 use crate::utils;
 
 #[derive(Clone)]
-pub(crate) struct Signature(String);
+pub struct Signature(String);
 
 impl Signature {
-    pub(crate) fn from_string(string: String) -> Self {
+    pub fn from_string(string: String) -> Self {
         Self(string)
     }
 
-    pub(crate) fn parse(string: &str) -> Option<Self> {
+    pub fn parse(string: &str) -> Option<Self> {
         utils::format(string, "=").map(Self)
     }
 }

@@ -19,7 +19,7 @@ use std::{
     path::Path,
 };
 
-use self::{extention::Extention, identifier::Identifier, keywords::Keywords, title::Title};
+pub use self::{extention::Extention, identifier::Identifier, keywords::Keywords, title::Title};
 
 const NAME_SHCHEME_REGEXP: &str = pomsky!(
     ^
@@ -109,6 +109,6 @@ impl Display for NameScheme {
 }
 
 #[test]
-fn name_scheme_regexp() {
+fn regexp() {
     Regex::new(NAME_SHCHEME_REGEXP).unwrap();
 }

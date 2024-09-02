@@ -9,18 +9,18 @@ use std::fmt::{self, Display};
 use crate::utils;
 
 #[derive(Default)]
-pub(crate) struct Keywords(Vec<String>);
+pub struct Keywords(Vec<String>);
 
 impl Keywords {
-    pub(crate) fn parse_user_input(string: &str) -> Option<Self> {
+    pub fn parse_user_input(string: &str) -> Option<Self> {
         Self::parse(string, ",")
     }
 
-    pub(crate) fn parse_schemed_string(string: &str) -> Option<Self> {
+    pub fn parse_schemed_string(string: &str) -> Option<Self> {
         Self::parse(string, "_")
     }
 
-    pub(crate) fn parse(string: &str, separator: &str) -> Option<Self> {
+    pub fn parse(string: &str, separator: &str) -> Option<Self> {
         let keywords: Vec<_> = string
             .split(separator)
             .filter_map(|s| utils::format(s, ""))
