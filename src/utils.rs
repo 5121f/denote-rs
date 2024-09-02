@@ -27,10 +27,10 @@ pub(crate) fn replace_spaces(string: &str, rep: &str) -> String {
     regex.replace_all(string, rep).to_string()
 }
 
-pub(crate) fn format(string: &str, separator: &str) -> Option<String> {
+pub(crate) fn format(string: &str, separator: &str) -> String {
     let string = remove_punctuation(string);
     let string = string.trim().to_lowercase();
-    (!string.is_empty()).then(|| replace_spaces(&string, separator))
+    replace_spaces(&string, separator)
 }
 
 #[test]

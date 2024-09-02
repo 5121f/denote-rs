@@ -92,25 +92,26 @@ fn touch(
     let mut name_scheme = NameScheme::new(identifier);
 
     if let Some(signature) = signature {
-        name_scheme.signature = Signature::parse(&signature);
+        name_scheme.signature(Signature::parse(&signature));
     }
 
     if let Some(title) = title {
-        name_scheme.title = Title::parse(&title);
+        name_scheme.title(Title::parse(&title));
     } else if interactive {
-        name_scheme.title = ui.take_title()?;
+        let title = ui.take_title()?;
+        name_scheme.title(title);
     }
 
     if let Some(keywords) = keywords {
-        name_scheme.keywords = Keywords::parse_user_input(&keywords);
+        name_scheme.keywords(Keywords::parse_user_input(&keywords));
     } else if interactive {
-        name_scheme.keywords = ui.take_keywords()?;
+        name_scheme.keywords(ui.take_keywords()?);
     }
 
     if let Some(extention) = extention {
-        name_scheme.extention = Extention::new(extention);
+        name_scheme.extention(Extention::new(extention));
     } else if interactive {
-        name_scheme.extention = ui.take_extention()?;
+        name_scheme.extention(ui.take_extention()?);
     }
 
     let file_name = name_scheme.to_string();
@@ -173,38 +174,38 @@ fn rename_file(
     let mut name_scheme = NameScheme::new(identifier);
 
     if let Some(signature) = signature {
-        name_scheme.signature = Signature::parse(signature);
+        name_scheme.signature(Signature::parse(signature));
     } else if !interactive {
         name_scheme.signature = current_name_scheme
             .as_ref()
             .and_then(|ns| ns.signature.clone());
     }
 
-    name_scheme.title = if let Some(title) = title {
-        Title::parse(title)
+    if let Some(title) = title {
+        name_scheme.title(Title::parse(title));
     } else if interactive {
         let old_title = current_name_scheme
             .as_ref()
             .and_then(|ns| ns.title.clone())
             .map(|title| title.desluggify())
             .unwrap_or(file_title);
-        io.title_with_old_title(&old_title)?
+        name_scheme.title(io.title_with_old_title(&old_title)?);
     } else {
-        current_name_scheme.as_ref().and_then(|ns| ns.title.clone())
+        name_scheme.title = current_name_scheme.as_ref().and_then(|ns| ns.title.clone())
     };
 
     if let Some(keywords) = keywords {
-        name_scheme.keywords = Keywords::parse_user_input(&keywords);
+        name_scheme.keywords(Keywords::parse_user_input(&keywords));
     } else if interactive {
-        name_scheme.keywords = io.take_keywords()?;
+        name_scheme.keywords(io.take_keywords()?);
     };
 
-    name_scheme.extention = if let Some(extention) = extention {
-        Extention::new(extention.to_string())
+    if let Some(extention) = extention {
+        name_scheme.extention(Extention::new(extention.to_string()));
     } else {
-        current_name_scheme
+        name_scheme.extention = current_name_scheme
             .as_ref()
-            .and_then(|ns| ns.extention.clone())
+            .and_then(|ns| ns.extention.clone());
     };
 
     let new_file_name = name_scheme.to_string();

@@ -10,20 +10,16 @@ use std::fmt::{self, Display};
 pub struct Extention(String);
 
 impl Extention {
-    pub fn from_string(string: String) -> Self {
-        Self(string)
-    }
-
-    pub fn new(ext: String) -> Option<Self> {
-        if ext.is_empty() {
-            return None;
-        }
-        Some(Self(ext))
+    pub fn new(ext: String) -> Self {
+        Self(ext.trim().to_string())
     }
 }
 
 impl Display for Extention {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        if self.0.is_empty() {
+            return fmt::Result::Ok(());
+        }
         write!(f, ".{}", self.0)
     }
 }

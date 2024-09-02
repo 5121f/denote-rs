@@ -73,14 +73,34 @@ impl NameScheme {
         name_scheme.keywords = captures
             .name("keywords")
             .map(|c| c.as_str())
-            .and_then(Keywords::parse_schemed_string);
+            .map(Keywords::parse_schemed_string);
 
         name_scheme.extention = captures
             .name("ext")
             .map(|c| c.as_str().to_string())
-            .map(Extention::from_string);
+            .map(Extention::new);
 
         Some(name_scheme)
+    }
+
+    pub fn signature(&mut self, signature: Signature) -> &mut Self {
+        self.signature = Some(signature);
+        self
+    }
+
+    pub fn title(&mut self, title: Title) -> &mut Self {
+        self.title = Some(title);
+        self
+    }
+
+    pub fn keywords(&mut self, keywords: Keywords) -> &mut Self {
+        self.keywords = Some(keywords);
+        self
+    }
+
+    pub fn extention(&mut self, extention: Extention) -> &mut Self {
+        self.extention = Some(extention);
+        self
     }
 }
 

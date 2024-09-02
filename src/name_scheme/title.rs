@@ -16,8 +16,8 @@ impl Title {
         Self(string)
     }
 
-    pub fn parse(string: &str) -> Option<Self> {
-        utils::format(string, "-").map(Self)
+    pub fn parse(string: &str) -> Self {
+        Self(utils::format(string, "-"))
     }
 
     pub fn desluggify(&self) -> String {
@@ -28,6 +28,9 @@ impl Title {
 
 impl Display for Title {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        if self.0.is_empty() {
+            return fmt::Result::Ok(());
+        }
         write!(f, "--{}", self.0)
     }
 }
