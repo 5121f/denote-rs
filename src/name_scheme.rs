@@ -12,14 +12,16 @@ pub(crate) mod title;
 
 use pomsky_macro::pomsky;
 use regex::Regex;
-use signature::Signature;
 
 use std::{
     fmt::{self, Display},
     path::Path,
 };
 
-pub use self::{extention::Extention, identifier::Identifier, keywords::Keywords, title::Title};
+pub use self::{
+    extention::Extention, identifier::Identifier, keywords::Keywords, signature::Signature,
+    title::Title,
+};
 
 const NAME_SHCHEME_REGEXP: &str = pomsky!(
     ^
