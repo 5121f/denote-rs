@@ -7,6 +7,7 @@
 use regex::Regex;
 
 const PUNCTUATION: &str = r"\p{P}";
+const SPACE_CHARACTERS: &str = r"\s+";
 
 pub(crate) fn remove_punctuation(string: &str) -> String {
     let punctuation = Regex::new(PUNCTUATION).unwrap();
@@ -21,13 +22,19 @@ pub(crate) fn first_letter_uppercase(string: &str) -> String {
     }
 }
 
+pub(crate) fn replace_spaces(string: &str, rep: &str) -> String {
+    let regex = Regex::new(SPACE_CHARACTERS).unwrap();
+    regex.replace_all(string, rep).to_string()
+}
+
 pub(crate) fn format(string: &str, separator: &str) -> Option<String> {
     let string = remove_punctuation(string);
     let string = string.trim().to_lowercase();
-    (!string.is_empty()).then(|| string.replace(' ', separator).to_string())
+    (!string.is_empty()).then(|| replace_spaces(&string, separator))
 }
 
 #[test]
-fn punctuation_regexp() {
+fn regexp() {
     Regex::new(PUNCTUATION).unwrap();
+    Regex::new(SPACE_CHARACTERS).unwrap();
 }
