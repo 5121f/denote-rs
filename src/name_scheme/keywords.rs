@@ -36,7 +36,7 @@ impl Keywords {
         Self::parse(string, "_")
     }
 
-    pub fn parse(string: &str, separator: &str) -> Self {
+    fn parse(string: &str, separator: &str) -> Self {
         let keywords: Vec<_> = string
             .split(separator)
             .map(|s| utils::format(s, ""))
