@@ -7,11 +7,9 @@
 pub(crate) mod extention;
 pub(crate) mod identifier;
 pub(crate) mod keywords;
+pub(crate) mod regexp;
 pub(crate) mod signature;
 pub(crate) mod title;
-
-use pomsky_macro::pomsky;
-use regex::Regex;
 
 use std::{
     fmt::{self, Display},
@@ -22,16 +20,6 @@ pub use self::{
     extention::Extention, identifier::Identifier, keywords::Keywords, signature::Signature,
     title::Title,
 };
-
-const NAME_SHCHEME_REGEXP: &str = pomsky!(
-    ^
-    :id([digit]{8} 'T' [digit]{8})
-    ("==" :signature([Alphabetic] ([Alphabetic '='])*))?
-    ("--" :title([Alphabetic] ([Alphabetic '-']*)))?
-    ("__" :keywords([Alphabetic] ([Alphabetic '_']*)))?
-    ('.' :ext([Alphabetic]+))?
-    $
-);
 
 #[derive(Default)]
 pub struct NameScheme {
@@ -51,7 +39,7 @@ impl NameScheme {
     }
 
     pub fn from_path(path: &Path) -> Option<Self> {
-        let regex = Regex::new(NAME_SHCHEME_REGEXP).unwrap();
+        let regex = &regexp::name_scheme();
         let file_name = path.file_name()?.to_str()?;
         let captures = regex.captures(file_name)?;
 
@@ -128,9 +116,4 @@ impl Display for NameScheme {
 
         fmt::Result::Ok(())
     }
-}
-
-#[test]
-fn regexp() {
-    Regex::new(NAME_SHCHEME_REGEXP).unwrap();
 }
