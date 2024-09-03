@@ -28,8 +28,8 @@ impl Keywords {
     /// use denote::Keywords;
     ///
     /// assert_eq!(
-    ///     Keywords::parse_user_input("word1_wor d2_").to_string(),
-    ///     "__word1_word2_"
+    ///     Keywords::parse_schemed_string("word1_wor d2_").to_string(),
+    ///     "__word1_word2"
     /// );
     /// ```
     pub fn parse_schemed_string(string: &str) -> Self {
