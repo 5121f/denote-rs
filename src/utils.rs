@@ -4,13 +4,20 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use regex::Regex;
+const PUNCTUATION: &str = r"-=_.,;*()";
 
-const PUNCTUATION: &str = r"\p{P}";
-
-pub(crate) fn remove_punctuation(string: &str) -> String {
-    let punctuation = Regex::new(PUNCTUATION).unwrap();
-    punctuation.replace_all(string, "").to_string()
+/// Remove symbols from string which contains in `PUNCTUATION` except separator
+pub(crate) fn remove_punctuation(string: &str, separator: &str) -> String {
+    string.chars().fold(String::new(), |acc, x| {
+        if acc.ends_with(x) {
+            return acc;
+        }
+        let x = x.to_string();
+        if x != separator && PUNCTUATION.contains(&x) {
+            return acc;
+        }
+        acc + &x
+    })
 }
 
 pub(crate) fn first_letter_uppercase(string: &str) -> String {
@@ -23,7 +30,7 @@ pub(crate) fn first_letter_uppercase(string: &str) -> String {
 
 pub(crate) fn format(string: &str, separator: &str) -> String {
     let string = only_one_letter(string, separator);
-    let string = remove_punctuation(&string);
+    let string = remove_punctuation(&string, separator);
     let string = string.trim().to_lowercase();
     let string = only_one_letter(&string, " ");
     string.replace(" ", separator)
@@ -38,9 +45,4 @@ fn only_one_letter(string: &str, letter: &str) -> String {
             acc + &x
         }
     })
-}
-
-#[test]
-fn regexp() {
-    Regex::new(PUNCTUATION).unwrap();
 }
