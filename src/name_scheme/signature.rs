@@ -15,8 +15,7 @@ impl Signature {
     /// ```
     /// use denote::Signature;
     ///
-    /// assert_eq!(Signature::parse("1b 2c").to_string(), "==1b=2c");
-    /// assert_eq!(Signature::parse("1a=2c").to_string(), "==1a=2c");
+    /// assert_eq!(Signature::parse("1b 2b=3c").to_string(), "==1b=2b=3c");
     /// ```
     pub fn parse(string: &str) -> Self {
         Self(utils::format(string, "="))
