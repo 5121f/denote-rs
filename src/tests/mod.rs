@@ -4,9 +4,4 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-pub mod name_scheme;
-#[cfg(test)]
-mod tests;
-mod utils;
-
-pub use name_scheme::{Extention, Identifier, Keywords, NameScheme, Signature, Title};
+mod keywords;

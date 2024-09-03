@@ -4,9 +4,10 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-pub mod name_scheme;
-#[cfg(test)]
-mod tests;
-mod utils;
+use crate::Keywords;
 
-pub use name_scheme::{Extention, Identifier, Keywords, NameScheme, Signature, Title};
+#[test]
+fn prase() {
+    assert_eq!(Keywords::parse_user_input("").to_string(), "");
+    assert_eq!(Keywords::parse_schemed_string("").to_string(), "");
+}
