@@ -12,6 +12,14 @@ use crate::utils;
 pub struct Title(String);
 
 impl Title {
+    /// ```
+    /// use denote::Title;
+    ///
+    /// assert_eq!(
+    ///     Title::from_string(String::from("some-title")).to_string(),
+    ///     "--some-title"
+    /// );
+    /// ```
     pub fn from_string(string: String) -> Self {
         Self(string)
     }
