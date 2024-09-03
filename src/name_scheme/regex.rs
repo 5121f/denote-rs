@@ -6,23 +6,23 @@
 
 use regex::Regex;
 
-const ACCEPTABLE_CHAR: &str = r"[\d\p{Alphabetic}]";
+const ACCEPTABLE_CHARS: &str = r"[\d\p{Alphabetic}]";
 const IDENTIFIER: &str = r"(?<id>\d{8}T\d{8})";
 
 pub(crate) fn signature() -> String {
-    format!(r"(?<signature>{ACCEPTABLE_CHAR}[{ACCEPTABLE_CHAR}=]*)")
+    format!(r"(?<signature>{ACCEPTABLE_CHARS}[{ACCEPTABLE_CHARS}=]*)")
 }
 
 pub(crate) fn title() -> String {
-    format!("(?<title>{ACCEPTABLE_CHAR}[{ACCEPTABLE_CHAR}-]*)")
+    format!("(?<title>{ACCEPTABLE_CHARS}[{ACCEPTABLE_CHARS}-]*)")
 }
 
 pub(crate) fn keywords() -> String {
-    format!("(?<keywords>{ACCEPTABLE_CHAR}[{ACCEPTABLE_CHAR}_]*)")
+    format!("(?<keywords>{ACCEPTABLE_CHARS}[{ACCEPTABLE_CHARS}_]*)")
 }
 
 pub(crate) fn extention() -> String {
-    format!("(?<ext>{ACCEPTABLE_CHAR}+)")
+    format!("(?<ext>{ACCEPTABLE_CHARS}+)")
 }
 
 pub(crate) fn name_scheme() -> Regex {
