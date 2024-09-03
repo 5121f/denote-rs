@@ -7,7 +7,7 @@
 mod extention;
 mod identifier;
 mod keywords;
-mod regexp;
+mod regex;
 mod signature;
 mod title;
 
@@ -38,7 +38,7 @@ impl NameScheme {
     }
 
     pub fn from_path(path: &Path) -> Option<Self> {
-        let regex = &regexp::name_scheme();
+        let regex = &regex::name_scheme();
         let file_name = path.file_name()?.to_str()?;
         let captures = regex.captures(file_name)?;
 
