@@ -40,6 +40,7 @@ impl Keywords {
         let keywords: Vec<_> = string
             .split(separator)
             .map(|s| utils::format(s, ""))
+            .filter(|s| !s.is_empty())
             .collect();
         Self(keywords)
     }
