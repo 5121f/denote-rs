@@ -9,6 +9,10 @@ use regex::Regex;
 const ACCEPTABLE_CHARS: &str = r"[\d\p{Alphabetic}]";
 const IDENTIFIER: &str = r"(?<id>\d{8}T\d{8})";
 
+pub(crate) fn identifier() -> Regex {
+    Regex::new(IDENTIFIER).unwrap()
+}
+
 pub(crate) fn signature() -> String {
     format!(r"(?<signature>{ACCEPTABLE_CHARS}[{ACCEPTABLE_CHARS}=]*)")
 }

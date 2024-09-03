@@ -10,6 +10,8 @@ use std::path::Path;
 
 use chrono::{DateTime, Duration, Local, NaiveDateTime};
 
+use super::regex;
+
 #[derive(Clone)]
 pub struct Identifier(String);
 
@@ -47,6 +49,9 @@ impl Identifier {
         if string == "now" {
             return Ok(Self::now());
         }
+        if let Some(id) = Self::find_in_string(string) {
+            return Ok(id);
+        }
         let currnet_time = chrono::offset::Local::now().naive_local().time();
         let first_try = chrono::NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
             .map(|d| {
@@ -68,6 +73,11 @@ impl Identifier {
         let metadata = fs::metadata(path)?;
         let created: DateTime<Local> = metadata.created()?.into();
         Ok(Self::from_date_time(created.naive_local()))
+    }
+
+    fn find_in_string(string: &str) -> Option<Self> {
+        let id = regex::identifier().captures(string)?.name("id")?;
+        Some(Self(id.as_str().to_string()))
     }
 }
 
