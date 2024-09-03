@@ -12,6 +12,10 @@ use crate::utils;
 pub struct Signature(String);
 
 impl Signature {
+    /// Function takes string as is. No checks are carried out.
+    ///
+    /// # Examples
+    ///
     /// ```
     /// use denote::Signature;
     ///

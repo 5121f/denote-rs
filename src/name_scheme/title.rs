@@ -12,6 +12,10 @@ use crate::utils;
 pub struct Title(String);
 
 impl Title {
+    /// Function takes string as is. No checks are carried out.
+    ///
+    /// # Examples
+    ///
     /// ```
     /// use denote::Title;
     ///
