@@ -25,22 +25,19 @@ pub(crate) fn extention() -> String {
     format!("(?<ext>{ACCEPTABLE_CHAR}+)")
 }
 
-fn _name_scheme() -> String {
-    format!(
+pub(crate) fn name_scheme() -> Regex {
+    let regex = format!(
         "^{id}(=={signature})?(--{title})?(__{keywords})?(.{ext})?$",
         id = IDENTIFIER,
         signature = signature(),
         title = title(),
         keywords = keywords(),
         ext = extention()
-    )
-}
-
-pub(crate) fn name_scheme() -> Regex {
-    Regex::new(&_name_scheme()).unwrap()
+    );
+    Regex::new(&regex).unwrap()
 }
 
 #[test]
 fn regexp() {
-    Regex::new(&_name_scheme()).unwrap();
+    name_scheme();
 }
