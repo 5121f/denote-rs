@@ -10,6 +10,9 @@ use std::fmt::{self, Display};
 pub struct Extention(String);
 
 impl Extention {
+    /// ```
+    /// assert_eq!(Extention::new(String::from("ext")).to_string(), ".ext");
+    /// ```
     pub fn new(ext: String) -> Self {
         Self(ext.trim().to_string())
     }

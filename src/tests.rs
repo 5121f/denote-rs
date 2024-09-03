@@ -4,13 +4,21 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-mod extention {
-    use crate::Extention;
+mod signature {
+    use crate::Signature;
 
     #[test]
-    fn test() {
-        assert_eq!(Extention::new(String::from("ext")).to_string(), ".ext");
-        assert_eq!(Extention::new(String::new()).to_string(), "");
+    fn parse() {
+        assert_eq!(Signature::parse("").to_string(), "");
+    }
+}
+
+mod title {
+    use crate::Title;
+
+    #[test]
+    fn parse() {
+        assert_eq!(Title::parse("").to_string(), "");
     }
 }
 
@@ -21,5 +29,14 @@ mod keywords {
     fn prase() {
         assert_eq!(Keywords::parse_user_input("").to_string(), "");
         assert_eq!(Keywords::parse_schemed_string("").to_string(), "");
+    }
+}
+
+mod extention {
+    use crate::Extention;
+
+    #[test]
+    fn test() {
+        assert_eq!(Extention::new(String::new()).to_string(), "");
     }
 }
