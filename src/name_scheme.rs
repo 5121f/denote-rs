@@ -67,10 +67,7 @@ impl NameScheme {
             .map(|c| c.as_str())
             .map(Signature::parse);
 
-        name_scheme.title = captures
-            .name("title")
-            .map(|c| c.as_str().to_string())
-            .map(Title::from_string);
+        name_scheme.title = captures.name("title").map(|c| c.as_str()).map(Title::parse);
 
         name_scheme.keywords = captures
             .name("keywords")

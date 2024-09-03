@@ -12,26 +12,11 @@ use crate::utils;
 pub struct Title(String);
 
 impl Title {
-    /// Function takes string as is. No checks are carried out.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use denote::Title;
-    ///
-    /// assert_eq!(
-    ///     Title::from_string(String::from("some-title")).to_string(),
-    ///     "--some-title"
-    /// );
-    /// ```
-    pub fn from_string(string: String) -> Self {
-        Self(string)
-    }
-
     /// ```
     /// use denote::Title;
     ///
     /// assert_eq!(Title::parse(",Some  title ").to_string(), "--some-title");
+    /// assert_eq!(Title::parse("some-title").to_string(), "--some-title");
     /// ```
     pub fn parse(string: &str) -> Self {
         Self(utils::format(string, "-"))
