@@ -16,10 +16,20 @@ impl Title {
         Self(string)
     }
 
+    /// ```
+    /// use denote::Title;
+    ///
+    /// assert_eq!(Title::parse(",Some  title ").to_string(), "--some-title");
+    /// ```
     pub fn parse(string: &str) -> Self {
         Self(utils::format(string, "-"))
     }
 
+    /// ```
+    /// use denote::Title;
+    ///
+    /// assert_eq!(Title::parse(" some Title").desluggify(), "Some title");
+    /// ```
     pub fn desluggify(&self) -> String {
         let deslugify = self.0.clone().replace('-', " ");
         utils::first_letter_uppercase(&deslugify)
