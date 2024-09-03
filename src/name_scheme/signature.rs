@@ -12,6 +12,14 @@ use crate::utils;
 pub struct Signature(String);
 
 impl Signature {
+    /// ```
+    /// use denote::Signature;
+    ///
+    /// assert_eq!(
+    ///     Signature::from_string(String::from("1a=2c")).to_string(),
+    ///     "==1a=2c"
+    /// );
+    /// ```
     pub fn from_string(string: String) -> Self {
         Self(string)
     }
