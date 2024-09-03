@@ -49,7 +49,6 @@ impl NameScheme {
     /// let mut name_scheme = NameScheme::from_path(path).unwrap();
     /// name_scheme.title(Title::parse("Another title"));
     /// assert_eq!(name_scheme.to_string(), "20240903T13173023--another-title__keyword.txt");
-    ///
     /// ```
     pub fn from_path(path: &Path) -> Option<Self> {
         let regex = &regex::name_scheme();
@@ -65,8 +64,8 @@ impl NameScheme {
 
         name_scheme.signature = captures
             .name("signature")
-            .map(|c| c.as_str().to_string())
-            .map(Signature::from_string);
+            .map(|c| c.as_str())
+            .map(Signature::parse);
 
         name_scheme.title = captures
             .name("title")
