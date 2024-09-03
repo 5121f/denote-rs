@@ -12,10 +12,26 @@ use crate::utils;
 pub struct Keywords(Vec<String>);
 
 impl Keywords {
+    /// ```
+    /// use denote::Keywords;
+    ///
+    /// assert_eq!(
+    ///     Keywords::parse_user_input("word1,word2, word 3 ").to_string(),
+    ///     "__word1_word2_word3"
+    /// );
+    /// ```
     pub fn parse_user_input(string: &str) -> Self {
         Self::parse(string, ",")
     }
 
+    /// ```
+    /// use denote::Keywords;
+    ///
+    /// assert_eq!(
+    ///     Keywords::parse_user_input("word1_wor d2_").to_string(),
+    ///     "__word1_word2_"
+    /// );
+    /// ```
     pub fn parse_schemed_string(string: &str) -> Self {
         Self::parse(string, "_")
     }
