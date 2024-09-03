@@ -37,6 +37,10 @@ impl NameScheme {
         }
     }
 
+    /// Trying find denote name scheme in file name. Returns `None` if name scheme didn't found.
+    ///
+    /// # Examples
+    ///
     /// ```
     /// use std::path::Path;
     /// use denote::{NameScheme, Title};
