@@ -6,7 +6,7 @@
 
 use std::io::{self, Write};
 
-use crate::name_scheme::{extention::Extention, keywords::Keywords, title::Title};
+use crate::{Extention, Keywords, Title};
 
 /// User Interface
 pub struct UI {

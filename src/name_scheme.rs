@@ -4,22 +4,21 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-pub(crate) mod extention;
-pub(crate) mod identifier;
-pub(crate) mod keywords;
-pub(crate) mod regexp;
-pub(crate) mod signature;
-pub(crate) mod title;
+mod extention;
+mod identifier;
+mod keywords;
+mod regexp;
+mod signature;
+mod title;
 
-use std::{
-    fmt::{self, Display},
-    path::Path,
-};
+use std::fmt::{self, Display};
+use std::path::Path;
 
-pub use self::{
-    extention::Extention, identifier::Identifier, keywords::Keywords, signature::Signature,
-    title::Title,
-};
+pub use extention::Extention;
+pub use identifier::Identifier;
+pub use keywords::Keywords;
+pub use signature::Signature;
+pub use title::Title;
 
 #[derive(Default)]
 pub struct NameScheme {

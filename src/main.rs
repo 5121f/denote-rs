@@ -14,14 +14,9 @@ use std::{fs, path::PathBuf};
 use anyhow::{bail, Context, Result};
 use clap::Parser;
 
-use crate::{
-    cli_args::Cli,
-    name_scheme::{
-        extention::Extention, identifier::Identifier, keywords::Keywords, signature::Signature,
-        title::Title, NameScheme,
-    },
-    ui::UI,
-};
+use cli_args::Cli;
+use name_scheme::{Extention, Identifier, Keywords, NameScheme, Signature, Title};
+use ui::UI;
 
 fn main() -> Result<()> {
     let cli = Cli::parse();

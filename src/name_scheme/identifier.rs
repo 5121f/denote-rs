@@ -4,11 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::{
-    fmt::{self, Display},
-    fs,
-    path::Path,
-};
+use std::fmt::{self, Display};
+use std::fs;
+use std::path::Path;
 
 use chrono::{DateTime, Duration, Local, NaiveDateTime};
 

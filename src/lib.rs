@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-pub mod name_scheme;
+mod name_scheme;
 #[cfg(test)]
 mod tests;
 mod utils;
