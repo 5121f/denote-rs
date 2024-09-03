@@ -92,7 +92,8 @@ fn touch(
     let mut name_scheme = NameScheme::new(identifier);
 
     if let Some(signature) = signature {
-        name_scheme.signature(Signature::parse(&signature));
+        let signature = Signature::parse(&signature);
+        name_scheme.signature(signature);
     }
 
     if let Some(title) = title {
@@ -105,13 +106,15 @@ fn touch(
     if let Some(keywords) = keywords {
         name_scheme.keywords(Keywords::parse_user_input(&keywords));
     } else if interactive {
-        name_scheme.keywords(ui.take_keywords()?);
+        let keywords = ui.take_keywords()?;
+        name_scheme.keywords(keywords);
     }
 
     if let Some(extention) = extention {
         name_scheme.extention(Extention::new(extention));
     } else if interactive {
-        name_scheme.extention(ui.take_extention()?);
+        let extention = ui.take_extention()?;
+        name_scheme.extention(extention);
     }
 
     let file_name = name_scheme.to_string();
@@ -189,19 +192,23 @@ fn rename_file(
             .and_then(|ns| ns.title.clone())
             .map(|title| title.desluggify())
             .unwrap_or(file_title);
-        name_scheme.title(io.title_with_old_title(&old_title)?);
+        let title = io.title_with_old_title(&old_title)?;
+        name_scheme.title(title);
     } else {
         name_scheme.title = current_name_scheme.as_ref().and_then(|ns| ns.title.clone())
     };
 
     if let Some(keywords) = keywords {
-        name_scheme.keywords(Keywords::parse_user_input(&keywords));
+        let keywords = Keywords::parse_user_input(&keywords);
+        name_scheme.keywords(keywords);
     } else if interactive {
-        name_scheme.keywords(io.take_keywords()?);
+        let keywords = io.take_keywords()?;
+        name_scheme.keywords(keywords);
     };
 
     if let Some(extention) = extention {
-        name_scheme.extention(Extention::new(extention.to_string()));
+        let extention = Extention::new(extention.to_string());
+        name_scheme.extention(extention);
     } else {
         name_scheme.extention = current_name_scheme
             .as_ref()
