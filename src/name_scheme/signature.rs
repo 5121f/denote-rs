@@ -16,6 +16,11 @@ impl Signature {
         Self(string)
     }
 
+    /// ```
+    /// use denote::Signature;
+    ///
+    /// assert_eq!(Signature::parse("1b 2c").to_string(), "==1b=2c");
+    /// ```
     pub fn parse(string: &str) -> Self {
         Self(utils::format(string, "="))
     }
