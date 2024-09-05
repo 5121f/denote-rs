@@ -39,9 +39,9 @@ impl UI {
         self.print(&format!("Title [{old_title}]: "))?;
         let input = self.read_line()?;
         let title = if input.trim().is_empty() {
-            old_title.to_owned()
+            old_title
         } else {
-            input
+            &input
         };
         let title = Title::parse(&title);
         Ok(title)
