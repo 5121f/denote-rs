@@ -35,7 +35,7 @@ pub(crate) fn format(string: &str, separator: &str) -> String {
     string.replace(" ", separator)
 }
 
-/// Leave oly one `letter` in `string` where it repeated
+/// Leave oly one `letter` per in `string` in places where it is repeated
 fn leave_only_one_letter(string: &str, letter: &str) -> String {
     string.chars().fold(String::new(), |acc, x| {
         let x = x.to_string();
