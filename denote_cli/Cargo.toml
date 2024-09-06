@@ -12,9 +12,3 @@ license.workspace = true
 denote = { path = "../denote" }
 clap = { version = "4.5.16", features = ["derive", "cargo", "wrap_help"] }
 anyhow = "1.0.86"
-
-[profile.release]
-lto = true
-opt-level = "s"
-strip = "symbols"
-codegen-units = 1
