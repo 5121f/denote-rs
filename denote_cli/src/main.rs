@@ -106,7 +106,8 @@ fn touch(
     }
 
     if let Some(extention) = extention {
-        name_scheme.extention(Extention::new(extention));
+        let extention = Extention::new(extention);
+        name_scheme.extention(extention);
     } else if interactive {
         let extention = ui.take_extention()?;
         name_scheme.extention(extention);
