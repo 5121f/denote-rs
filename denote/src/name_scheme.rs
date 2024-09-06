@@ -50,9 +50,9 @@ impl NameScheme {
     /// name_scheme.title(Title::parse("Another title"));
     /// assert_eq!(name_scheme.to_string(), "20240903T13173023--another-title__keyword.txt");
     /// ```
-    pub fn from_path(path: &Path) -> Option<Self> {
+    pub fn from_path(path: impl AsRef<Path>) -> Option<Self> {
         let regex = &regex::name_scheme();
-        let file_name = path.file_name()?.to_str()?;
+        let file_name = path.as_ref().file_name()?.to_str()?;
         let captures = regex.captures(file_name)?;
 
         let id = {

@@ -69,7 +69,7 @@ impl Identifier {
         Ok(Self::from_date_time(date_time))
     }
 
-    pub fn from_file_metadata(path: &Path) -> Result<Self> {
+    pub fn from_file_metadata(path: impl AsRef<Path>) -> Result<Self> {
         let metadata = fs::metadata(path)?;
         let created: DateTime<Local> = metadata.created()?.into();
         Ok(Self::from_date_time(created.naive_local()))
