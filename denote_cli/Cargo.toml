@@ -18,4 +18,3 @@ lto = true
 opt-level = "s"
 strip = "symbols"
 codegen-units = 1
-
