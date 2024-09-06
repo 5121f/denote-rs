@@ -35,6 +35,7 @@ pub(crate) fn format(string: &str, separator: &str) -> String {
     string.replace(" ", separator)
 }
 
+/// Leave oly one `letter` in `string` where it repeated
 fn only_one_letter(string: &str, letter: &str) -> String {
     string.chars().fold(String::new(), |acc, x| {
         let x = x.to_string();
@@ -44,4 +45,14 @@ fn only_one_letter(string: &str, letter: &str) -> String {
             acc + &x
         }
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::only_one_letter;
+
+    #[test]
+    fn only_one_letter_test() {
+        assert_eq!(only_one_letter("some---title", "-"), "some-title");
+    }
 }
