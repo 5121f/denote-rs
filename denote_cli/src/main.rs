@@ -13,7 +13,7 @@ use anyhow::{bail, Context, Result};
 use clap::Parser;
 
 use cli_args::Cli;
-use denote::{Extention, Identifier, Keywords, NameScheme, Signature, Title};
+use denote::{Extension, Identifier, Keywords, NameScheme, Signature, Title};
 use ui::UI;
 
 fn main() -> Result<()> {
@@ -27,7 +27,7 @@ fn main() -> Result<()> {
             signature,
             title,
             keywords,
-            extention,
+            extension,
             non_interactive,
             accept,
         } => {
@@ -39,7 +39,7 @@ fn main() -> Result<()> {
                     signature.as_deref(),
                     title.as_deref(),
                     keywords.as_deref(),
-                    extention.as_deref(),
+                    extension.as_deref(),
                     non_interactive,
                     accept,
                 )?;
@@ -50,7 +50,7 @@ fn main() -> Result<()> {
             date,
             signature,
             keywords,
-            extention,
+            extension,
             non_interactive,
             accept,
         } => touch(
@@ -58,7 +58,7 @@ fn main() -> Result<()> {
             date,
             signature,
             keywords,
-            extention,
+            extension,
             non_interactive,
             accept,
         )?,
@@ -72,7 +72,7 @@ fn touch(
     date: String,
     signature: Option<String>,
     keywords: Option<String>,
-    extention: Option<String>,
+    extension: Option<String>,
     non_interactive: bool,
     accept: bool,
 ) -> Result<()> {
@@ -105,12 +105,12 @@ fn touch(
         name_scheme.keywords(keywords);
     }
 
-    if let Some(extention) = extention {
-        let extention = Extention::new(extention);
-        name_scheme.extention(extention);
+    if let Some(extension) = extension {
+        let extension = Extension::new(extension);
+        name_scheme.extension(extension);
     } else if interactive {
-        let extention = ui.take_extention()?;
-        name_scheme.extention(extention);
+        let extension = ui.take_extension()?;
+        name_scheme.extension(extension);
     }
 
     let file_name = name_scheme.to_string();
@@ -135,7 +135,7 @@ fn rename_file(
     signature: Option<&str>,
     title: Option<&str>,
     keywords: Option<&str>,
-    extention: Option<&str>,
+    extension: Option<&str>,
     non_interactive: bool,
     accept: bool,
 ) -> Result<()> {
@@ -204,13 +204,13 @@ fn rename_file(
         name_scheme.keywords(keywords);
     };
 
-    if let Some(extention) = extention {
-        let extention = Extention::new(extention.to_string());
-        name_scheme.extention(extention);
+    if let Some(extension) = extension {
+        let extension = Extension::new(extension.to_string());
+        name_scheme.extension(extension);
     } else {
-        name_scheme.extention = current_name_scheme
+        name_scheme.extension = current_name_scheme
             .as_ref()
-            .and_then(|ns| ns.extention.clone());
+            .and_then(|ns| ns.extension.clone());
     };
 
     let new_file_name = name_scheme.to_string();

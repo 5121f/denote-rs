@@ -32,11 +32,11 @@ mod keywords {
     }
 }
 
-mod extention {
-    use crate::Extention;
+mod extension {
+    use crate::Extension;
 
     #[test]
     fn test() {
-        assert_eq!(Extention::new(String::new()).to_string(), "");
+        assert_eq!(Extension::new(String::new()).to_string(), "");
     }
 }

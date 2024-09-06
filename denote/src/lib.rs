@@ -9,4 +9,4 @@ mod name_scheme;
 mod tests;
 mod utils;
 
-pub use name_scheme::{Extention, Identifier, Keywords, NameScheme, Signature, Title};
+pub use name_scheme::{Extension, Identifier, Keywords, NameScheme, Signature, Title};

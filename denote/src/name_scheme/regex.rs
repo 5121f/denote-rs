@@ -25,7 +25,7 @@ pub(crate) fn keywords() -> String {
     format!("(?<keywords>{ACCEPTABLE_CHARS}[{ACCEPTABLE_CHARS}_]*)")
 }
 
-pub(crate) fn extention() -> String {
+pub(crate) fn extension() -> String {
     format!("(?<ext>{ACCEPTABLE_CHARS}+)")
 }
 
@@ -36,7 +36,7 @@ pub(crate) fn name_scheme() -> Regex {
         signature = signature(),
         title = title(),
         keywords = keywords(),
-        ext = extention()
+        ext = extension()
     );
     Regex::new(&regex).unwrap()
 }

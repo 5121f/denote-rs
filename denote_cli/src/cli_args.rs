@@ -31,9 +31,9 @@ pub(crate) enum Cli {
         /// Specify the keywords
         #[clap(long, short)]
         keywords: Option<String>,
-        /// Specify the extention
+        /// Specify the v
         #[clap(long, short)]
-        extention: Option<String>,
+        extension: Option<String>,
         /// Don't ask anything. Use default values if not specified
         #[clap(long, short)]
         non_interactive: bool,
@@ -57,9 +57,9 @@ pub(crate) enum Cli {
         /// Specify the keywords
         #[clap(long, short)]
         keywords: Option<String>,
-        /// Specify the file extention
+        /// Specify the file extension
         #[clap(long, short)]
-        extention: Option<String>,
+        extension: Option<String>,
         /// Don't ask anything. Use default values if not specified
         #[clap(long, short)]
         non_interactive: bool,

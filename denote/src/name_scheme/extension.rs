@@ -7,9 +7,9 @@
 use std::fmt::{self, Display};
 
 #[derive(Clone, Default)]
-pub struct Extention(String);
+pub struct Extension(String);
 
-impl Extention {
+impl Extension {
     /// ```
     /// use denote::Extention;
     ///
@@ -20,7 +20,7 @@ impl Extention {
     }
 }
 
-impl Display for Extention {
+impl Display for Extension {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if self.0.is_empty() {
             return fmt::Result::Ok(());
