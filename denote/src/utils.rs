@@ -9,9 +9,6 @@ const PUNCTUATION: &str = r"-=_.,;*()";
 /// Remove symbols from string which contains in `PUNCTUATION` except separator
 pub(crate) fn remove_punctuation(string: &str, separator: &str) -> String {
     string.chars().fold(String::new(), |acc, x| {
-        if acc.ends_with(x) {
-            return acc;
-        }
         let x = x.to_string();
         if x != separator && PUNCTUATION.contains(&x) {
             return acc;
