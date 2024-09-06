@@ -28,15 +28,15 @@ pub(crate) fn first_letter_uppercase(string: &str) -> String {
 }
 
 pub(crate) fn format(string: &str, separator: &str) -> String {
-    let string = only_one_letter(string, separator);
+    let string = leave_only_one_letter(string, separator);
     let string = remove_punctuation(&string, separator);
     let string = string.trim().to_lowercase();
-    let string = only_one_letter(&string, " ");
+    let string = leave_only_one_letter(&string, " ");
     string.replace(" ", separator)
 }
 
 /// Leave oly one `letter` in `string` where it repeated
-fn only_one_letter(string: &str, letter: &str) -> String {
+fn leave_only_one_letter(string: &str, letter: &str) -> String {
     string.chars().fold(String::new(), |acc, x| {
         let x = x.to_string();
         if acc.ends_with(letter) && letter == x {
@@ -49,10 +49,10 @@ fn only_one_letter(string: &str, letter: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::only_one_letter;
+    use super::leave_only_one_letter;
 
     #[test]
     fn only_one_letter_test() {
-        assert_eq!(only_one_letter("some---title", "-"), "some-title");
+        assert_eq!(leave_only_one_letter("some---title", "-"), "some-title");
     }
 }
