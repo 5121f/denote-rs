@@ -11,9 +11,9 @@ pub struct Extension(String);
 
 impl Extension {
     /// ```
-    /// use denote::Extention;
+    /// use denote::Extension;
     ///
-    /// assert_eq!(Extention::new(String::from("ext")).to_string(), ".ext");
+    /// assert_eq!(Extension::new(String::from("ext")).to_string(), ".ext");
     /// ```
     pub fn new(ext: String) -> Self {
         Self(ext.trim().to_string())

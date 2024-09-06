@@ -52,11 +52,11 @@ impl Identifier {
         if let Some(id) = Self::find_in_string(string) {
             return Ok(id);
         }
-        let currnet_time = chrono::offset::Local::now().naive_local().time();
+        let current_time = chrono::offset::Local::now().naive_local().time();
         let first_try = chrono::NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
             .map(|d| {
                 d.checked_add_signed(Duration::milliseconds(
-                    currnet_time.format("%S%3f").to_string().parse().ok()?,
+                    current_time.format("%S%3f").to_string().parse().ok()?,
                 ))
             })
             .ok()
@@ -64,7 +64,7 @@ impl Identifier {
         let date_time = match first_try {
             Some(date) => date,
             None => chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
-                .map(|d| d.and_time(currnet_time))?,
+                .map(|d| d.and_time(current_time))?,
         };
         Ok(Self::from_date_time(date_time))
     }

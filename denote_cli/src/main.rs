@@ -144,7 +144,7 @@ fn rename_file(
     let path = PathBuf::from(&file_name);
 
     if !path.exists() {
-        bail!("File dosen't exists");
+        bail!("File doesn't exists");
     }
     if path.is_dir() {
         bail!("Renaming directories are not supported");
