@@ -20,11 +20,13 @@ pub(crate) fn remove_punctuation(string: &str, separator: &str) -> String {
     })
 }
 
+/// Makes first letter in string uppercase
 pub(crate) fn first_letter_uppercase(string: &str) -> String {
     let mut chars = string.chars();
-    match chars.next() {
+    let first_letter = chars.next();
+    match first_letter {
+        Some(c) => c.to_uppercase().to_string() + chars.as_str(),
         None => String::new(),
-        Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
     }
 }
 
