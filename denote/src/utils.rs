@@ -40,10 +40,9 @@ fn leave_only_one_letter(string: &str, letter: &str) -> String {
     string.chars().fold(String::new(), |acc, x| {
         let x = x.to_string();
         if acc.ends_with(letter) && letter == x {
-            acc
-        } else {
-            acc + &x
+            return acc;
         }
+        acc + &x
     })
 }
 
