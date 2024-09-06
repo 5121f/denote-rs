@@ -5,9 +5,7 @@
  */
 
 mod cli_args;
-mod name_scheme;
 mod ui;
-mod utils;
 
 use std::{fs, path::PathBuf};
 
@@ -15,7 +13,7 @@ use anyhow::{bail, Context, Result};
 use clap::Parser;
 
 use cli_args::Cli;
-use name_scheme::{Extention, Identifier, Keywords, NameScheme, Signature, Title};
+use denote::{Extention, Identifier, Keywords, NameScheme, Signature, Title};
 use ui::UI;
 
 fn main() -> Result<()> {

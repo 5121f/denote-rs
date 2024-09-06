@@ -1,27 +1,13 @@
-[package]
-name = "denote-rs"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+members = ["denote", "denote_cli"]
+resolver = "2"
 
+[workspace.package]
+edition = "2021"
 description = "Create and rename files with denote name shcheme"
 authors = ["Artyom Kalin Vyacheslavovich <kalin.a.v20031@gmail.com>"]
 repository = "https://github.com/5121f/denote-rs"
 license = "MPL-2.0"
-
-[[bin]]
-name = "denote_bin"
-path = "src/main.rs"
-
-[lib]
-name = "denote"
-path = "src/lib.rs"
-
-[dependencies]
-clap = { version = "4.5.16", features = ["derive", "cargo", "wrap_help"] }
-chrono = "0.4.38"
-anyhow = "1.0.86"
-regex = "1.10.6"
-thiserror = "1.0.63"
 
 [profile.release]
 lto = true
