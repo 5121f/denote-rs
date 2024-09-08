@@ -75,10 +75,11 @@ impl FileNameError {
 
 #[cfg(test)]
 mod tests {
-    use super::leave_only_one_letter;
-
     #[test]
-    fn only_one_letter_test() {
-        assert_eq!(leave_only_one_letter("some---title", "-"), "some-title");
+    fn leave_only_one_letter() {
+        assert_eq!(
+            super::leave_only_one_letter("some---title", "-"),
+            "some-title"
+        );
     }
 }
