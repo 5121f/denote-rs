@@ -9,4 +9,6 @@ mod name_scheme;
 mod tests;
 mod utils;
 
-pub use name_scheme::{Error, Extension, Identifier, Keywords, NameScheme, Signature, Title};
+pub use name_scheme::{Error, Extension, Keywords, NameScheme, Signature, Title};
+pub use name_scheme::{Identifier, IdentifierError};
+pub use utils::FileNameError;
