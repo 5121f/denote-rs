@@ -32,7 +32,7 @@ fn main() -> Result<()> {
             accept,
         } => {
             for path in paths {
-                rename_file(
+                rename(
                     &path,
                     date.as_deref(),
                     date_from_metadata,
@@ -128,7 +128,7 @@ fn touch(
     Ok(())
 }
 
-fn rename_file(
+fn rename(
     path: &Path,
     date: Option<&str>,
     date_from_metadata: bool,
