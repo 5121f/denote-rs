@@ -49,7 +49,7 @@ impl Identifier {
                     .ok()
                     .map(|d| d.and_time(current_time))
             })
-            .ok_or(Error::ConvertDate)?;
+            .ok_or(Error::ParseDate)?;
         Ok(Self::from_date_time(date_time))
     }
 
@@ -79,8 +79,8 @@ impl Display for Identifier {
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("Failed to convert date")]
-    ConvertDate,
+    #[error("Failed to papse date")]
+    ParseDate,
     #[error("Failed to take file metadata: {}", 0)]
     IO(#[from] std::io::Error),
 }
