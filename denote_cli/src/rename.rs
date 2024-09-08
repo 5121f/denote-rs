@@ -34,12 +34,12 @@ pub fn rename(
         .map(|s| s.to_string_lossy().to_string())
         .unwrap_or_default();
 
-    let current_name_scheme = NameScheme::from_path(&path).ok();
+    let current_name_scheme = NameScheme::from_path(path).ok();
 
     let identifier = if date_from_metadata {
-        Identifier::from_file_metadata(&path)?
+        Identifier::from_file_metadata(path)?
     } else if let Some(date) = date {
-        Identifier::parse(&date)?
+        Identifier::parse(date)?
     } else if let Some(cns) = &current_name_scheme {
         cns.identifier.clone()
     } else {
@@ -77,7 +77,7 @@ pub fn rename(
     };
 
     if let Some(keywords) = keywords {
-        let keywords = Keywords::parse_user_input(&keywords);
+        let keywords = Keywords::parse_user_input(keywords);
         name_scheme.keywords(keywords);
     } else if interactive {
         let keywords = io.take_keywords()?;
@@ -107,7 +107,7 @@ pub fn rename(
         }
     }
 
-    fs::rename(&path, new_file_name).with_context(|| format!("Failed to rename file {path:?}"))?;
+    fs::rename(path, new_file_name).with_context(|| format!("Failed to rename file {path:?}"))?;
 
     Ok(())
 }

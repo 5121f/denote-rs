@@ -14,9 +14,11 @@ mod title;
 use std::fmt::{self, Display};
 use std::path::{Path, PathBuf};
 
+use ::regex::Regex;
 pub use extension::Extension;
 pub use identifier::{Error as IdentifierError, Identifier};
 pub use keywords::Keywords;
+use once_cell::sync::Lazy;
 pub use signature::Signature;
 pub use title::Title;
 
@@ -54,9 +56,9 @@ impl NameScheme {
     /// ```
     pub fn from_path(path: impl AsRef<Path>) -> Result<Self> {
         let file_name = utils::take_file_name(&path)?;
-        let captures = regex::NAME_SCHEME
-            .captures(&file_name)
-            .ok_or(Error::find(&path))?;
+
+        static REGEX: Lazy<Regex> = regex::NAME_SCHEME;
+        let captures = REGEX.captures(&file_name).ok_or(Error::find(&path))?;
 
         let id = {
             let capture = captures.name("id").unwrap();

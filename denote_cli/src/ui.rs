@@ -43,7 +43,7 @@ impl UI {
         } else {
             &input
         };
-        let title = Title::parse(&title);
+        let title = Title::parse(title);
         Ok(title)
     }
 

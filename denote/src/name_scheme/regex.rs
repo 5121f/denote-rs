@@ -42,5 +42,6 @@ pub(crate) const NAME_SCHEME: Lazy<Regex> = Lazy::new(|| {
 
 #[test]
 fn regexp() {
-    NAME_SCHEME.captures("test");
+    static REGEX: Lazy<Regex> = NAME_SCHEME;
+    REGEX.captures("test");
 }
