@@ -5,7 +5,7 @@
  */
 
 mod signature {
-    use crate::Signature;
+    use denote::Signature;
 
     #[test]
     fn parse() {
@@ -14,7 +14,7 @@ mod signature {
 }
 
 mod title {
-    use crate::Title;
+    use denote::Title;
 
     #[test]
     fn parse() {
@@ -23,7 +23,7 @@ mod title {
 }
 
 mod keywords {
-    use crate::Keywords;
+    use denote::Keywords;
 
     #[test]
     fn prase() {
@@ -33,7 +33,7 @@ mod keywords {
 }
 
 mod extension {
-    use crate::Extension;
+    use denote::Extension;
 
     #[test]
     fn test() {
@@ -42,7 +42,7 @@ mod extension {
 }
 
 mod identifier {
-    use crate::{Identifier, IdentifierError};
+    use denote::{Identifier, IdentifierError};
 
     #[test]
     fn test() {

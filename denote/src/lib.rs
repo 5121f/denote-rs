@@ -5,8 +5,6 @@
  */
 
 mod name_scheme;
-#[cfg(test)]
-mod tests;
 mod utils;
 
 pub use name_scheme::{Error, Extension, Keywords, NameScheme, Signature, Title};
