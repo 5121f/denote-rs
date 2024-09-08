@@ -57,7 +57,10 @@ pub(crate) fn take_file_name(path: impl AsRef<Path>) -> Result<String, FileNameE
 }
 
 #[derive(Debug, thiserror::Error)]
-#[error("Failed to take file name from path: {path}")]
+#[error(
+    "Failed to take file name from path: '{path}'. \
+    Maybe path contains non Unicode characters or ends with '..'"
+)]
 pub struct FileNameError {
     path: PathBuf,
 }
