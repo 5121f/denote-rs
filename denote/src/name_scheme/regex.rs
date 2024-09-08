@@ -4,14 +4,13 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+use once_cell::sync::Lazy;
 use regex::Regex;
 
 const ACCEPTABLE_CHARS: &str = r"[\d\p{Alphabetic}]";
-const IDENTIFIER: &str = r"(?<id>\d{8}T\d{8})";
+const _IDENTIFIER: &str = r"(?<id>\d{8}T\d{8})";
 
-pub(crate) fn identifier() -> Regex {
-    Regex::new(IDENTIFIER).unwrap()
-}
+pub(crate) const IDENTIFIER: Lazy<Regex> = Lazy::new(|| Regex::new(_IDENTIFIER).unwrap());
 
 pub(crate) fn signature() -> String {
     format!(r"(?<signature>{ACCEPTABLE_CHARS}[{ACCEPTABLE_CHARS}=]*)")
@@ -29,19 +28,19 @@ pub(crate) fn extension() -> String {
     format!("(?<ext>{ACCEPTABLE_CHARS}+)")
 }
 
-pub(crate) fn name_scheme() -> Regex {
+pub(crate) const NAME_SCHEME: Lazy<Regex> = Lazy::new(|| {
     let regex = format!(
         "^{id}(=={signature})?(--{title})?(__{keywords})?(.{ext})?$",
-        id = IDENTIFIER,
+        id = _IDENTIFIER,
         signature = signature(),
         title = title(),
         keywords = keywords(),
         ext = extension()
     );
     Regex::new(&regex).unwrap()
-}
+});
 
 #[test]
 fn regexp() {
-    name_scheme();
+    NAME_SCHEME.captures("test");
 }
