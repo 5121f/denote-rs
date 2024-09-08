@@ -1,5 +1,5 @@
 [package]
-name = "denote_cli"
+name = "denote-cli"
 version = "0.1.0"
 
 edition.workspace = true
