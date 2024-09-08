@@ -89,3 +89,15 @@ pub enum Error {
 }
 
 type Result<T> = std::result::Result<T, Error>;
+
+#[cfg(test)]
+mod test {
+    use super::Identifier;
+
+    #[test]
+    fn find() {
+        let text = "some random text 20240908T19063022 asd";
+        let identifier = Identifier::parse(text).unwrap();
+        assert_eq!(identifier.to_string(), "20240908T19063022");
+    }
+}
