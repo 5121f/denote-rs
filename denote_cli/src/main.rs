@@ -155,7 +155,7 @@ fn rename_file(
         .map(|s| s.to_string_lossy().to_string())
         .unwrap_or_default();
 
-    let current_name_scheme = NameScheme::from_path(&path);
+    let current_name_scheme = NameScheme::from_path(&path).ok();
 
     let identifier = if date_from_metadata {
         Identifier::from_file_metadata(&path)?
