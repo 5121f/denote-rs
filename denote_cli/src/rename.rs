@@ -56,9 +56,9 @@ pub fn rename(
         let signature = Signature::parse(signature);
         name_scheme.signature(signature);
     } else if !interactive {
-        name_scheme.signature = current_name_scheme
-            .as_ref()
-            .and_then(|ns| ns.signature.clone());
+        if let Some(cns) = &current_name_scheme {
+            name_scheme.signature = cns.signature.clone();
+        }
     }
 
     if let Some(title) = title {
@@ -72,8 +72,8 @@ pub fn rename(
             .unwrap_or(file_title.clone());
         let title = io.title_with_old_title(&old_title)?;
         name_scheme.title(title);
-    } else {
-        name_scheme.title = current_name_scheme.as_ref().and_then(|ns| ns.title.clone())
+    } else if let Some(cns) = &current_name_scheme {
+        name_scheme.title = cns.title.clone();
     };
 
     if let Some(keywords) = keywords {
@@ -87,10 +87,8 @@ pub fn rename(
     if let Some(extension) = extension {
         let extension = Extension::new(extension.to_string());
         name_scheme.extension(extension);
-    } else {
-        name_scheme.extension = current_name_scheme
-            .as_ref()
-            .and_then(|ns| ns.extension.clone());
+    } else if let Some(cns) = &current_name_scheme {
+        name_scheme.extension = cns.extension.clone()
     };
 
     let new_file_name = name_scheme.to_string();
