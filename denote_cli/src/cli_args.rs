@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+use std::path::PathBuf;
+
 use clap::Parser;
 
 #[derive(Parser)]
@@ -12,7 +14,7 @@ pub(crate) enum Cli {
     /// Rename existing file
     Rename {
         #[clap(required = true)]
-        file_names: Vec<String>,
+        paths: Vec<PathBuf>,
         /// The date to be used as the identifier.
         /// Can be used a date like 2022-06-30 or a date and time like 2022-06-16 14:30.
         /// Can be used "now" to use current system date and time.

@@ -21,7 +21,7 @@ fn main() -> Result<()> {
 
     match cli {
         Cli::Rename {
-            file_names,
+            paths,
             date,
             date_from_metadata,
             signature,
@@ -31,9 +31,9 @@ fn main() -> Result<()> {
             non_interactive,
             accept,
         } => {
-            for file_name in file_names {
+            for path in paths {
                 rename_file(
-                    file_name,
+                    &path,
                     date.as_deref(),
                     date_from_metadata,
                     signature.as_deref(),
@@ -129,7 +129,7 @@ fn touch(
 }
 
 fn rename_file(
-    file_name: String,
+    path: &Path,
     date: Option<&str>,
     date_from_metadata: bool,
     signature: Option<&str>,
@@ -139,7 +139,6 @@ fn rename_file(
     non_interactive: bool,
     accept: bool,
 ) -> Result<()> {
-    let path = Path::new(&file_name);
     if !path.exists() {
         bail!("File doesn't exists");
     }
@@ -187,7 +186,7 @@ fn rename_file(
             .as_ref()
             .and_then(|ns| ns.title.clone())
             .map(|title| title.desluggify())
-            .unwrap_or(file_title);
+            .unwrap_or(file_title.clone());
         let title = io.title_with_old_title(&old_title)?;
         name_scheme.title(title);
     } else {
@@ -213,13 +212,13 @@ fn rename_file(
 
     let new_file_name = name_scheme.to_string();
 
-    if file_name == new_file_name {
+    if file_title == new_file_name {
         UI::no_action_needed();
         return Ok(());
     }
 
     if !accept {
-        println!("Old name \"{file_name}\"\nNew name \"{new_file_name}\"");
+        println!("Old name {file_title:?}\nNew name \"{new_file_name}\"");
         let accepted = io.question("Accept?", true)?;
         if !accepted {
             UI::no_action_needed();
