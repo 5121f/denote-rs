@@ -40,3 +40,13 @@ mod extension {
         assert_eq!(Extension::new(String::new()).to_string(), "");
     }
 }
+
+mod identifier {
+    use crate::{Identifier, IdentifierError};
+
+    #[test]
+    fn test() {
+        let id = Identifier::parse("");
+        assert!(matches!(id, Err(IdentifierError::ParseDate)));
+    }
+}
