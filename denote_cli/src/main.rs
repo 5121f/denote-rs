@@ -7,7 +7,7 @@
 mod cli_args;
 mod ui;
 
-use std::{fs, path::PathBuf};
+use std::{fs, path::Path};
 
 use anyhow::{bail, Context, Result};
 use clap::Parser;
@@ -139,10 +139,7 @@ fn rename_file(
     non_interactive: bool,
     accept: bool,
 ) -> Result<()> {
-    let mut io = UI::new();
-
-    let path = PathBuf::from(&file_name);
-
+    let path = Path::new(&file_name);
     if !path.exists() {
         bail!("File doesn't exists");
     }
@@ -170,6 +167,8 @@ fn rename_file(
     let interactive = !non_interactive;
 
     let mut name_scheme = NameScheme::new(identifier);
+
+    let mut io = UI::new();
 
     if let Some(signature) = signature {
         let signature = Signature::parse(signature);
