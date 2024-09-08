@@ -53,19 +53,19 @@ impl Identifier {
             return Ok(id);
         }
         let current_time = chrono::offset::Local::now().naive_local().time();
-        let first_try = chrono::NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
-            .map(|d| {
+        let date_time = chrono::NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
+            .ok()
+            .and_then(|d| {
                 d.checked_add_signed(Duration::milliseconds(
                     current_time.format("%S%3f").to_string().parse().ok()?,
                 ))
             })
-            .ok()
-            .flatten();
-        let date_time = match first_try {
-            Some(date) => date,
-            None => chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
-                .map(|d| d.and_time(current_time))?,
-        };
+            .or_else(|| {
+                chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
+                    .ok()
+                    .map(|d| d.and_time(current_time))
+            })
+            .ok_or(Error::ConvertDate)?;
         Ok(Self::from_date_time(date_time))
     }
 
@@ -96,7 +96,7 @@ impl Display for Identifier {
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("Failed to convert date")]
-    ConvertDate(#[from] chrono::ParseError),
+    ConvertDate,
     #[error(transparent)]
     IO(#[from] std::io::Error),
 }
