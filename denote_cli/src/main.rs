@@ -161,11 +161,10 @@ fn rename_file(
         Identifier::from_file_metadata(&path)?
     } else if let Some(date) = date {
         Identifier::parse(&date)?
+    } else if let Some(cns) = &current_name_scheme {
+        cns.identifier.clone()
     } else {
-        current_name_scheme
-            .as_ref()
-            .map(|ns| ns.identifier.clone())
-            .unwrap_or_default()
+        Identifier::now()
     };
 
     let interactive = !non_interactive;
