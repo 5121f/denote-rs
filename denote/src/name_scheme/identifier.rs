@@ -29,22 +29,6 @@ impl Identifier {
         Self::from_date_time(now)
     }
 
-    /// Function takes string as is. No checks are carried out.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use denote::Identifier;
-    ///
-    /// let time = "20240903T13173023".to_string();
-    /// assert_eq!(
-    ///     Identifier::from_string(time.clone()).to_string(),
-    ///     time
-    /// );
-    pub fn from_string(string: String) -> Self {
-        Self(string)
-    }
-
     pub fn parse(string: &str) -> Result<Self> {
         if string == "now" {
             return Ok(Self::now());

@@ -57,7 +57,7 @@ impl NameScheme {
 
         let id = {
             let capture = captures.name("id")?;
-            Identifier::from_string(capture.as_str().to_string())
+            Identifier::parse(capture.as_str()).ok()?
         };
 
         let mut name_scheme = Self::new(id);
