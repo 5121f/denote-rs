@@ -60,7 +60,10 @@ impl Identifier {
     }
 
     fn find_in_string(string: &str) -> Option<Self> {
-        let id = regex::IDENTIFIER.captures(string)?.name("id")?;
+        let id = regex::IDENTIFIER
+            .captures(string)?
+            .name("id")
+            .expect("Regex: \"id\" name group didn't found");
         Some(Self(id.as_str().to_string()))
     }
 }
