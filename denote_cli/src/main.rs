@@ -147,7 +147,7 @@ fn rename_file(
         bail!("File doesn't exists");
     }
     if path.is_dir() {
-        bail!("Renaming directories are not supported");
+        bail!("Renaming directories is not supported");
     }
 
     let file_title = path
