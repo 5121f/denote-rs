@@ -81,7 +81,7 @@ impl Display for Identifier {
 pub enum Error {
     #[error("Failed to convert date")]
     ConvertDate,
-    #[error(transparent)]
+    #[error("Failed to take file metadata: {}", 0)]
     IO(#[from] std::io::Error),
 }
 
