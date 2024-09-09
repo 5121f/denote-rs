@@ -35,14 +35,20 @@ fn main() -> Result<()> {
         } => {
             let mut ui = UI::new();
 
-            if paths.len() > 1 && !sisngle_unic_id(date.as_deref(), &mut ui)? {
-                UI::no_action_needed();
-                return Ok(());
+            if paths.len() > 1 && unic_id(date.as_deref()) {
+                let accept = ui.question(
+                    "It is not recommended to use one unique identifier for several files\nContinue?",
+                    false,
+                )?;
+                if !accept {
+                    UI::no_action_needed();
+                    return Ok(());
+                }
             }
 
-            for path in paths {
+            for path in &paths {
                 rename(
-                    &path,
+                    path,
                     date.as_deref(),
                     date_from_metadata,
                     signature.as_deref(),
@@ -77,16 +83,10 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn sisngle_unic_id(date: Option<&str>, ui: &mut UI) -> Result<bool> {
+fn unic_id(date: Option<&str>) -> bool {
     let Some(date) = &date else {
-        return Ok(false);
+        return false;
     };
-    if Identifier::find_in_string(date).is_none() {
-        return Ok(false);
-    };
-    let accept = ui.question(
-        "It is not recommended to use one unique identifier for several files\nContinue?",
-        false,
-    )?;
-    Ok(accept)
+    let identifier = Identifier::find_in_string(date);
+    identifier.is_some()
 }
