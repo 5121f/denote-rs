@@ -51,6 +51,7 @@ fn main() -> Result<()> {
                     extension.as_deref(),
                     non_interactive,
                     accept,
+                    &mut ui,
                 )?;
             }
         }

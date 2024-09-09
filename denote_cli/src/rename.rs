@@ -21,6 +21,7 @@ pub fn rename(
     extension: Option<&str>,
     non_interactive: bool,
     accept: bool,
+    ui: &mut UI,
 ) -> Result<()> {
     if !path.exists() {
         bail!("File doesn't exists");
@@ -50,8 +51,6 @@ pub fn rename(
 
     let mut name_scheme = NameScheme::new(identifier);
 
-    let mut io = UI::new();
-
     if let Some(signature) = signature {
         let signature = Signature::parse(signature);
         name_scheme.signature(signature);
@@ -70,7 +69,7 @@ pub fn rename(
             .and_then(|ns| ns.title.clone())
             .map(|title| title.desluggify())
             .unwrap_or(file_title.clone());
-        let title = io.title_with_old_title(&old_title)?;
+        let title = ui.title_with_old_title(&old_title)?;
         name_scheme.title(title);
     } else if let Some(cns) = &current_name_scheme {
         name_scheme.title = cns.title.clone();
@@ -80,7 +79,7 @@ pub fn rename(
         let keywords = Keywords::parse_user_input(keywords);
         name_scheme.keywords(keywords);
     } else if interactive {
-        let keywords = io.take_keywords()?;
+        let keywords = ui.take_keywords()?;
         name_scheme.keywords(keywords);
     };
 
@@ -100,7 +99,7 @@ pub fn rename(
 
     if !accept {
         println!("Old name {file_title:?}\nNew name \"{new_file_name}\"");
-        let accepted = io.question("Accept?", true)?;
+        let accepted = ui.question("Accept?", true)?;
         if !accepted {
             UI::no_action_needed();
             return Ok(());
