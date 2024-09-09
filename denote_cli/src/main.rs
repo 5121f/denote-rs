@@ -11,11 +11,12 @@ mod ui;
 
 use anyhow::Result;
 use clap::Parser;
-use denote::{Extension, Keywords, Title};
+use denote::{Extension, Identifier, Keywords, Title};
 
 use cli_args::Cli;
 use rename::rename;
 use touch::touch;
+use ui::UI;
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
@@ -32,6 +33,13 @@ fn main() -> Result<()> {
             non_interactive,
             accept,
         } => {
+            let mut ui = UI::new();
+
+            if paths.len() > 1 && !sisngle_unic_id(date.as_deref(), &mut ui)? {
+                UI::no_action_needed();
+                return Ok(());
+            }
+
             for path in paths {
                 rename(
                     &path,
@@ -66,4 +74,18 @@ fn main() -> Result<()> {
     }
 
     Ok(())
+}
+
+fn sisngle_unic_id(date: Option<&str>, ui: &mut UI) -> Result<bool> {
+    let Some(date) = &date else {
+        return Ok(false);
+    };
+    if Identifier::find_in_string(date).is_none() {
+        return Ok(false);
+    };
+    let accept = ui.question(
+        "It is not recommended to use one unique identifier for several files\nContinue?",
+        false,
+    )?;
+    Ok(accept)
 }

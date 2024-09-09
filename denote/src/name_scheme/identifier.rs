@@ -59,7 +59,7 @@ impl Identifier {
         Ok(Self::from_date_time(created.naive_local()))
     }
 
-    fn find_in_string(string: &str) -> Option<Self> {
+    pub fn find_in_string(string: &str) -> Option<Self> {
         let id = regex::IDENTIFIER
             .captures(string)?
             .name("id")
