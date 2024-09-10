@@ -9,7 +9,7 @@ use std::fs;
 use std::path::Path;
 use std::time::SystemTime;
 
-use chrono::{DateTime, Duration, Local, NaiveDateTime, NaiveTime};
+use chrono::{DateTime, Duration, Local, NaiveDate, NaiveDateTime, NaiveTime};
 
 use super::regex;
 
@@ -19,7 +19,7 @@ pub struct Identifier(String);
 impl Identifier {
     /// Use current system time for create Identifier
     pub fn now() -> Self {
-        chrono::offset::Local::now().naive_local().into()
+        Local::now().naive_local().into()
     }
 
     /// Try parse identifier from given string.
@@ -37,7 +37,7 @@ impl Identifier {
 
     /// Just call a `from_string_date` and `parse_from_xml` functions.
     pub fn from_string(string: &str) -> Result<Self> {
-        let current_time = chrono::offset::Local::now().naive_local().time();
+        let current_time = Local::now().naive_local().time();
 
         Self::from_string_date(string, current_time)
             .or_else(|_| Self::parse_from_xml_date(string, current_time))
@@ -45,7 +45,7 @@ impl Identifier {
 
     /// Parse date from xml date format. Takes time from given `time`.
     pub fn parse_from_xml_date(string: &str, time: NaiveTime) -> Result<Self> {
-        let date_time = chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
+        let date_time = NaiveDate::parse_from_str(string, "%Y-%m-%d")
             .ok()
             .map(|d| d.and_time(time))
             .ok_or(Error::ParseDate)?;
@@ -56,7 +56,7 @@ impl Identifier {
     /// Parse string for date and time formatted  as follows: `%Y-%m-%d %H:%M`.
     /// Takes milliseconds from given `time`.
     pub fn from_string_date(string: &str, time: NaiveTime) -> Result<Self> {
-        let date_time = chrono::NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
+        let date_time = NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
             .ok()
             .and_then(|d| {
                 d.checked_add_signed(Duration::milliseconds(
