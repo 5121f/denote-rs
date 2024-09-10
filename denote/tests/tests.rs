@@ -8,7 +8,7 @@ mod signature {
     use denote::Signature;
 
     #[test]
-    fn parse() {
+    fn empty_input() {
         assert_eq!(Signature::parse("").to_string(), "");
     }
 }
@@ -17,7 +17,7 @@ mod title {
     use denote::Title;
 
     #[test]
-    fn parse() {
+    fn empty_input() {
         assert_eq!(Title::parse("").to_string(), "");
     }
 }
@@ -26,7 +26,7 @@ mod keywords {
     use denote::Keywords;
 
     #[test]
-    fn prase() {
+    fn empty_input() {
         assert_eq!(Keywords::parse_user_input("").to_string(), "");
         assert_eq!(Keywords::parse_schemed_string("").to_string(), "");
     }
@@ -36,7 +36,7 @@ mod extension {
     use denote::Extension;
 
     #[test]
-    fn test() {
+    fn empty_input() {
         assert_eq!(Extension::new(String::new()).to_string(), "");
     }
 }
@@ -45,7 +45,7 @@ mod identifier {
     use denote::{Identifier, IdentifierError};
 
     #[test]
-    fn test() {
+    fn empty_input() {
         let id = Identifier::parse("");
         assert!(matches!(id, Err(IdentifierError::ParseDate)));
     }
