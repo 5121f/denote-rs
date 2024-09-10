@@ -20,7 +20,7 @@ pub use title::Title;
 
 use crate::utils::{self, FileNameError};
 
-#[derive(Default)]
+#[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
 pub struct NameScheme {
     pub identifier: Identifier,
     pub signature: Option<Signature>,

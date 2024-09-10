@@ -8,7 +8,7 @@ use std::fmt::{self, Display};
 
 use crate::utils;
 
-#[derive(Default)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct Keywords(Vec<String>);
 
 impl Keywords {

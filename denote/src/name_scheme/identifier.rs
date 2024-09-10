@@ -12,7 +12,7 @@ use chrono::{DateTime, Duration, Local, NaiveDateTime, NaiveTime};
 
 use super::regex;
 
-#[derive(Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Identifier(String);
 
 impl Identifier {

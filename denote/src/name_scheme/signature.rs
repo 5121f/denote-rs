@@ -8,7 +8,7 @@ use std::fmt::{self, Display};
 
 use crate::utils;
 
-#[derive(Clone)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct Signature(String);
 
 impl Signature {
