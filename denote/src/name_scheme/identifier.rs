@@ -8,7 +8,7 @@ use std::fmt::{self, Display};
 use std::fs;
 use std::path::Path;
 
-use chrono::{DateTime, Duration, Local, NaiveDateTime};
+use chrono::{DateTime, Duration, Local, NaiveDateTime, NaiveTime};
 
 use super::regex;
 
@@ -29,27 +29,49 @@ impl Identifier {
         Self::from_date_time(now)
     }
 
+    /// Try parse identifier from given string.
     pub fn parse(string: &str) -> Result<Self> {
         if string == "now" {
             return Ok(Self::now());
         }
+
         if let Some(id) = Self::find_in_string(string) {
             return Ok(id);
         }
+
+        Self::from_string(string)
+    }
+
+    /// Just call a `from_string_date` and `parse_from_xml` functions.
+    pub fn from_string(string: &str) -> Result<Self> {
         let current_time = chrono::offset::Local::now().naive_local().time();
+
+        Self::from_string_date(string, current_time)
+            .or_else(|_| Self::parse_from_xml_date(string, current_time))
+    }
+
+    /// Parse date from xml date format. Takes time from given `time`.
+    pub fn parse_from_xml_date(string: &str, time: NaiveTime) -> Result<Self> {
+        let date_time = chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
+            .ok()
+            .map(|d| d.and_time(time))
+            .ok_or(Error::ParseDate)?;
+
+        Ok(Self::from_date_time(date_time))
+    }
+
+    /// Parse string for date and time formatted  as follows: `%Y-%m-%d %H:%M`.
+    /// Takes milliseconds from given `time`.
+    pub fn from_string_date(string: &str, time: NaiveTime) -> Result<Self> {
         let date_time = chrono::NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
             .ok()
             .and_then(|d| {
                 d.checked_add_signed(Duration::milliseconds(
-                    current_time.format("%S%3f").to_string().parse().ok()?,
+                    time.format("%S%3f").to_string().parse().ok()?,
                 ))
             })
-            .or_else(|| {
-                chrono::NaiveDate::parse_from_str(string, "%Y-%m-%d")
-                    .ok()
-                    .map(|d| d.and_time(current_time))
-            })
             .ok_or(Error::ParseDate)?;
+
         Ok(Self::from_date_time(date_time))
     }
 
