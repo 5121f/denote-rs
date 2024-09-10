@@ -7,6 +7,6 @@
 mod name_scheme;
 mod utils;
 
-pub use name_scheme::{Error, Extension, Keywords, NameScheme, Signature, Title};
+pub use name_scheme::{Error, Keywords, NameScheme, Signature, Title};
 pub use name_scheme::{Identifier, IdentifierError};
 pub use utils::FileNameError;

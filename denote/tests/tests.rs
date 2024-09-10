@@ -32,15 +32,6 @@ mod keywords {
     }
 }
 
-mod extension {
-    use denote::Extension;
-
-    #[test]
-    fn empty_input() {
-        assert_eq!(Extension::new(String::new()).to_string(), "");
-    }
-}
-
 mod identifier {
     use denote::{Identifier, IdentifierError};
 

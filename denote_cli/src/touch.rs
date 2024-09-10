@@ -7,7 +7,7 @@
 use std::fs;
 
 use anyhow::{Context, Result};
-use denote::{Extension, Identifier, Keywords, NameScheme, Signature, Title};
+use denote::{Identifier, Keywords, NameScheme, Signature, Title};
 
 use crate::ui::UI;
 
@@ -50,7 +50,6 @@ pub fn touch(
     }
 
     if let Some(extension) = extension {
-        let extension = Extension::new(extension);
         name_scheme.extension(extension);
     } else if interactive {
         let extension = ui.take_extension()?;

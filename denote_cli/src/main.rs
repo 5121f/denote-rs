@@ -11,7 +11,7 @@ mod ui;
 
 use anyhow::Result;
 use clap::Parser;
-use denote::{Extension, Identifier, Keywords, Title};
+use denote::{Identifier, Keywords, Title};
 
 use cli_args::Cli;
 use rename::rename;

@@ -6,7 +6,7 @@
 
 use std::io::{self, Write};
 
-use crate::{Extension, Keywords, Title};
+use crate::{Keywords, Title};
 
 /// User Interface
 pub struct UI {
@@ -64,10 +64,10 @@ impl UI {
         Ok(Keywords::parse_user_input(&input))
     }
 
-    pub(crate) fn take_extension(&mut self) -> Result<Extension> {
+    pub(crate) fn take_extension(&mut self) -> Result<String> {
         self.print("Extension: ")?;
         let input = self.read_line()?;
-        Ok(Extension::new(input))
+        Ok(input)
     }
 
     fn read_line(&mut self) -> Result<String> {
