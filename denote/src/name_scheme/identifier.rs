@@ -24,6 +24,7 @@ impl Identifier {
         Self(format!("{date}T{time}{milliseconds}"))
     }
 
+    /// Use current system time for create Identifier
     pub fn now() -> Self {
         let now = chrono::offset::Local::now().naive_local();
         Self::from_date_time(now)
