@@ -7,6 +7,7 @@
 use std::fmt::{self, Display};
 use std::fs;
 use std::path::Path;
+use std::time::SystemTime;
 
 use chrono::{DateTime, Duration, Local, NaiveDateTime, NaiveTime};
 
@@ -16,18 +17,9 @@ use super::regex;
 pub struct Identifier(String);
 
 impl Identifier {
-    fn from_date_time(date_time: NaiveDateTime) -> Self {
-        let date = date_time.date().format("%Y%m%d").to_string();
-        let time = date_time.time();
-        let milliseconds = time.format("%3f").to_string()[..2].to_owned();
-        let time = time.format("%H%M%S").to_string();
-        Self(format!("{date}T{time}{milliseconds}"))
-    }
-
     /// Use current system time for create Identifier
     pub fn now() -> Self {
-        let now = chrono::offset::Local::now().naive_local();
-        Self::from_date_time(now)
+        chrono::offset::Local::now().naive_local().into()
     }
 
     /// Try parse identifier from given string.
@@ -58,7 +50,7 @@ impl Identifier {
             .map(|d| d.and_time(time))
             .ok_or(Error::ParseDate)?;
 
-        Ok(Self::from_date_time(date_time))
+        Ok(date_time.into())
     }
 
     /// Parse string for date and time formatted  as follows: `%Y-%m-%d %H:%M`.
@@ -73,13 +65,13 @@ impl Identifier {
             })
             .ok_or(Error::ParseDate)?;
 
-        Ok(Self::from_date_time(date_time))
+        Ok(date_time.into())
     }
 
     pub fn from_file_metadata(path: impl AsRef<Path>) -> Result<Self> {
         let metadata = fs::metadata(path)?;
-        let created: DateTime<Local> = metadata.created()?.into();
-        Ok(Self::from_date_time(created.naive_local()))
+        let created = metadata.created()?;
+        Ok(created.into())
     }
 
     pub fn find_in_string(string: &str) -> Option<Self> {
@@ -100,6 +92,29 @@ impl Default for Identifier {
 impl Display for Identifier {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.0)
+    }
+}
+
+impl From<NaiveDateTime> for Identifier {
+    fn from(value: NaiveDateTime) -> Self {
+        let date = value.date().format("%Y%m%d").to_string();
+        let time = value.time();
+        let milliseconds = time.format("%3f").to_string()[..2].to_owned();
+        let time = time.format("%H%M%S").to_string();
+        Self(format!("{date}T{time}{milliseconds}"))
+    }
+}
+
+impl From<DateTime<Local>> for Identifier {
+    fn from(value: DateTime<Local>) -> Self {
+        value.naive_local().into()
+    }
+}
+
+impl From<SystemTime> for Identifier {
+    fn from(value: SystemTime) -> Self {
+        let date_time: DateTime<Local> = value.into();
+        date_time.into()
     }
 }
 
