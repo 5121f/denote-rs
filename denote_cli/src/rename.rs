@@ -11,6 +11,7 @@ use denote::{Identifier, Keywords, NameScheme, Signature, Title};
 
 use crate::ui::UI;
 
+#[allow(clippy::too_many_arguments)]
 pub fn rename(
     path: &Path,
     date: Option<&str>,
