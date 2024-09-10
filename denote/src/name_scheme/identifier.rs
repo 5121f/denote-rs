@@ -75,10 +75,13 @@ impl Identifier {
     }
 
     pub fn find_in_string(string: &str) -> Option<Self> {
-        let id = regex::IDENTIFIER
-            .captures(string)?
+        let captures = regex::IDENTIFIER.captures(string)?;
+
+        // We have test in `regex` module to usnsure regex is contains `id` group
+        let id = captures
             .name("id")
             .expect("Regex: \"id\" name group didn't found");
+
         Some(Self(id.as_str().to_string()))
     }
 }
