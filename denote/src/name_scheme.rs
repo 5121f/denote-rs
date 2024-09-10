@@ -45,7 +45,7 @@ impl NameScheme {
     /// use std::path::Path;
     /// use denote::{NameScheme, Title};
     ///
-    /// let path = Path::new("20240903T13173023--title__keyword.txt");
+    /// let path = "20240903T13173023--title__keyword.txt";
     /// let mut name_scheme = NameScheme::from_path(path).unwrap();
     /// name_scheme.title(Title::parse("Another title"));
     /// assert_eq!(name_scheme.to_string(), "20240903T13173023--another-title__keyword.txt");
