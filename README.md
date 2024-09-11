@@ -2,11 +2,13 @@
 
 # denote-rs
 
-Use [denote](https://github.com/protesilaos/denote) name shcheme outside of Emacs.
+Use [denote](https://github.com/protesilaos/denote) name shcheme outside of
+Emacs.
 
 ## Building
 
-denote-rs written in Rust so you need [Rust compiler and Cargo](https://www.rust-lang.org) for build it.
+denote-rs written in Rust so you need
+[Rust compiler and Cargo](https://www.rust-lang.org) for build it.
 
 To build denote-rs:
 
