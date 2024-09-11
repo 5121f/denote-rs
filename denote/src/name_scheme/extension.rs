@@ -4,9 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::path::Path;
 use std::fmt::{self, Display};
-
+use std::path::Path;
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct Extension(String);
