@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 const PUNCTUATION: &str = r"-=_.,;*()";
 
@@ -48,29 +48,8 @@ fn leave_only_one_letter(string: &str, letter: &str) -> String {
     })
 }
 
-fn _take_file_name(path: impl AsRef<Path>) -> Option<String> {
+pub fn take_file_name(path: impl AsRef<Path>) -> Option<String> {
     Some(path.as_ref().file_name()?.to_str()?.to_string())
-}
-
-pub(crate) fn take_file_name(path: impl AsRef<Path>) -> Result<String, FileNameError> {
-    _take_file_name(&path).ok_or_else(|| FileNameError::new(path))
-}
-
-#[derive(Debug, thiserror::Error)]
-#[error(
-    "Failed to take file name from path: '{path}'. \
-    Maybe path contains non Unicode characters or ends with '..'"
-)]
-pub struct FileNameError {
-    path: PathBuf,
-}
-
-impl FileNameError {
-    fn new(path: impl AsRef<Path>) -> Self {
-        Self {
-            path: path.as_ref().to_path_buf(),
-        }
-    }
 }
 
 #[cfg(test)]

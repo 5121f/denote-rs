@@ -23,52 +23,44 @@ impl Identifier {
     }
 
     /// Try parse identifier from given string.
-    pub fn parse(string: &str) -> Result<Self> {
+    pub fn parse(string: &str) -> Option<Self> {
         if string == "now" {
-            return Ok(Self::now());
+            return Some(Self::now());
         }
 
-        if let Some(id) = Self::find_in_string(string) {
-            return Ok(id);
-        }
-
-        Self::from_string(string)
+        Self::find_in_string(string).or_else(|| Self::from_string(string))
     }
 
     /// Just call a `from_string_date` and `parse_from_xml` functions.
-    pub fn from_string(string: &str) -> Result<Self> {
+    pub fn from_string(string: &str) -> Option<Self> {
         let current_time = Local::now().naive_local().time();
 
         Self::from_string_date(string, current_time)
-            .or_else(|_| Self::parse_from_xml_date(string, current_time))
+            .or_else(|| Self::parse_from_xml_date(string, current_time))
     }
 
     /// Parse date from xml date format. Takes time from given `time`.
-    pub fn parse_from_xml_date(string: &str, time: NaiveTime) -> Result<Self> {
-        let date_time = NaiveDate::parse_from_str(string, "%Y-%m-%d")
+    pub fn parse_from_xml_date(string: &str, time: NaiveTime) -> Option<Self> {
+        NaiveDate::parse_from_str(string, "%Y-%m-%d")
             .ok()
             .map(|d| d.and_time(time))
-            .ok_or(Error::ParseDate)?;
-
-        Ok(date_time.into())
+            .map(Into::into)
     }
 
     /// Parse string for date and time formatted  as follows: `%Y-%m-%d %H:%M`.
     /// Takes milliseconds from given `time`.
-    pub fn from_string_date(string: &str, time: NaiveTime) -> Result<Self> {
-        let date_time = NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
+    pub fn from_string_date(string: &str, time: NaiveTime) -> Option<Self> {
+        NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
             .ok()
             .and_then(|d| {
                 d.checked_add_signed(Duration::milliseconds(
                     time.format("%S%3f").to_string().parse().ok()?,
                 ))
             })
-            .ok_or(Error::ParseDate)?;
-
-        Ok(date_time.into())
+            .map(Into::into)
     }
 
-    pub fn from_file_metadata(path: impl AsRef<Path>) -> Result<Self> {
+    pub fn from_file_metadata(path: impl AsRef<Path>) -> std::io::Result<Self> {
         let metadata = fs::metadata(path)?;
         let created = metadata.created()?;
         Ok(created.into())
@@ -120,16 +112,6 @@ impl From<SystemTime> for Identifier {
         date_time.into()
     }
 }
-
-#[derive(Debug, thiserror::Error)]
-pub enum Error {
-    #[error("Failed to papse date")]
-    ParseDate,
-    #[error("Failed to take file metadata: {}", 0)]
-    IO(#[from] std::io::Error),
-}
-
-type Result<T> = std::result::Result<T, Error>;
 
 #[cfg(test)]
 mod test {

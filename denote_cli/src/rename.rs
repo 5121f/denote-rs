@@ -36,16 +36,17 @@ pub fn rename(
         .map(|s| s.to_string_lossy().to_string())
         .unwrap_or_default();
 
-    let current_name_scheme = NameScheme::from_path(path).ok();
+    let current_name_scheme = NameScheme::from_path(path);
 
     let identifier = if date_from_metadata {
         Identifier::from_file_metadata(path)?
     } else if let Some(date) = date {
-        Identifier::parse(date)?
-    } else if let Some(cns) = &current_name_scheme {
-        cns.identifier.clone()
+        Identifier::parse(date).unwrap_or_default()
     } else {
-        Identifier::now()
+        current_name_scheme
+            .as_ref()
+            .map(|cns| cns.identifier.clone())
+            .unwrap_or_default()
     };
 
     let interactive = !non_interactive;

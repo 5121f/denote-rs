@@ -22,7 +22,7 @@ pub fn touch(
 ) -> Result<()> {
     let mut ui = UI::new();
 
-    let identifier = Identifier::parse(&date)?;
+    let identifier = Identifier::parse(&date).context("Failed to parse identifier")?;
 
     let interactive = !non_interactive;
 

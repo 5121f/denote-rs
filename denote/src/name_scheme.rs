@@ -4,23 +4,23 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-mod identifier;
 mod extension;
+mod identifier;
 mod keywords;
 mod regex;
 mod signature;
 mod title;
 
 use std::fmt::{self, Display};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 pub use extension::Extension;
-pub use identifier::{Error as IdentifierError, Identifier};
+pub use identifier::Identifier;
 pub use keywords::Keywords;
 pub use signature::Signature;
 pub use title::Title;
 
-use crate::utils::{self, FileNameError};
+use crate::utils;
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
 pub struct NameScheme {
@@ -52,12 +52,10 @@ impl NameScheme {
     /// name_scheme.title(Title::parse("Another title"));
     /// assert_eq!(name_scheme.to_string(), "20240903T13173023--another-title__keyword.txt");
     /// ```
-    pub fn from_path(path: impl AsRef<Path>) -> Result<Self> {
+    pub fn from_path(path: impl AsRef<Path>) -> Option<Self> {
         let file_name = utils::take_file_name(&path)?;
 
-        let captures = regex::NAME_SCHEME
-            .captures(&file_name)
-            .ok_or(Error::find(&path))?;
+        let captures = regex::NAME_SCHEME.captures(&file_name)?;
 
         let id = {
             let capture = captures.name("id").unwrap();
@@ -80,7 +78,7 @@ impl NameScheme {
 
         name_scheme.extension = captures.name("ext").map(|c| c.as_str()).map(Extension::new);
 
-        Ok(name_scheme)
+        Some(name_scheme)
     }
 
     pub fn signature(&mut self, signature: Signature) -> &mut Self {
@@ -127,23 +125,3 @@ impl Display for NameScheme {
         fmt::Result::Ok(())
     }
 }
-
-#[derive(Debug, thiserror::Error)]
-pub enum Error {
-    #[error("Name scheme didn't found in path: {path}")]
-    Find { path: PathBuf },
-    #[error("Identifier error: {0}")]
-    Identifier(#[from] IdentifierError),
-    #[error(transparent)]
-    FileName(#[from] FileNameError),
-}
-
-impl Error {
-    fn find(path: impl AsRef<Path>) -> Self {
-        Self::Find {
-            path: path.as_ref().to_path_buf(),
-        }
-    }
-}
-
-type Result<T> = std::result::Result<T, Error>;

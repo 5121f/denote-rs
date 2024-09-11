@@ -33,12 +33,12 @@ mod keywords {
 }
 
 mod identifier {
-    use denote::{Identifier, IdentifierError};
+    use denote::Identifier;
 
     #[test]
     fn empty_input() {
         let id = Identifier::parse("");
-        assert!(matches!(id, Err(IdentifierError::ParseDate)));
+        assert!(id.is_none());
     }
 
     #[test]
