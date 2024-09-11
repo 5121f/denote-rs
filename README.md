@@ -2,7 +2,7 @@
 
 # denote-rs
 
-Create and rename files with [denote](https://github.com/protesilaos/denote) name shcheme.
+Use [denote](https://github.com/protesilaos/denote) name shcheme outside of Emacs.
 
 ## Building
 
