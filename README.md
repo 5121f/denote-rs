@@ -24,4 +24,9 @@ $ target/release/denote-rs --version
 ## TODO
 
 - Changing front matter
-- Rename file based on it's front matter
+
+
+## About me
+
+I'm a amateur programmer and English is not my native language so I will be glad to get any corrections and feedback from you.
+
