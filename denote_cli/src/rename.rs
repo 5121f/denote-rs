@@ -7,7 +7,7 @@
 use std::{fs, path::Path};
 
 use anyhow::{bail, Context, Result};
-use denote::{Identifier, Keywords, NameScheme, Signature, Title};
+use denote::{Extension, Identifier, Keywords, NameScheme, Signature, Title};
 
 use crate::ui::UI;
 
@@ -85,7 +85,7 @@ pub fn rename(
     };
 
     if let Some(extension) = extension {
-        let extension = extension.to_string();
+        let extension = Extension::new(extension);
         name_scheme.extension(extension);
     } else if let Some(cns) = &current_name_scheme {
         name_scheme.extension = cns.extension.clone()

@@ -5,6 +5,7 @@
  */
 
 mod identifier;
+mod extension;
 mod keywords;
 mod regex;
 mod signature;
@@ -13,6 +14,7 @@ mod title;
 use std::fmt::{self, Display};
 use std::path::{Path, PathBuf};
 
+pub use extension::Extension;
 pub use identifier::{Error as IdentifierError, Identifier};
 pub use keywords::Keywords;
 pub use signature::Signature;
@@ -26,7 +28,7 @@ pub struct NameScheme {
     pub signature: Option<Signature>,
     pub title: Option<Title>,
     pub keywords: Option<Keywords>,
-    pub extension: Option<String>,
+    pub extension: Option<Extension>,
 }
 
 impl NameScheme {
@@ -76,7 +78,7 @@ impl NameScheme {
             .map(|c| c.as_str())
             .map(Keywords::parse_schemed_string);
 
-        name_scheme.extension = captures.name("ext").map(|c| c.as_str().to_string());
+        name_scheme.extension = captures.name("ext").map(|c| c.as_str()).map(Extension::new);
 
         Ok(name_scheme)
     }
@@ -96,7 +98,7 @@ impl NameScheme {
         self
     }
 
-    pub fn extension(&mut self, extension: String) -> &mut Self {
+    pub fn extension(&mut self, extension: Extension) -> &mut Self {
         self.extension = Some(extension);
         self
     }
@@ -119,7 +121,7 @@ impl Display for NameScheme {
         }
 
         if let Some(extension) = &self.extension {
-            write!(f, ".{extension}")?;
+            write!(f, "{extension}")?;
         }
 
         fmt::Result::Ok(())

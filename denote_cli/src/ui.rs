@@ -6,6 +6,8 @@
 
 use std::io::{self, Write};
 
+use denote::Extension;
+
 use crate::{Keywords, Title};
 
 /// User Interface
@@ -64,10 +66,10 @@ impl UI {
         Ok(Keywords::parse_user_input(&input))
     }
 
-    pub(crate) fn take_extension(&mut self) -> Result<String> {
+    pub(crate) fn take_extension(&mut self) -> Result<Extension> {
         self.print("Extension: ")?;
         let input = self.read_line()?;
-        Ok(input)
+        Ok(Extension::new(&input))
     }
 
     fn read_line(&mut self) -> Result<String> {
