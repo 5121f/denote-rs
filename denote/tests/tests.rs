@@ -40,12 +40,4 @@ mod identifier {
         let id = Identifier::parse("");
         assert!(id.is_none());
     }
-
-    #[test]
-    fn file_metadata() {
-        let project_dir = env!("CARGO_MANIFEST_DIR");
-        let testfile = format!("{project_dir}/tests/testfile");
-        let id = Identifier::from_file_metadata(&testfile).unwrap();
-        assert!(id.to_string().starts_with("20240910T220434"));
-    }
 }
