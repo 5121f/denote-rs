@@ -3,7 +3,8 @@
 # denote-rs
 
 Use [denote](https://github.com/protesilaos/denote) name shcheme outside of
-Emacs.
+Emacs. You can watch [this](https://youtu.be/mLzFJcLpDFI) video to find out
+about Denote name scheme and originally plugin to Emacs.
 
 ## Building
 
