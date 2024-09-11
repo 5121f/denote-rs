@@ -7,7 +7,7 @@
 use std::{fs, path::Path};
 
 use anyhow::{bail, Context, Result};
-use denote::{Extension, Identifier, Keywords, NameScheme, Signature, Title};
+use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
 
 use crate::ui::UI;
 
@@ -36,7 +36,7 @@ pub fn rename(
         .map(|s| s.to_string_lossy().to_string())
         .unwrap_or_default();
 
-    let current_name_scheme = NameScheme::from_path(path);
+    let current_name_scheme = Denote::from_path(path);
 
     let identifier = if date_from_metadata {
         Identifier::from_file_metadata(path)?
@@ -51,7 +51,7 @@ pub fn rename(
 
     let interactive = !non_interactive;
 
-    let mut name_scheme = NameScheme::new(identifier);
+    let mut name_scheme = Denote::new(identifier);
 
     if let Some(signature) = signature {
         name_scheme.signature = Signature::parse(signature);

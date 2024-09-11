@@ -7,7 +7,7 @@
 use std::fs;
 
 use anyhow::{Context, Result};
-use denote::{Extension, Identifier, Keywords, NameScheme, Signature, Title};
+use denote::{Extension, Identifier, Keywords, Denote, Signature, Title};
 
 use crate::ui::UI;
 
@@ -26,7 +26,7 @@ pub fn touch(
 
     let interactive = !non_interactive;
 
-    let mut name_scheme = NameScheme::new(identifier);
+    let mut name_scheme = Denote::new(identifier);
 
     if let Some(signature) = signature {
         name_scheme.signature = Signature::parse(&signature)
