@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-mod cli_args;
+mod args;
 mod rename;
 mod touch;
 mod ui;
@@ -13,16 +13,16 @@ use anyhow::Result;
 use clap::Parser;
 use denote::{Identifier, Keywords, Title};
 
-use cli_args::Cli;
+use args::Args;
 use rename::rename;
 use touch::touch;
 use ui::UI;
 
 fn main() -> Result<()> {
-    let cli = Cli::parse();
+    let cli = Args::parse();
 
     match cli {
-        Cli::Rename {
+        Args::Rename {
             paths,
             date,
             date_from_metadata,
@@ -61,7 +61,7 @@ fn main() -> Result<()> {
                 )?;
             }
         }
-        Cli::Touch {
+        Args::Touch {
             title,
             date,
             signature,

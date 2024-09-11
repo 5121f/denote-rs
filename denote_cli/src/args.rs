@@ -10,7 +10,7 @@ use clap::Parser;
 
 #[derive(Parser)]
 #[command(version = clap::crate_version!(), about = clap::crate_description!())]
-pub(crate) enum Cli {
+pub(crate) enum Args {
     /// Rename existing file
     Rename {
         #[clap(required = true)]
