@@ -9,7 +9,7 @@ mod signature {
 
     #[test]
     fn empty_input() {
-        assert_eq!(Signature::parse("").to_string(), "");
+        assert!(Signature::parse("").is_none());
     }
 }
 
@@ -18,7 +18,7 @@ mod title {
 
     #[test]
     fn empty_input() {
-        assert_eq!(Title::parse("").to_string(), "");
+        assert!(Title::parse("").is_none());
     }
 }
 
@@ -27,8 +27,8 @@ mod keywords {
 
     #[test]
     fn empty_input() {
-        assert_eq!(Keywords::parse_user_input("").to_string(), "");
-        assert_eq!(Keywords::parse_schemed_string("").to_string(), "");
+        assert!(Keywords::parse_user_input("").is_none());
+        assert!(Keywords::parse_schemed_string("").is_none());
     }
 }
 

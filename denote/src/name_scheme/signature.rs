@@ -15,18 +15,16 @@ impl Signature {
     /// ```
     /// use denote::Signature;
     ///
-    /// assert_eq!(Signature::parse("1b 2b=3c").to_string(), "==1b=2b=3c");
+    /// assert_eq!(Signature::parse("1b 2b=3c").unwrap().to_string(), "==1b=2b=3c");
     /// ```
-    pub fn parse(string: &str) -> Self {
-        Self(utils::format(string, "="))
+    pub fn parse(string: &str) -> Option<Self> {
+        let string = utils::format(string, "=");
+        (!string.is_empty()).then_some(string).map(Self)
     }
 }
 
 impl Display for Signature {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if self.0.is_empty() {
-            return fmt::Result::Ok(());
-        }
         write!(f, "=={}", self.0)
     }
 }

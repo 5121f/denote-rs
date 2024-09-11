@@ -49,7 +49,7 @@ impl NameScheme {
     ///
     /// let path = "20240903T13173023--title__keyword.txt";
     /// let mut name_scheme = NameScheme::from_path(path).unwrap();
-    /// name_scheme.title(Title::parse("Another title"));
+    /// name_scheme.title = Title::parse("Another title");
     /// assert_eq!(name_scheme.to_string(), "20240903T13173023--another-title__keyword.txt");
     /// ```
     pub fn from_path(path: impl AsRef<Path>) -> Option<Self> {
@@ -67,14 +67,17 @@ impl NameScheme {
         name_scheme.signature = captures
             .name("signature")
             .map(|c| c.as_str())
-            .map(Signature::parse);
+            .and_then(Signature::parse);
 
-        name_scheme.title = captures.name("title").map(|c| c.as_str()).map(Title::parse);
+        name_scheme.title = captures
+            .name("title")
+            .map(|c| c.as_str())
+            .and_then(Title::parse);
 
         name_scheme.keywords = captures
             .name("keywords")
             .map(|c| c.as_str())
-            .map(Keywords::parse_schemed_string);
+            .and_then(Keywords::parse_schemed_string);
 
         name_scheme.extension = captures.name("ext").map(|c| c.as_str()).map(Extension::new);
 

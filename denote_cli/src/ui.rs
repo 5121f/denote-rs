@@ -37,7 +37,7 @@ impl UI {
         Ok(response)
     }
 
-    pub(crate) fn title_with_old_title(&mut self, old_title: &str) -> Result<Title> {
+    pub(crate) fn title_with_old_title(&mut self, old_title: &str) -> Result<Option<Title>> {
         self.print(&format!("Title [{old_title}]: "))?;
         let input = self.read_line()?;
         let title = if input.trim().is_empty() {
@@ -53,14 +53,14 @@ impl UI {
         println!("No action needed")
     }
 
-    pub(crate) fn take_title(&mut self) -> Result<Title> {
+    pub(crate) fn take_title(&mut self) -> Result<Option<Title>> {
         self.print("Title: ")?;
         let input = self.read_line()?;
         let title = Title::parse(&input);
         Ok(title)
     }
 
-    pub(crate) fn take_keywords(&mut self) -> Result<Keywords> {
+    pub(crate) fn take_keywords(&mut self) -> Result<Option<Keywords>> {
         self.print("Keywords: ")?;
         let input = self.read_line()?;
         Ok(Keywords::parse_user_input(&input))

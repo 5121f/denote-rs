@@ -29,24 +29,19 @@ pub fn touch(
     let mut name_scheme = NameScheme::new(identifier);
 
     if let Some(signature) = signature {
-        let signature = Signature::parse(&signature);
-        name_scheme.signature(signature);
+        name_scheme.signature = Signature::parse(&signature)
     }
 
     if let Some(title) = title {
-        let title = Title::parse(&title);
-        name_scheme.title(title);
+        name_scheme.title = Title::parse(&title);
     } else if interactive {
-        let title = ui.take_title()?;
-        name_scheme.title(title);
+        name_scheme.title = ui.take_title()?;
     }
 
     if let Some(keywords) = keywords {
-        let keywords = Keywords::parse_user_input(&keywords);
-        name_scheme.keywords(keywords);
+        name_scheme.keywords = Keywords::parse_user_input(&keywords);
     } else if interactive {
-        let keywords = ui.take_keywords()?;
-        name_scheme.keywords(keywords);
+        name_scheme.keywords = ui.take_keywords()?;
     }
 
     if let Some(extension) = &extension {

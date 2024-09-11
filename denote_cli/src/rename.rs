@@ -54,8 +54,7 @@ pub fn rename(
     let mut name_scheme = NameScheme::new(identifier);
 
     if let Some(signature) = signature {
-        let signature = Signature::parse(signature);
-        name_scheme.signature(signature);
+        name_scheme.signature = Signature::parse(signature);
     } else if !interactive {
         if let Some(cns) = &current_name_scheme {
             name_scheme.signature = cns.signature.clone();
@@ -63,26 +62,22 @@ pub fn rename(
     }
 
     if let Some(title) = title {
-        let title = Title::parse(title);
-        name_scheme.title(title);
+        name_scheme.title = Title::parse(title);
     } else if interactive {
         let old_title = current_name_scheme
             .as_ref()
             .and_then(|ns| ns.title.clone())
             .map(|title| title.desluggify())
             .unwrap_or(file_title.clone());
-        let title = ui.title_with_old_title(&old_title)?;
-        name_scheme.title(title);
+        name_scheme.title = ui.title_with_old_title(&old_title)?;
     } else if let Some(cns) = &current_name_scheme {
         name_scheme.title = cns.title.clone();
     };
 
     if let Some(keywords) = keywords {
-        let keywords = Keywords::parse_user_input(keywords);
-        name_scheme.keywords(keywords);
+        name_scheme.keywords = Keywords::parse_user_input(keywords);
     } else if interactive {
-        let keywords = ui.take_keywords()?;
-        name_scheme.keywords(keywords);
+        name_scheme.keywords = ui.take_keywords()?;
     };
 
     if let Some(extension) = extension {

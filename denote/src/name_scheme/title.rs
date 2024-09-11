@@ -15,17 +15,18 @@ impl Title {
     /// ```
     /// use denote::Title;
     ///
-    /// assert_eq!(Title::parse(",Some  title ").to_string(), "--some-title");
-    /// assert_eq!(Title::parse("some-title").to_string(), "--some-title");
+    /// assert_eq!(Title::parse(",Some  title ").unwrap().to_string(), "--some-title");
+    /// assert_eq!(Title::parse("some-title").unwrap().to_string(), "--some-title");
     /// ```
-    pub fn parse(string: &str) -> Self {
-        Self(utils::format(string, "-"))
+    pub fn parse(string: &str) -> Option<Self> {
+        let string = utils::format(string, "-");
+        (!string.is_empty()).then_some(string).map(Self)
     }
 
     /// ```
     /// use denote::Title;
     ///
-    /// assert_eq!(Title::parse(" some Title").desluggify(), "Some title");
+    /// assert_eq!(Title::parse(" some Title").unwrap().desluggify(), "Some title");
     /// ```
     pub fn desluggify(&self) -> String {
         let deslugify = self.0.clone().replace('-', " ");
@@ -35,9 +36,6 @@ impl Title {
 
 impl Display for Title {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if self.0.is_empty() {
-            return fmt::Result::Ok(());
-        }
         write!(f, "--{}", self.0)
     }
 }

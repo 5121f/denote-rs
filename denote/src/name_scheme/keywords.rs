@@ -16,11 +16,11 @@ impl Keywords {
     /// use denote::Keywords;
     ///
     /// assert_eq!(
-    ///     Keywords::parse_user_input("word1,word2, word 3 ").to_string(),
+    ///     Keywords::parse_user_input("word1,word2, word 3 ").unwrap().to_string(),
     ///     "__word1_word2_word3"
     /// );
     /// ```
-    pub fn parse_user_input(string: &str) -> Self {
+    pub fn parse_user_input(string: &str) -> Option<Self> {
         Self::parse(string, ",")
     }
 
@@ -28,29 +28,26 @@ impl Keywords {
     /// use denote::Keywords;
     ///
     /// assert_eq!(
-    ///     Keywords::parse_schemed_string("word1_wor d2_").to_string(),
+    ///     Keywords::parse_schemed_string("word1_wor d2_").unwrap().to_string(),
     ///     "__word1_word2"
     /// );
     /// ```
-    pub fn parse_schemed_string(string: &str) -> Self {
+    pub fn parse_schemed_string(string: &str) -> Option<Self> {
         Self::parse(string, "_")
     }
 
-    fn parse(string: &str, separator: &str) -> Self {
+    fn parse(string: &str, separator: &str) -> Option<Self> {
         let keywords: Vec<_> = string
             .split(separator)
             .map(|s| utils::format(s, ""))
             .filter(|s| !s.is_empty())
             .collect();
-        Self(keywords)
+        (!keywords.is_empty()).then_some(keywords).map(Self)
     }
 }
 
 impl Display for Keywords {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if self.0.is_empty() {
-            return fmt::Result::Ok(());
-        }
         write!(f, "__{}", self.0.join("_"))
     }
 }
