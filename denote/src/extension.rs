@@ -7,6 +7,7 @@
 use std::fmt::{self, Display};
 use std::path::Path;
 
+/// Represent file extension
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct Extension(String);
 

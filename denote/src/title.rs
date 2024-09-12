@@ -8,6 +8,7 @@ use std::fmt::{self, Display};
 
 use crate::utils;
 
+/// Represent title in denote name scheme
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct Title(String);
 

@@ -41,3 +41,20 @@ mod identifier {
         assert!(id.is_none());
     }
 }
+
+mod denote {
+    #[test]
+    fn doc() {
+        use denote::{Denote, Extension, Identifier, Signature, Title};
+
+        // You can use something like `Identifier::now()` but for example, we will take an already
+        // formatted identifier
+        let identifier = Identifier::parse("20240912T13015412").unwrap();
+        let denote = Denote::new(identifier)
+            .title(Title::parse("Some title").unwrap())
+            .signature(Signature::parse("1b").unwrap())
+            .extension(Extension::new("txt"))
+            .to_string();
+        assert_eq!(denote.to_string(), "20240912T13015412==1b--some-title.txt");
+    }
+}

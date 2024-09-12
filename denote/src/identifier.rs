@@ -13,6 +13,8 @@ use chrono::{DateTime, Duration, Local, NaiveDate, NaiveDateTime, NaiveTime};
 
 use super::regex;
 
+/// Identifier is a date and time formatted as "20240912T13015412"
+/// and represent unic identifier for file
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Identifier(String);
 
@@ -60,16 +62,28 @@ impl Identifier {
             .map(Into::into)
     }
 
+    /// Take date of file creation from file metadata and format it in denote identifier format
     pub fn from_file_metadata(path: impl AsRef<Path>) -> std::io::Result<Self> {
         let metadata = fs::metadata(path)?;
         let created = metadata.created()?;
         Ok(created.into())
     }
 
+    /// Find identifier in string
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use denote::Identifier;
+    ///
+    /// let string = "some random data 20240912T13015412 asdfsas";
+    /// let id = Identifier::find_in_string(string).unwrap();
+    /// assert_eq!(id.to_string(), "20240912T13015412");
+    /// ```
     pub fn find_in_string(string: &str) -> Option<Self> {
         let captures = regex::IDENTIFIER.captures(string)?;
 
-        // We have test in `regex` module to usnsure regex is contains `id` group
+        // We have test in `regex` module to ensure regex is contains `id` group
         let id = captures
             .name("id")
             .expect("Regex: \"id\" name group didn't found");

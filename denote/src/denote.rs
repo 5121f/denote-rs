@@ -9,6 +9,7 @@ use std::path::Path;
 
 use crate::{regex, utils, Extension, Identifier, Keywords, Signature, Title};
 
+/// Handle denote name scheme
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
 pub struct Denote {
     pub identifier: Identifier,
@@ -19,6 +20,7 @@ pub struct Denote {
 }
 
 impl Denote {
+    /// Create Denote with Identifier and empty other fields
     pub fn new(identifier: Identifier) -> Self {
         Self {
             identifier,
@@ -71,21 +73,25 @@ impl Denote {
         Some(name_scheme)
     }
 
+    /// Set signature
     pub fn signature(&mut self, signature: Signature) -> &mut Self {
         self.signature = Some(signature);
         self
     }
 
+    /// Set title
     pub fn title(&mut self, title: Title) -> &mut Self {
         self.title = Some(title);
         self
     }
 
+    /// Set keywords
     pub fn keywords(&mut self, keywords: Keywords) -> &mut Self {
         self.keywords = Some(keywords);
         self
     }
 
+    /// Set extension
     pub fn extension(&mut self, extension: Extension) -> &mut Self {
         self.extension = Some(extension);
         self
