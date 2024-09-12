@@ -1,6 +1,8 @@
 [package]
 name = "denote-cli"
 version = "0.1.0"
+keywords = ["cli", "denote", "name-scheme"]
+categories = ["command-line-utilities"]
 
 edition.workspace = true
 description.workspace = true

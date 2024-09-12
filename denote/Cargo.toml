@@ -1,9 +1,10 @@
 [package]
 name = "denote"
 version = "0.1.0"
+description = "Handle denote name scheme"
+keywords = ["denote", "name-scheme"]
 
 edition.workspace = true
-description.workspace = true
 authors.workspace = true
 repository.workspace = true
 license.workspace = true
