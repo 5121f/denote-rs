@@ -66,7 +66,7 @@ impl UI {
         Ok(Keywords::parse_user_input(&input))
     }
 
-    pub(crate) fn take_extension(&mut self) -> Result<Extension> {
+    pub(crate) fn take_extension(&mut self) -> Result<Option<Extension>> {
         self.print("Extension: ")?;
         let input = self.read_line()?;
         Ok(Extension::new(&input))

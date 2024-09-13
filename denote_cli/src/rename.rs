@@ -81,8 +81,7 @@ pub fn rename(
     };
 
     if let Some(extension) = extension {
-        let extension = Extension::new(extension);
-        name_scheme.extension(extension);
+        name_scheme.extension = Extension::new(extension);
     } else if let Some(cns) = &current_name_scheme {
         name_scheme.extension = cns.extension.clone()
     };

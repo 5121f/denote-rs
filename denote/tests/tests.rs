@@ -53,7 +53,7 @@ mod denote {
         let denote = Denote::new(identifier)
             .title(Title::parse("Some title").unwrap())
             .signature(Signature::parse("1b").unwrap())
-            .extension(Extension::new("txt"))
+            .extension(Extension::new("txt").unwrap())
             .to_string();
         assert_eq!(denote.to_string(), "20240912T13015412==1b--some-title.txt");
     }

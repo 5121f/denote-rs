@@ -68,7 +68,10 @@ impl Denote {
             .map(|c| c.as_str())
             .and_then(Keywords::parse_schemed_string);
 
-        name_scheme.extension = captures.name("ext").map(|c| c.as_str()).map(Extension::new);
+        name_scheme.extension = captures
+            .name("ext")
+            .map(|c| c.as_str())
+            .and_then(Extension::new);
 
         Some(name_scheme)
     }

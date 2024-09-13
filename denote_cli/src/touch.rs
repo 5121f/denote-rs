@@ -7,7 +7,7 @@
 use std::fs;
 
 use anyhow::{Context, Result};
-use denote::{Extension, Identifier, Keywords, Denote, Signature, Title};
+use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
 
 use crate::ui::UI;
 
@@ -45,11 +45,9 @@ pub fn touch(
     }
 
     if let Some(extension) = &extension {
-        let extension = Extension::new(extension);
-        name_scheme.extension(extension);
+        name_scheme.extension = Extension::new(extension);
     } else if interactive {
-        let extension = ui.take_extension()?;
-        name_scheme.extension(extension);
+        name_scheme.extension = ui.take_extension()?;
     }
 
     let file_name = name_scheme.to_string();

@@ -12,9 +12,13 @@ use std::path::Path;
 pub struct Extension(String);
 
 impl Extension {
-    pub fn new(ext: &str) -> Self {
+    pub fn new(ext: &str) -> Option<Self> {
+        let ext = ext.trim();
         let ext = ext.strip_prefix(".").unwrap_or(ext);
-        Self(ext.to_string())
+        if ext.is_empty() {
+            return None;
+        }
+        Some(Self(ext.to_string()))
     }
 
     pub fn from_path(path: impl AsRef<Path>) -> Option<Self> {
