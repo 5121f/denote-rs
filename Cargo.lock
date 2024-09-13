@@ -592,10 +592,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "zeroten-denote"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e12537f2f13158e772adb83ff42af7be86ed59e2bfb984097bc26fd8f9b6cd95"
+dependencies = [
+ "chrono",
+ "once_cell",
+ "regex",
+]
+
+[[package]]
 name = "zeroten-denote-cli"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
- "zeroten-denote",
+ "zeroten-denote 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
