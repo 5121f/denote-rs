@@ -1,1 +1,0 @@
-denote_cli/CHANGELOG.md
