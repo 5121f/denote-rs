@@ -24,10 +24,6 @@ pub fn build_denote(
     non_interactive: bool,
 ) -> Result<Denote> {
     let path = path.as_ref();
-    let file_title = path
-        .file_stem()
-        .map(|s| s.to_string_lossy().to_string())
-        .unwrap_or_default();
 
     let current_name_scheme = Denote::from_path(path);
 
@@ -57,11 +53,15 @@ pub fn build_denote(
     if let Some(title) = title {
         name_scheme.title = Title::parse(title);
     } else if interactive {
+        let file_title = path
+            .file_stem()
+            .map(|s| s.to_string_lossy().to_string())
+            .unwrap_or_default();
         let old_title = current_name_scheme
             .as_ref()
             .and_then(|ns| ns.title.clone())
             .map(|title| title.desluggify())
-            .unwrap_or(file_title.clone());
+            .unwrap_or(file_title);
         name_scheme.title = ui.title_with_old_title(&old_title)?;
     } else if let Some(cns) = &current_name_scheme {
         name_scheme.title = cns.title.clone();
