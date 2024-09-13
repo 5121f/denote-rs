@@ -11,19 +11,15 @@ use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
 
 use crate::ui::UI;
 
-#[allow(clippy::too_many_arguments)]
-pub fn touch(
+pub fn build_denote(
+    ui: &mut UI,
     title: Option<String>,
     date: String,
     signature: Option<String>,
     keywords: Option<String>,
     extension: Option<String>,
     non_interactive: bool,
-    accept: bool,
-    open: bool,
-) -> Result<()> {
-    let mut ui = UI::new();
-
+) -> Result<Denote> {
     let identifier = Identifier::parse(&date).context("Failed to parse identifier")?;
 
     let interactive = !non_interactive;
@@ -52,28 +48,15 @@ pub fn touch(
         name_scheme.extension = ui.take_extension()?;
     }
 
-    let file_name = name_scheme.to_string();
-
-    if !accept && !ui.create_file_p(&file_name)? {
-        UI::no_action_needed();
-        return Ok(());
-    }
-
-    create_file(&file_name)?;
-
-    if open {
-        open_file(&file_name)?;
-    }
-
-    Ok(())
+    Ok(name_scheme)
 }
 
-fn create_file(file_name: impl AsRef<Path>) -> Result<()> {
+pub fn create_file(file_name: impl AsRef<Path>) -> Result<()> {
     fs::File::create(&file_name).context("Failed to create file")?;
     Ok(())
 }
 
-fn open_file(file_name: impl AsRef<Path>) -> Result<()> {
+pub fn open_file(file_name: impl AsRef<Path>) -> Result<()> {
     let editor = std::env::var("EDITOR").context("EDITOR environment variable don't set")?;
     let mut cmd = std::process::Command::new(editor);
     cmd.arg(file_name.as_ref()).stdout(Stdio::inherit());

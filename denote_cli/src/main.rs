@@ -15,7 +15,7 @@ use denote::{Identifier, Keywords, Title};
 
 use args::Args;
 use rename::rename;
-use touch::touch;
+use touch::{build_denote, create_file, open_file};
 use ui::UI;
 
 fn main() -> Result<()> {
@@ -70,16 +70,32 @@ fn main() -> Result<()> {
             non_interactive,
             accept,
             open,
-        } => touch(
-            title,
-            date,
-            signature,
-            keywords,
-            extension,
-            non_interactive,
-            accept,
-            open,
-        )?,
+        } => {
+            let mut ui = UI::new();
+
+            let denote = build_denote(
+                &mut ui,
+                title,
+                date,
+                signature,
+                keywords,
+                extension,
+                non_interactive,
+            )?;
+
+            let file_name = denote.to_string();
+
+            if !accept && !ui.create_file_p(&file_name)? {
+                UI::no_action_needed();
+                return Ok(());
+            }
+
+            create_file(&file_name)?;
+
+            if open {
+                open_file(&file_name)?;
+            }
+        }
     }
 
     Ok(())
