@@ -6,10 +6,20 @@ Use [denote](https://github.com/protesilaos/denote) name shcheme outside of
 Emacs. You can watch [this](https://youtu.be/mLzFJcLpDFI) video to find out
 about Denote name scheme and originally plugin to Emacs.
 
+## Install with Cargo
+
+You need [rust toolchain](https://www.rust-lang.org/tools/install) for install
+denote-rs from Crates.io.
+
+```
+cargo install zeroten-denote-cli
+denote --version
+```
+
 ## Building
 
 denote-rs written in Rust so you need
-[Rust compiler and Cargo](https://www.rust-lang.org) for build it.
+[Rust toolchain](https://www.rust-lang.org/tools/install) for build it.
 
 To build denote-rs:
 
@@ -17,8 +27,7 @@ To build denote-rs:
 $ git clone https://github.com/5121f/denote-rs.git
 $ cd denote-rs
 $ cargo build --release
-$ target/release/denote-rs --version
-0.1.0
+$ target/release/denote --version
 ```
 
 ## TODO
