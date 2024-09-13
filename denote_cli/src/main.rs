@@ -21,6 +21,8 @@ use ui::UI;
 fn main() -> Result<()> {
     let cli = Args::parse();
 
+    let mut ui = UI::new();
+
     match cli {
         Args::Rename {
             paths,
@@ -33,8 +35,6 @@ fn main() -> Result<()> {
             non_interactive,
             accept,
         } => {
-            let mut ui = UI::new();
-
             if paths.len() > 1 && unic_id(date.as_deref()) {
                 let accept = ui.question(
                     "It is not recommended to use one unique identifier for several files\nContinue?",
@@ -48,6 +48,7 @@ fn main() -> Result<()> {
 
             for path in &paths {
                 rename(
+                    &mut ui,
                     path,
                     date.as_deref(),
                     date_from_metadata,
@@ -57,7 +58,6 @@ fn main() -> Result<()> {
                     extension.as_deref(),
                     non_interactive,
                     accept,
-                    &mut ui,
                 )?;
             }
         }
@@ -71,8 +71,6 @@ fn main() -> Result<()> {
             accept,
             open,
         } => {
-            let mut ui = UI::new();
-
             let denote = build_denote(
                 &mut ui,
                 title,

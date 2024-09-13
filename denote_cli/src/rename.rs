@@ -13,6 +13,7 @@ use crate::ui::UI;
 
 #[allow(clippy::too_many_arguments)]
 pub fn rename(
+    ui: &mut UI,
     path: &Path,
     date: Option<&str>,
     date_from_metadata: bool,
@@ -22,7 +23,6 @@ pub fn rename(
     extension: Option<&str>,
     non_interactive: bool,
     accept: bool,
-    ui: &mut UI,
 ) -> Result<()> {
     if !path.exists() {
         bail!("File doesn't exists");
@@ -93,13 +93,9 @@ pub fn rename(
         return Ok(());
     }
 
-    if !accept {
-        println!("Old name {file_title:?}\nNew name \"{new_file_name}\"");
-        let accepted = ui.question("Accept?", true)?;
-        if !accepted {
-            UI::no_action_needed();
-            return Ok(());
-        }
+    if !accept && !ui.rename(&file_title, &new_file_name)? {
+        UI::no_action_needed();
+        return Ok(());
     }
 
     fs::rename(path, new_file_name).with_context(|| format!("Failed to rename file {path:?}"))?;

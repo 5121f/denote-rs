@@ -37,6 +37,11 @@ impl UI {
         Ok(response)
     }
 
+    pub fn rename(&mut self, old_file_name: &str, new_file_name: &str) -> Result<bool> {
+        println!("Old name \"{old_file_name}\"\nNew name \"{new_file_name}\"");
+        self.question("Accept?", true)
+    }
+
     pub fn create_file_p(&mut self, file_name: &str) -> Result<bool> {
         self.question(&format!("Create file \"{file_name}\"?"), true)
     }
