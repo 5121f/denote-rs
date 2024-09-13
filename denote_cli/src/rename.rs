@@ -6,15 +6,15 @@
 
 use std::{fs, path::Path};
 
-use anyhow::{bail, Context, Result};
+use anyhow::{Context, Result};
 use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
 
 use crate::ui::UI;
 
 #[allow(clippy::too_many_arguments)]
-pub fn rename(
+pub fn build_denote(
     ui: &mut UI,
-    path: &Path,
+    path: impl AsRef<Path>,
     date: Option<&str>,
     date_from_metadata: bool,
     signature: Option<&str>,
@@ -22,15 +22,8 @@ pub fn rename(
     keywords: Option<&str>,
     extension: Option<&str>,
     non_interactive: bool,
-    accept: bool,
-) -> Result<()> {
-    if !path.exists() {
-        bail!("File doesn't exists");
-    }
-    if path.is_dir() {
-        bail!("Renaming directories is not supported");
-    }
-
+) -> Result<Denote> {
+    let path = path.as_ref();
     let file_title = path
         .file_stem()
         .map(|s| s.to_string_lossy().to_string())
@@ -86,19 +79,15 @@ pub fn rename(
         name_scheme.extension = cns.extension.clone()
     };
 
-    let new_file_name = name_scheme.to_string();
+    Ok(name_scheme)
+}
 
-    if file_title == new_file_name {
-        UI::no_action_needed();
-        return Ok(());
-    }
-
-    if !accept && !ui.rename(&file_title, &new_file_name)? {
-        UI::no_action_needed();
-        return Ok(());
-    }
-
-    fs::rename(path, new_file_name).with_context(|| format!("Failed to rename file {path:?}"))?;
-
+pub fn rename(current_file: impl AsRef<Path>, new_name: &str) -> Result<()> {
+    fs::rename(&current_file, new_name).with_context(|| {
+        format!(
+            "Failed to rename file {current_file:?}",
+            current_file = current_file.as_ref()
+        )
+    })?;
     Ok(())
 }

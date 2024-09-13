@@ -9,7 +9,7 @@ mod rename;
 mod touch;
 mod ui;
 
-use anyhow::Result;
+use anyhow::{bail, Result};
 use clap::Parser;
 use denote::{Identifier, Keywords, Title};
 
@@ -47,7 +47,14 @@ fn main() -> Result<()> {
             }
 
             for path in &paths {
-                rename(
+                if !path.exists() {
+                    bail!("File doesn't exists");
+                }
+                if path.is_dir() {
+                    bail!("Renaming directories is not supported");
+                }
+
+                let denote = rename::build_denote(
                     &mut ui,
                     path,
                     date.as_deref(),
@@ -57,8 +64,26 @@ fn main() -> Result<()> {
                     keywords.as_deref(),
                     extension.as_deref(),
                     non_interactive,
-                    accept,
                 )?;
+
+                let file_title = path
+                    .file_stem()
+                    .map(|s| s.to_string_lossy().to_string())
+                    .unwrap_or_default();
+
+                let new_file_name = denote.to_string();
+
+                if file_title == new_file_name {
+                    UI::no_action_needed();
+                    return Ok(());
+                }
+
+                if !accept && !ui.rename(&file_title, &new_file_name)? {
+                    UI::no_action_needed();
+                    return Ok(());
+                }
+
+                rename(path, &new_file_name)?;
             }
         }
         Args::Touch {
