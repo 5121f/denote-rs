@@ -24,10 +24,10 @@ denote-rs written in Rust so you need
 To build denote-rs:
 
 ```
-$ git clone https://github.com/5121f/denote-rs.git
-$ cd denote-rs
-$ cargo build --release
-$ target/release/denote --version
+git clone https://github.com/5121f/denote-rs.git
+cd denote-rs
+cargo build --release
+target/release/denote --version
 ```
 
 ## TODO
