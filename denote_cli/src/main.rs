@@ -69,6 +69,7 @@ fn main() -> Result<()> {
             extension,
             non_interactive,
             accept,
+            open,
         } => touch(
             title,
             date,
@@ -77,6 +78,7 @@ fn main() -> Result<()> {
             extension,
             non_interactive,
             accept,
+            open,
         )?,
     }
 

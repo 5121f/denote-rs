@@ -68,5 +68,8 @@ pub(crate) enum Args {
         /// Don't ask confirmation to create file
         #[clap(long, short)]
         accept: bool,
+        /// Open created file in default text editor
+        #[clap(long, short)]
+        open: bool
     },
 }

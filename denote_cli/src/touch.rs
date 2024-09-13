@@ -4,13 +4,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::fs;
+use std::{fs, process::Stdio};
 
 use anyhow::{Context, Result};
 use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
 
 use crate::ui::UI;
 
+#[allow(clippy::too_many_arguments)]
 pub fn touch(
     title: Option<String>,
     date: String,
@@ -19,6 +20,7 @@ pub fn touch(
     extension: Option<String>,
     non_interactive: bool,
     accept: bool,
+    open: bool,
 ) -> Result<()> {
     let mut ui = UI::new();
 
@@ -60,7 +62,14 @@ pub fn touch(
         }
     }
 
-    fs::File::create(file_name).context("Failed to create file")?;
+    fs::File::create(&file_name).context("Failed to create file")?;
+
+    if open {
+        let editor = std::env::var("EDITOR").context("EDITOR environment variable don't set")?;
+        let mut cmd = std::process::Command::new(editor);
+        cmd.arg(file_name).stdout(Stdio::inherit());
+        cmd.output()?;
+    }
 
     Ok(())
 }
