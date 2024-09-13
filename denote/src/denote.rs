@@ -34,7 +34,7 @@ impl Denote {
     ///
     /// ```
     /// use std::path::Path;
-    /// use denote::{Denote, Title};
+    /// use zeroten_denote::{Denote, Title};
     ///
     /// let path = "20240903T13173023--title__keyword.txt";
     /// let mut name_scheme = Denote::from_path(path).unwrap();

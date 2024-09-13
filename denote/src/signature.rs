@@ -14,7 +14,7 @@ pub struct Signature(String);
 
 impl Signature {
     /// ```
-    /// use denote::Signature;
+    /// use zeroten_denote::Signature;
     ///
     /// assert_eq!(Signature::parse("1b 2b=3c").unwrap().to_string(), "==1b=2b=3c");
     /// ```

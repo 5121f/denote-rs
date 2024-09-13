@@ -1,5 +1,5 @@
 [package]
-name = "denote-cli"
+name = "zeroten-denote-cli"
 version = "0.1.0"
 keywords = ["cli", "denote", "name-scheme"]
 categories = ["command-line-utilities"]
@@ -11,6 +11,6 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-denote = { path = "../denote" }
+denote = { package = "zeroten-denote", path = "../denote" }
 clap = { version = "4.5.17", features = ["derive", "cargo", "wrap_help"] }
 anyhow = "1.0.86"

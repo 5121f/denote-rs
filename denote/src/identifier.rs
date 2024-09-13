@@ -74,7 +74,7 @@ impl Identifier {
     /// # Examples
     ///
     /// ```
-    /// use denote::Identifier;
+    /// use zeroten_denote::Identifier;
     ///
     /// let string = "some random data 20240912T13015412 asdfsas";
     /// let id = Identifier::find_in_string(string).unwrap();

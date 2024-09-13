@@ -14,7 +14,7 @@ pub struct Title(String);
 
 impl Title {
     /// ```
-    /// use denote::Title;
+    /// use zeroten_denote::Title;
     ///
     /// assert_eq!(Title::parse(",Some  title ").unwrap().to_string(), "--some-title");
     /// assert_eq!(Title::parse("some-title").unwrap().to_string(), "--some-title");
@@ -25,7 +25,7 @@ impl Title {
     }
 
     /// ```
-    /// use denote::Title;
+    /// use zeroten_denote::Title;
     ///
     /// assert_eq!(Title::parse(" some Title").unwrap().desluggify(), "Some title");
     /// ```

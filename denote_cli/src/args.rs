@@ -70,6 +70,6 @@ pub(crate) enum Args {
         accept: bool,
         /// Open created file in default text editor
         #[clap(long, short)]
-        open: bool
+        open: bool,
     },
 }

@@ -5,7 +5,7 @@
  */
 
 mod signature {
-    use denote::Signature;
+    use zeroten_denote::Signature;
 
     #[test]
     fn empty_input() {
@@ -14,7 +14,7 @@ mod signature {
 }
 
 mod title {
-    use denote::Title;
+    use zeroten_denote::Title;
 
     #[test]
     fn empty_input() {
@@ -23,7 +23,7 @@ mod title {
 }
 
 mod keywords {
-    use denote::Keywords;
+    use zeroten_denote::Keywords;
 
     #[test]
     fn empty_input() {
@@ -33,7 +33,7 @@ mod keywords {
 }
 
 mod identifier {
-    use denote::Identifier;
+    use zeroten_denote::Identifier;
 
     #[test]
     fn empty_input() {
@@ -43,7 +43,7 @@ mod identifier {
 }
 
 mod extension {
-    use denote::Extension;
+    use zeroten_denote::Extension;
 
     #[test]
     fn empty_input() {
@@ -63,7 +63,7 @@ mod extension {
 mod denote {
     #[test]
     fn doc() {
-        use denote::{Denote, Extension, Identifier, Signature, Title};
+        use zeroten_denote::{Denote, Extension, Identifier, Signature, Title};
 
         // You can use something like `Identifier::now()` but for example, we will take an already
         // formatted identifier

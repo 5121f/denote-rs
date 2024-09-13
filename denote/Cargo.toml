@@ -1,5 +1,5 @@
 [package]
-name = "denote"
+name = "zeroten-denote"
 version = "0.1.0"
 description = "Handle denote name scheme"
 keywords = ["denote", "name-scheme"]

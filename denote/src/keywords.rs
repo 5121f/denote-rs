@@ -14,7 +14,7 @@ pub struct Keywords(Vec<String>);
 
 impl Keywords {
     /// ```
-    /// use denote::Keywords;
+    /// use zeroten_denote::Keywords;
     ///
     /// assert_eq!(
     ///     Keywords::parse_user_input("word1,word2, word 3 ").unwrap().to_string(),
@@ -26,7 +26,7 @@ impl Keywords {
     }
 
     /// ```
-    /// use denote::Keywords;
+    /// use zeroten_denote::Keywords;
     ///
     /// assert_eq!(
     ///     Keywords::parse_schemed_string("word1_wor d2_").unwrap().to_string(),
