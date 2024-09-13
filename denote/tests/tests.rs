@@ -50,6 +50,14 @@ mod extension {
         let extension = Extension::new("");
         assert!(extension.is_none())
     }
+
+    #[test]
+    fn extension() {
+        let ext = Extension::new("txt").unwrap();
+        assert_eq!(ext.to_string(), ".txt");
+        let ext = Extension::new(".md").unwrap();
+        assert_eq!(ext.to_string(), ".md");
+    }
 }
 
 mod denote {
