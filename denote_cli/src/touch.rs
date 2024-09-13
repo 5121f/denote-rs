@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::{fs, process::Stdio};
+use std::{fs, path::Path, process::Stdio};
 
 use anyhow::{Context, Result};
 use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
@@ -54,22 +54,29 @@ pub fn touch(
 
     let file_name = name_scheme.to_string();
 
-    if !accept {
-        let accepted = ui.question(&format!("Create file \"{file_name}\"?"), true)?;
-        if !accepted {
-            UI::no_action_needed();
-            return Ok(());
-        }
+    if !accept && !ui.create_file_p(&file_name)? {
+        UI::no_action_needed();
+        return Ok(());
     }
 
-    fs::File::create(&file_name).context("Failed to create file")?;
+    create_file(&file_name)?;
 
     if open {
-        let editor = std::env::var("EDITOR").context("EDITOR environment variable don't set")?;
-        let mut cmd = std::process::Command::new(editor);
-        cmd.arg(file_name).stdout(Stdio::inherit());
-        cmd.output()?;
+        open_file(&file_name)?;
     }
 
+    Ok(())
+}
+
+fn create_file(file_name: impl AsRef<Path>) -> Result<()> {
+    fs::File::create(&file_name).context("Failed to create file")?;
+    Ok(())
+}
+
+fn open_file(file_name: impl AsRef<Path>) -> Result<()> {
+    let editor = std::env::var("EDITOR").context("EDITOR environment variable don't set")?;
+    let mut cmd = std::process::Command::new(editor);
+    cmd.arg(file_name.as_ref()).stdout(Stdio::inherit());
+    cmd.output()?;
     Ok(())
 }

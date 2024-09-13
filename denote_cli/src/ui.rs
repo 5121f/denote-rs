@@ -37,6 +37,10 @@ impl UI {
         Ok(response)
     }
 
+    pub fn create_file_p(&mut self, file_name: &str) -> Result<bool> {
+        self.question(&format!("Create file \"{file_name}\"?"), true)
+    }
+
     pub(crate) fn title_with_old_title(&mut self, old_title: &str) -> Result<Option<Title>> {
         self.print(&format!("Title [{old_title}]: "))?;
         let input = self.read_line()?;
