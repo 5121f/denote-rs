@@ -66,19 +66,19 @@ fn main() -> Result<()> {
                     non_interactive,
                 )?;
 
-                let file_title = path
-                    .file_stem()
+                let file_name = path
+                    .file_name()
                     .map(|s| s.to_string_lossy().to_string())
                     .unwrap_or_default();
 
                 let new_file_name = denote.to_string();
 
-                if file_title == new_file_name {
+                if file_name == new_file_name {
                     UI::no_action_needed();
                     return Ok(());
                 }
 
-                if !accept && !ui.rename(&file_title, &new_file_name)? {
+                if !accept && !ui.rename(&file_name, &new_file_name)? {
                     UI::no_action_needed();
                     return Ok(());
                 }
