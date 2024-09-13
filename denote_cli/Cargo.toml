@@ -10,6 +10,10 @@ authors.workspace = true
 repository.workspace = true
 license.workspace = true
 
+[[bin]]
+name = "denote"
+path = "src/main.rs"
+
 [dependencies]
 denote = { package = "zeroten-denote", version = "0.1.0" }
 clap = { version = "4.5.17", features = ["derive", "cargo", "wrap_help"] }
