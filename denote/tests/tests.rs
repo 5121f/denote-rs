@@ -42,6 +42,16 @@ mod identifier {
     }
 }
 
+mod extension {
+    use denote::Extension;
+
+    #[test]
+    fn empty_input() {
+        let extension = Extension::new("");
+        assert!(extension.is_none())
+    }
+}
+
 mod denote {
     #[test]
     fn doc() {
