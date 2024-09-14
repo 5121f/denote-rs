@@ -7,7 +7,7 @@
 use std::fmt::{self, Display};
 use std::path::Path;
 
-use crate::{regex, utils, Extension, Identifier, Keywords, Signature, Title};
+use crate::{regex, Extension, Identifier, Keywords, Signature, Title};
 
 /// Handle denote name scheme
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
@@ -42,7 +42,7 @@ impl Denote {
     /// assert_eq!(name_scheme.to_string(), "20240903T13173023--another-title__keyword.txt");
     /// ```
     pub fn from_path(path: impl AsRef<Path>) -> Option<Self> {
-        let file_name = utils::take_file_name(&path)?;
+        let file_name = path.as_ref().file_name()?.to_str()?.to_string();
 
         let captures = regex::NAME_SCHEME.captures(&file_name)?;
 

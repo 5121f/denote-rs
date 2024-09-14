@@ -27,12 +27,12 @@
 
 mod denote;
 mod extension;
+mod format;
 mod identifier;
 mod keywords;
 mod regex;
 mod signature;
 mod title;
-mod utils;
 
 pub use denote::Denote;
 pub use extension::Extension;

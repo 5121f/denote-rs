@@ -6,7 +6,7 @@
 
 use std::fmt::{self, Display};
 
-use crate::utils;
+use crate::format;
 
 /// Represent keyword in denote name scheme
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
@@ -40,7 +40,7 @@ impl Keywords {
     fn parse(string: &str, separator: &str) -> Option<Self> {
         let keywords: Vec<_> = string
             .split(separator)
-            .map(|s| utils::format(s, ""))
+            .map(|s| format::format(s, ""))
             .filter(|s| !s.is_empty())
             .collect();
         (!keywords.is_empty()).then_some(keywords).map(Self)

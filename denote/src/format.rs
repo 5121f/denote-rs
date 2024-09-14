@@ -4,12 +4,10 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::path::Path;
-
 const PUNCTUATION: &str = r"-=_.,;*()";
 
 /// Remove symbols from string which contains in `PUNCTUATION` except separator
-pub(crate) fn remove_punctuation(string: &str, separator: &str) -> String {
+fn remove_punctuation(string: &str, separator: &str) -> String {
     string.chars().fold(String::new(), |acc, x| {
         let x = x.to_string();
         if x != separator && PUNCTUATION.contains(&x) {
@@ -48,17 +46,12 @@ fn leave_only_one_letter(string: &str, letter: &str) -> String {
     })
 }
 
-pub fn take_file_name(path: impl AsRef<Path>) -> Option<String> {
-    Some(path.as_ref().file_name()?.to_str()?.to_string())
-}
-
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
-    fn leave_only_one_letter() {
-        assert_eq!(
-            super::leave_only_one_letter("some---title", "-"),
-            "some-title"
-        );
+    fn leave_only_one_letter_test() {
+        assert_eq!(leave_only_one_letter("some---title", "-"), "some-title");
     }
 }

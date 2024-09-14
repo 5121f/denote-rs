@@ -6,7 +6,7 @@
 
 use std::fmt::{self, Display};
 
-use crate::utils;
+use crate::format;
 
 /// Represent signature in denote name scuheme
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
@@ -19,7 +19,7 @@ impl Signature {
     /// assert_eq!(Signature::parse("1b 2b=3c").unwrap().to_string(), "==1b=2b=3c");
     /// ```
     pub fn parse(string: &str) -> Option<Self> {
-        let string = utils::format(string, "=");
+        let string = format::format(string, "=");
         (!string.is_empty()).then_some(string).map(Self)
     }
 }

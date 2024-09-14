@@ -6,7 +6,7 @@
 
 use std::fmt::{self, Display};
 
-use crate::utils;
+use crate::format;
 
 /// Represent title in denote name scheme
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
@@ -20,7 +20,7 @@ impl Title {
     /// assert_eq!(Title::parse("some-title").unwrap().to_string(), "--some-title");
     /// ```
     pub fn parse(string: &str) -> Option<Self> {
-        let string = utils::format(string, "-");
+        let string = format::format(string, "-");
         (!string.is_empty()).then_some(string).map(Self)
     }
 
@@ -31,7 +31,7 @@ impl Title {
     /// ```
     pub fn desluggify(&self) -> String {
         let deslugify = self.0.clone().replace('-', " ");
-        utils::first_letter_uppercase(&deslugify)
+        format::first_letter_uppercase(&deslugify)
     }
 }
 
