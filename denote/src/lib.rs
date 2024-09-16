@@ -9,7 +9,16 @@
 //! Core of this crate is the `Denote` struct. Create it, fill in the fields as an option and
 //! convert it in to string to get formatted string in denote name scheme.
 //!
-//! # Example
+//! # Declaration
+//!
+//! I recommend declaring denote-lib in Cargo.toml like this:
+//!
+//! ```toml
+//! [dependencies]
+//! denote = { package = "zeroten-denote", version = "0.1.1" }
+//! ```
+//!
+//! # Usage
 //!
 //! ```
 //! use zeroten_denote::{Denote, Identifier, Signature, Extension, Title};
