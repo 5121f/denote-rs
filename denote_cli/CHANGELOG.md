@@ -3,6 +3,7 @@
 ## New
 
 - Better formatting of naming scheme elements
+- Updated docs
 
 ## 0.1.1 (2024-09-13)
 
