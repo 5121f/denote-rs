@@ -1,5 +1,9 @@
 # denote changelog
 
+## New
+
+- Updated docs.
+
 ## 0.1.1
 
 - Better formatting of naming scheme elements
