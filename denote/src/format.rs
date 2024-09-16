@@ -4,18 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-const PUNCTUATION: &str = r"-=_.,;*()";
-
-/// Remove symbols from string which contains in `PUNCTUATION` except separator
-fn remove_punctuation(string: &str, separator: &str) -> String {
-    string.chars().fold(String::new(), |acc, x| {
-        let x = x.to_string();
-        if x != separator && PUNCTUATION.contains(&x) {
-            return acc;
-        }
-        acc + &x
-    })
-}
+use slug::slugify;
 
 /// Makes first letter in string uppercase
 pub(crate) fn first_letter_uppercase(string: &str) -> String {
@@ -28,30 +17,10 @@ pub(crate) fn first_letter_uppercase(string: &str) -> String {
 }
 
 pub(crate) fn format(string: &str, separator: &str) -> String {
-    let string = leave_only_one_letter(string, separator);
-    let string = remove_punctuation(&string, separator);
-    let string = string.trim().to_lowercase();
-    let string = leave_only_one_letter(&string, " ");
-    string.replace(" ", separator)
-}
-
-/// Leave only one `letter` per in `string` in places where it is repeated
-fn leave_only_one_letter(string: &str, letter: &str) -> String {
-    string.chars().fold(String::new(), |acc, x| {
-        let x = x.to_string();
-        if acc.ends_with(letter) && letter == x {
-            return acc;
-        }
-        acc + &x
-    })
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn leave_only_one_letter_test() {
-        assert_eq!(leave_only_one_letter("some---title", "-"), "some-title");
+    let string = slugify(string);
+    if separator == "-" {
+        string
+    } else {
+        string.replace("-", separator)
     }
 }
