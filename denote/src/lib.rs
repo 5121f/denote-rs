@@ -12,7 +12,7 @@
 //! # Example
 //!
 //! ```
-//! use denote::{Denote, Identifier, Signature, Extension, Title};
+//! use zeroten_denote::{Denote, Identifier, Signature, Extension, Title};
 //!
 //! // You can use something like `Identifier::now()` but for example, we will take an already
 //! // formatted identifier
@@ -20,7 +20,7 @@
 //! let denote = Denote::new(identifier)
 //!     .title(Title::parse("Some title").unwrap())
 //!     .signature(Signature::parse("1b").unwrap())
-//!     .extension(Extension::new("txt"))
+//!     .extension(Extension::new("txt").unwrap())
 //!     .to_string();
 //! assert_eq!(denote.to_string(), "20240912T13015412==1b--some-title.txt");
 //! ```
