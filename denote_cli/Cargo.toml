@@ -15,8 +15,8 @@ name = "denote"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "4.5.17", features = ["derive", "cargo", "wrap_help"] }
-anyhow = "1.0.86"
+clap = { version = "4.5.20", features = ["derive", "cargo", "wrap_help"] }
+anyhow = "1.0.91"
 
 [dependencies.denote]
 package = "zeroten-denote"
