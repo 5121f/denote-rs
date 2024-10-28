@@ -7,16 +7,19 @@
 use slug::slugify;
 
 /// Makes first letter in string uppercase
-pub(crate) fn first_letter_uppercase(string: &str) -> String {
+pub fn first_letter_uppercase(string: &str) -> String {
     let mut chars = string.chars();
     let first_letter = chars.next();
-    match first_letter {
-        Some(c) => c.to_uppercase().to_string() + chars.as_str(),
-        None => String::new(),
-    }
+    first_letter.map_or_else(String::new, |c| {
+        format!(
+            "{first_letter}{other_letters}",
+            first_letter = c.to_uppercase(),
+            other_letters = chars.as_str()
+        )
+    })
 }
 
-pub(crate) fn format(string: &str, separator: &str) -> String {
+pub fn format(string: &str, separator: &str) -> String {
     let string = slugify(string);
     if separator == "-" {
         string

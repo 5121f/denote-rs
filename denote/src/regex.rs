@@ -10,25 +10,25 @@ use regex::Regex;
 const ACCEPTABLE_CHARS: &str = r"[\d\p{Alphabetic}]";
 const _IDENTIFIER: &str = r"(?<id>\d{8}T\d{8})";
 
-pub(crate) static IDENTIFIER: Lazy<Regex> = Lazy::new(|| Regex::new(_IDENTIFIER).unwrap());
+pub static IDENTIFIER: Lazy<Regex> = Lazy::new(|| Regex::new(_IDENTIFIER).unwrap());
 
-pub(crate) fn signature() -> String {
+pub fn signature() -> String {
     format!(r"(?<signature>{ACCEPTABLE_CHARS}[{ACCEPTABLE_CHARS}=]*)")
 }
 
-pub(crate) fn title() -> String {
+pub fn title() -> String {
     format!("(?<title>{ACCEPTABLE_CHARS}[{ACCEPTABLE_CHARS}-]*)")
 }
 
-pub(crate) fn keywords() -> String {
+pub fn keywords() -> String {
     format!("(?<keywords>{ACCEPTABLE_CHARS}[{ACCEPTABLE_CHARS}_]*)")
 }
 
-pub(crate) fn extension() -> String {
+pub fn extension() -> String {
     format!("(?<ext>{ACCEPTABLE_CHARS}+)")
 }
 
-pub(crate) static NAME_SCHEME: Lazy<Regex> = Lazy::new(|| {
+pub static NAME_SCHEME: Lazy<Regex> = Lazy::new(|| {
     let regex = format!(
         "^{id}(=={signature})?(--{title})?(__{keywords})?(.{ext})?$",
         id = _IDENTIFIER,

@@ -4,6 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#![warn(clippy::nursery)]
+
 mod args;
 mod rename;
 mod touch;

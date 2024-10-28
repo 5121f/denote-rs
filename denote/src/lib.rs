@@ -34,6 +34,8 @@
 //! assert_eq!(denote.to_string(), "20240912T13015412==1b--some-title.txt");
 //! ```
 
+#![warn(clippy::nursery)]
+
 mod denote;
 mod extension;
 mod format;
