@@ -6,9 +6,7 @@
 
 use std::io::{self, Write};
 
-use denote::Extension;
-
-use crate::{Keywords, Title};
+use denote::{Extension, Keywords, Title};
 
 /// User Interface
 pub struct UI {

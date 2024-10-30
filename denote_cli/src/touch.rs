@@ -9,9 +9,36 @@ use std::{fs, path::Path, process::Stdio};
 use anyhow::{Context, Result};
 use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
 
-use crate::ui::UI;
+use crate::{args, ui::UI};
 
-pub fn build_denote(
+pub fn touch(args: args::Touch, ui: &mut UI) -> anyhow::Result<()> {
+    let denote = build_denote(
+        ui,
+        args.title,
+        args.date,
+        args.signature,
+        args.keywords,
+        args.extension,
+        args.non_interactive,
+    )?;
+
+    let file_name = denote.to_string();
+
+    if !args.accept && !ui.create_file_p(&file_name)? {
+        UI::no_action_needed();
+        return Ok(());
+    }
+
+    create_file(&file_name)?;
+
+    if args.open {
+        open_file(&file_name)?;
+    }
+
+    Ok(())
+}
+
+fn build_denote(
     ui: &mut UI,
     title: Option<String>,
     date: String,
