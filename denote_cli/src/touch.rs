@@ -4,10 +4,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::{fs, path::Path, process::Stdio};
+use std::{path::Path, process::Stdio};
 
 use anyhow::{Context, Result};
 use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
+use fs_err as fs;
 
 use crate::{args, ui::UI};
 
@@ -29,7 +30,7 @@ pub fn touch(args: args::Touch, ui: &mut UI) -> anyhow::Result<()> {
         return Ok(());
     }
 
-    create_file(&file_name)?;
+    fs::File::create(&file_name)?;
 
     if args.open {
         open_file(&file_name)?;
@@ -76,11 +77,6 @@ fn build_denote(
     }
 
     Ok(name_scheme)
-}
-
-pub fn create_file(file_name: impl AsRef<Path>) -> Result<()> {
-    fs::File::create(&file_name).context("Failed to create file")?;
-    Ok(())
 }
 
 pub fn open_file(file_name: impl AsRef<Path>) -> Result<()> {

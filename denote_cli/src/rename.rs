@@ -4,10 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::fs;
-
-use anyhow::{bail, Context};
+use anyhow::bail;
 use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
+use fs_err as fs;
 
 use crate::{args, ui::UI};
 
@@ -102,8 +101,7 @@ pub fn rename(args: args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             return Ok(());
         }
 
-        fs::rename(path, new_file_name)
-            .with_context(|| format!("Failed to rename file {:?}", path))?;
+        fs::rename(path, new_file_name)?;
     }
 
     Ok(())
