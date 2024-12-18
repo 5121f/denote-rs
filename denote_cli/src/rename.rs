@@ -82,6 +82,8 @@ pub fn rename(args: args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             name_scheme.extension = Extension::new(extension);
         } else if let Some(cns) = &current_name_scheme {
             name_scheme.extension = cns.extension.clone()
+        } else if let Some(ext) = Extension::from_path(path) {
+            name_scheme.extension(ext);
         };
 
         let file_name = path
