@@ -4,8 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use slug::slugify;
-
 /// Makes first letter in string uppercase
 pub fn first_letter_uppercase(string: &str) -> String {
     let mut chars = string.chars();
@@ -20,10 +18,41 @@ pub fn first_letter_uppercase(string: &str) -> String {
 }
 
 pub fn format(string: &str, separator: &str) -> String {
+    println!("{string}");
     let string = slugify(string);
+    println!("{string}");
     if separator == "-" {
         string
     } else {
         string.replace("-", separator)
     }
+}
+
+pub fn slugify<S: AsRef<str>>(s: S) -> String {
+    _slugify(s.as_ref())
+}
+
+fn _slugify(s: &str) -> String {
+    let mut slug = String::with_capacity(s.len());
+    // Starts with true to avoid leading -
+    let mut prev_is_dash = true;
+
+    for x in s.chars() {
+        if !x.is_alphabetic() {
+            if !prev_is_dash {
+                slug.push('-');
+                prev_is_dash = true;
+            }
+            continue;
+        }
+        slug = format!("{slug}{}", x.to_lowercase());
+        prev_is_dash = false;
+    }
+
+    if slug.ends_with('-') {
+        slug.pop();
+        slug.shrink_to_fit();
+    }
+
+    slug
 }
