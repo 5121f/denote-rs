@@ -553,15 +553,6 @@ checksum = "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
 [[package]]
 name = "zeroten-denote"
 version = "0.1.1"
-dependencies = [
- "chrono",
- "once_cell",
- "regex",
-]
-
-[[package]]
-name = "zeroten-denote"
-version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ee5100c938b1bad7685fbf0a3f8e0f202a40c43f87917ec412757a177c95b6ec"
 dependencies = [
@@ -572,11 +563,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "zeroten-denote"
+version = "0.1.2"
+dependencies = [
+ "chrono",
+ "once_cell",
+ "regex",
+]
+
+[[package]]
 name = "zeroten-denote-cli"
 version = "0.1.1"
 dependencies = [
  "anyhow",
  "clap",
  "fs-err",
- "zeroten-denote 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "zeroten-denote 0.1.1",
 ]
