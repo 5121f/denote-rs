@@ -1,6 +1,6 @@
 [package]
 name = "zeroten-denote-cli"
-version = "0.1.1"
+version = "0.1.2"
 keywords = ["cli", "denote", "name-scheme"]
 categories = ["command-line-utilities"]
 
