@@ -1,8 +1,9 @@
 # denote changelog
 
-## New
+## 0.1.2
 
-- Updated docs.
+- Accept non-ascii symbols in title
+- Updated docs
 
 ## 0.1.1
 

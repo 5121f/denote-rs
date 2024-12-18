@@ -1,7 +1,9 @@
 # denote-rs changelog
 
-## New
+## 0.1.2
 
+- Accept non-ascii symbols in title
+- Save extention if not defined
 - Better formatting of naming scheme elements
 - Updated docs
 
