@@ -1,5 +1,9 @@
 # denote changelog
 
+## New
+
+- Remove debug information
+
 ## 0.1.2
 
 - Accept non-ascii symbols in title
