@@ -18,9 +18,7 @@ pub fn first_letter_uppercase(string: &str) -> String {
 }
 
 pub fn format(string: &str, separator: &str) -> String {
-    println!("{string}");
     let string = slugify(string);
-    println!("{string}");
     if separator == "-" {
         string
     } else {
