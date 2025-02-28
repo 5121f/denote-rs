@@ -7,7 +7,7 @@
 use std::fmt::{self, Display};
 use std::path::Path;
 
-use crate::{regex, Extension, Identifier, Keywords, Signature, Title};
+use crate::{Extension, Identifier, Keywords, Signature, Title, regex};
 
 /// Handle denote name scheme
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]

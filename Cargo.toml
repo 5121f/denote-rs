@@ -3,7 +3,7 @@ members = ["denote", "denote_cli"]
 resolver = "2"
 
 [workspace.package]
-edition = "2021"
+edition = "2024"
 description = "Use denote name shcheme outside of Emacs"
 authors = ["Artyom Kalin <kalin.a.v20031@gmail.com>"]
 repository = "https://github.com/5121f/denote-rs"
