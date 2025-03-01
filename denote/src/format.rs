@@ -27,8 +27,6 @@ pub fn format(string: &str, separator: &str) -> String {
 }
 
 pub fn slugify(s: &str) -> String {
-    // let s = s.as_ref();
-
     let mut slug = String::with_capacity(s.len());
     // Starts with true to avoid leading -
     let mut prev_is_dash = true;
