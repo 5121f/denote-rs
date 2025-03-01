@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#![warn(clippy::nursery)]
+#![warn(clippy::pedantic)]
 
 mod args;
 mod rename;
@@ -24,7 +24,7 @@ fn main() -> Result<()> {
     let mut ui = UI::new();
 
     match cli {
-        Args::Rename(args) => rename(args, &mut ui)?,
+        Args::Rename(args) => rename(&args, &mut ui)?,
         Args::Touch(args) => touch(args, &mut ui)?,
     }
 

@@ -57,7 +57,7 @@ impl UI {
     }
 
     pub(crate) fn no_action_needed() {
-        println!("No action needed")
+        println!("No action needed");
     }
 
     pub(crate) fn take_title(&mut self) -> Result<Option<Title>> {

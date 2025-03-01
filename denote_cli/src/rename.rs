@@ -10,7 +10,7 @@ use fs_err as fs;
 
 use crate::{args, ui::UI};
 
-pub fn rename(args: args::Rename, ui: &mut UI) -> anyhow::Result<()> {
+pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
     if args.paths.len() > 1 && unic_id(args.date.as_deref()) {
         let accept = ui.question(
             "It is not recommended to use one unique identifier for several files\nContinue?",
@@ -51,7 +51,7 @@ pub fn rename(args: args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             name_scheme.signature = Signature::parse(signature);
         } else if !interactive {
             if let Some(cns) = &current_name_scheme {
-                name_scheme.signature = cns.signature.clone();
+                name_scheme.signature.clone_from(&cns.signature);
             }
         }
 
@@ -65,11 +65,10 @@ pub fn rename(args: args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             let old_title = current_name_scheme
                 .as_ref()
                 .and_then(|ns| ns.title.clone())
-                .map(|title| title.desluggify())
-                .unwrap_or(file_title);
+                .map_or(file_title, |title| title.desluggify());
             name_scheme.title = ui.title_with_old_title(&old_title)?;
         } else if let Some(cns) = &current_name_scheme {
-            name_scheme.title = cns.title.clone();
+            name_scheme.title.clone_from(&cns.title);
         };
 
         if let Some(keywords) = &args.keywords {
@@ -81,7 +80,7 @@ pub fn rename(args: args::Rename, ui: &mut UI) -> anyhow::Result<()> {
         if let Some(extension) = &args.extension {
             name_scheme.extension = Extension::new(extension);
         } else if let Some(cns) = &current_name_scheme {
-            name_scheme.extension = cns.extension.clone()
+            name_scheme.extension.clone_from(&cns.extension);
         } else if let Some(ext) = Extension::from_path(path) {
             name_scheme.extension(ext);
         };

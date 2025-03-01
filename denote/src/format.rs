@@ -22,15 +22,13 @@ pub fn format(string: &str, separator: &str) -> String {
     if separator == "-" {
         string
     } else {
-        string.replace("-", separator)
+        string.replace('-', separator)
     }
 }
 
-pub fn slugify<S: AsRef<str>>(s: S) -> String {
-    _slugify(s.as_ref())
-}
+pub fn slugify(s: &str) -> String {
+    // let s = s.as_ref();
 
-fn _slugify(s: &str) -> String {
     let mut slug = String::with_capacity(s.len());
     // Starts with true to avoid leading -
     let mut prev_is_dash = true;

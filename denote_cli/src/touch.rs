@@ -20,7 +20,7 @@ pub fn touch(args: args::Touch, ui: &mut UI) -> anyhow::Result<()> {
     let mut name_scheme = Denote::new(identifier);
 
     if let Some(signature) = args.signature {
-        name_scheme.signature = Signature::parse(&signature)
+        name_scheme.signature = Signature::parse(&signature);
     }
 
     if let Some(title) = args.title {
