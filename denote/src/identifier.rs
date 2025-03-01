@@ -106,10 +106,10 @@ impl Display for Identifier {
 
 impl From<NaiveDateTime> for Identifier {
     fn from(value: NaiveDateTime) -> Self {
-        let date = value.date().format("%Y%m%d").to_string();
+        let date = value.date().format("%Y%m%d");
         let time = value.time();
-        let milliseconds = time.format("%3f").to_string()[..2].to_owned();
-        let time = time.format("%H%M%S").to_string();
+        let milliseconds = &time.format("%3f").to_string()[..2];
+        let time = time.format("%H%M%S");
         Self(format!("{date}T{time}{milliseconds}"))
     }
 }
