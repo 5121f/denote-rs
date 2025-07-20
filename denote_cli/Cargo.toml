@@ -21,5 +21,5 @@ fs-err = "3.1.1"
 
 [dependencies.denote]
 package = "zeroten-denote"
-version = "0.1.3"
+version = "0.1.4"
 # path = "../denote"
