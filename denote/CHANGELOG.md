@@ -1,6 +1,10 @@
 # denote changelog
 
-## New
+## 0.1.4 (2025-07-20)
+
+- Remove unneded dependencies features
+
+## 0.1.3 (2025-07-20)
 
 - Remove debug information
 - Replace once_cell crate with standard library Lazy type
