@@ -63,6 +63,10 @@ impl Identifier {
     }
 
     /// Take date of file creation from file metadata and format it in denote identifier format
+    ///
+    /// # Errors
+    ///
+    /// Returns Err if metadata request fails.
     pub fn from_file_metadata(path: impl AsRef<Path>) -> std::io::Result<Self> {
         let metadata = fs::metadata(path)?;
         let created = metadata.created()?;
