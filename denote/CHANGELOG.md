@@ -1,5 +1,9 @@
 # denote changelog
 
+## 0.1.5 (2025-07-20)
+
+- Not all removed features was useless :)
+
 ## 0.1.4 (2025-07-20)
 
 - Remove unneded dependencies features
