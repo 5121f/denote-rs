@@ -4,6 +4,7 @@
 
 - Remove debug information
 - Replace once_cell crate with standard library Lazy type
+- Update docs
 
 ## 0.1.2
 
