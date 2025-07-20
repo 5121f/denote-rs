@@ -1,6 +1,6 @@
 [package]
 name = "zeroten-denote"
-version = "0.1.4"
+version = "0.1.5"
 description = "Handle denote name scheme"
 keywords = ["denote", "name-scheme"]
 
@@ -10,7 +10,7 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-regex = { version = "1", default-features = false }
+regex = "1"
 
 [dependencies.chrono]
 version = "0"
