@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use anyhow::bail;
+use anyhow::{Context, bail};
 use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
 use fs_err as fs;
 
@@ -102,7 +102,13 @@ pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             return Ok(());
         }
 
-        fs::rename(path, new_file_name)?;
+        let parent = path.parent().context(format!(
+            "Failed to find parent of dir '{}'",
+            path.to_string_lossy()
+        ))?;
+        let new_path = parent.join(&new_file_name);
+
+        fs::rename(path, new_path)?;
     }
 
     Ok(())
