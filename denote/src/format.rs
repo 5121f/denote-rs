@@ -32,15 +32,15 @@ pub fn slugify(s: &str) -> String {
     let mut prev_is_dash = true;
 
     for x in s.chars() {
-        if !x.is_alphabetic() {
-            if !prev_is_dash {
-                slug.push('-');
-                prev_is_dash = true;
-            }
+        if x.is_alphabetic() {
+            slug.push_str(&x.to_lowercase().to_string());
+            prev_is_dash = false;
             continue;
         }
-        slug = format!("{slug}{}", x.to_lowercase());
-        prev_is_dash = false;
+        if !prev_is_dash {
+            slug.push('-');
+            prev_is_dash = true;
+        }
     }
 
     if slug.ends_with('-') {
