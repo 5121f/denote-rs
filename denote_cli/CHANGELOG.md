@@ -1,6 +1,6 @@
 # denote-rs changelog
 
-## 0.1.3
+## 0.1.3 (2025-07-20)
 
 - Fixed renaming in any directory except current
 
