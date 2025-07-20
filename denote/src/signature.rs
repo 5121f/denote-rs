@@ -8,7 +8,7 @@ use std::fmt::{self, Display};
 
 use crate::format;
 
-/// Represent signature in denote name scuheme
+/// Represent signature in denote name scheme
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct Signature(String);
 

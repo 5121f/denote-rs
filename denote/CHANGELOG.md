@@ -3,7 +3,7 @@
 ## New
 
 - Remove debug information
-- Replace once_cell crate with standart library Lazy type
+- Replace once_cell crate with standard library Lazy type
 
 ## 0.1.2
 
