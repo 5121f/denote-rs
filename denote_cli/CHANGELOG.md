@@ -1,5 +1,9 @@
 # denote-rs changelog
 
+## 0.1.3
+
+- Fixed renaming in any directory except current
+
 ## 0.1.2
 
 - Accept non-ascii symbols in title
