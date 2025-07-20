@@ -69,13 +69,13 @@ pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             name_scheme.title = ui.title_with_old_title(&old_title)?;
         } else if let Some(cns) = &current_name_scheme {
             name_scheme.title.clone_from(&cns.title);
-        };
+        }
 
         if let Some(keywords) = &args.keywords {
             name_scheme.keywords = Keywords::parse_user_input(keywords);
         } else if interactive {
             name_scheme.keywords = ui.take_keywords()?;
-        };
+        }
 
         if let Some(extension) = &args.extension {
             name_scheme.extension = Extension::new(extension);
@@ -83,7 +83,7 @@ pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             name_scheme.extension.clone_from(&cns.extension);
         } else if let Some(ext) = Extension::from_path(path) {
             name_scheme.extension(ext);
-        };
+        }
 
         let file_name = path
             .file_name()
