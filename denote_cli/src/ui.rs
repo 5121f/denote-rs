@@ -36,7 +36,10 @@ impl UI {
     }
 
     pub fn rename(&mut self, old_file_name: &str, new_file_name: &str) -> Result<bool> {
-        println!("Old name \"{old_file_name}\"\nNew name \"{new_file_name}\"");
+        println!(
+            "Old name \"{old_file_name}\"\n\
+            New name \"{new_file_name}\""
+        );
         self.question("Accept?", true)
     }
 
@@ -52,8 +55,7 @@ impl UI {
         } else {
             &input
         };
-        let title = Title::parse(title);
-        Ok(title)
+        Ok(Title::parse(title))
     }
 
     pub(crate) fn no_action_needed() {
@@ -63,8 +65,7 @@ impl UI {
     pub(crate) fn take_title(&mut self) -> Result<Option<Title>> {
         self.print("Title: ")?;
         let input = self.read_line()?;
-        let title = Title::parse(&input);
-        Ok(title)
+        Ok(Title::parse(&input))
     }
 
     pub(crate) fn take_keywords(&mut self) -> Result<Option<Keywords>> {
