@@ -22,9 +22,12 @@ impl Extension {
     }
 
     pub fn from_path<P: AsRef<Path>>(path: P) -> Option<Self> {
-        let path = path.as_ref();
-        let ext = path.extension()?.to_str()?;
-        Some(Self(ext.to_string()))
+        fn inner(path: &Path) -> Option<Extension> {
+            let ext = path.extension()?.to_str()?;
+            Some(Extension(ext.to_string()))
+        }
+
+        inner(path.as_ref())
     }
 }
 

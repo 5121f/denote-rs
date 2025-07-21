@@ -42,38 +42,42 @@ impl Denote {
     /// assert_eq!(name_scheme.to_string(), "20240903T13173023--another-title__keyword.txt");
     /// ```
     pub fn from_path<P: AsRef<Path>>(path: P) -> Option<Self> {
-        let file_name = path.as_ref().file_name()?.to_str()?.to_string();
+        fn inner(path: &Path) -> Option<Denote> {
+            let file_name = path.file_name()?.to_str()?.to_string();
 
-        let captures = regex::NAME_SCHEME.captures(&file_name)?;
+            let captures = regex::NAME_SCHEME.captures(&file_name)?;
 
-        let id = {
-            let capture = captures.name("id").unwrap();
-            Identifier::parse(capture.as_str())?
-        };
+            let id = {
+                let capture = captures.name("id").unwrap();
+                Identifier::parse(capture.as_str())?
+            };
 
-        let mut name_scheme = Self::new(id);
+            let mut name_scheme = Denote::new(id);
 
-        name_scheme.signature = captures
-            .name("signature")
-            .map(|c| c.as_str())
-            .and_then(Signature::parse);
+            name_scheme.signature = captures
+                .name("signature")
+                .map(|c| c.as_str())
+                .and_then(Signature::parse);
 
-        name_scheme.title = captures
-            .name("title")
-            .map(|c| c.as_str())
-            .and_then(Title::parse);
+            name_scheme.title = captures
+                .name("title")
+                .map(|c| c.as_str())
+                .and_then(Title::parse);
 
-        name_scheme.keywords = captures
-            .name("keywords")
-            .map(|c| c.as_str())
-            .and_then(Keywords::parse_schemed_string);
+            name_scheme.keywords = captures
+                .name("keywords")
+                .map(|c| c.as_str())
+                .and_then(Keywords::parse_schemed_string);
 
-        name_scheme.extension = captures
-            .name("ext")
-            .map(|c| c.as_str())
-            .and_then(Extension::new);
+            name_scheme.extension = captures
+                .name("ext")
+                .map(|c| c.as_str())
+                .and_then(Extension::new);
 
-        Some(name_scheme)
+            Some(name_scheme)
+        }
+
+        inner(path.as_ref())
     }
 
     /// Set signature
