@@ -67,7 +67,7 @@ impl Identifier {
     /// # Errors
     ///
     /// Returns Err if metadata request fails.
-    pub fn from_file_metadata(path: impl AsRef<Path>) -> std::io::Result<Self> {
+    pub fn from_file_metadata<P: AsRef<Path>>(path: P) -> std::io::Result<Self> {
         let metadata = fs::metadata(path)?;
         let created = metadata.created()?;
         Ok(created.into())

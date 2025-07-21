@@ -21,7 +21,7 @@ impl Extension {
         Some(Self(ext.to_string()))
     }
 
-    pub fn from_path(path: impl AsRef<Path>) -> Option<Self> {
+    pub fn from_path<P: AsRef<Path>>(path: P) -> Option<Self> {
         let path = path.as_ref();
         let ext = path.extension()?.to_str()?;
         Some(Self(ext.to_string()))

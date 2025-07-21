@@ -41,7 +41,7 @@ impl Denote {
     /// name_scheme.title = Title::parse("Another title");
     /// assert_eq!(name_scheme.to_string(), "20240903T13173023--another-title__keyword.txt");
     /// ```
-    pub fn from_path(path: impl AsRef<Path>) -> Option<Self> {
+    pub fn from_path<P: AsRef<Path>>(path: P) -> Option<Self> {
         let file_name = path.as_ref().file_name()?.to_str()?.to_string();
 
         let captures = regex::NAME_SCHEME.captures(&file_name)?;
