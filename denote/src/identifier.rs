@@ -104,7 +104,7 @@ impl Default for Identifier {
 
 impl Display for Identifier {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.0)
+        fmt::Display::fmt(&self.0, f)
     }
 }
 
