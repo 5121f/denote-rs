@@ -6,6 +6,7 @@
 
 use std::io::{self, Write};
 
+use Answer::{No, Yes};
 use denote::{Extension, Keywords, Title};
 
 /// User Interface
@@ -22,29 +23,34 @@ impl UI {
         }
     }
 
-    pub(crate) fn question(&mut self, question: &str, default_ansfer: bool) -> Result<bool> {
-        let prompt = if default_ansfer { "[Y/n]" } else { "[y/N]" };
+    pub(crate) fn question(&mut self, question: &str, default_ansfer: Answer) -> Result<Answer> {
+        let prompt = match default_ansfer {
+            Yes => "[Y/n]",
+            No => "[y/N]",
+        };
         self.print(&format!("{question} {prompt} "))?;
         let response = self.read_line()?;
         let response = if response.is_empty() {
             default_ansfer
         } else {
-            let response = response.to_lowercase();
-            response == "y" || response == "yes"
+            match response.to_lowercase().trim() {
+                "y" | "yes" => Yes,
+                _ => No,
+            }
         };
         Ok(response)
     }
 
-    pub fn rename(&mut self, old_file_name: &str, new_file_name: &str) -> Result<bool> {
+    pub fn rename(&mut self, old_file_name: &str, new_file_name: &str) -> Result<Answer> {
         println!(
             "Old name \"{old_file_name}\"\n\
             New name \"{new_file_name}\""
         );
-        self.question("Accept?", true)
+        self.question("Accept?", Yes)
     }
 
-    pub fn create_file_p(&mut self, file_name: &str) -> Result<bool> {
-        self.question(&format!("Create file \"{file_name}\"?"), true)
+    pub fn create_file_p(&mut self, file_name: &str) -> Result<Answer> {
+        self.question(&format!("Create file \"{file_name}\"?"), Yes)
     }
 
     pub(crate) fn title_with_old_title(&mut self, old_title: &str) -> Result<Option<Title>> {
@@ -90,6 +96,17 @@ impl UI {
         print!("{value}");
         self.stdout.flush()?;
         Ok(())
+    }
+}
+
+pub enum Answer {
+    Yes,
+    No,
+}
+
+impl Answer {
+    pub fn is_no(&self) -> bool {
+        matches!(self, No)
     }
 }
 

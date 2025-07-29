@@ -8,15 +8,16 @@ use anyhow::{Context, bail};
 use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
 use fs_err as fs;
 
-use crate::{args, ui::UI};
+use crate::args;
+use crate::ui::{Answer, UI};
 
 pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
     if args.paths.len() > 1 && unic_id(args.date.as_deref()) {
         let accept = ui.question(
             "It is not recommended to use one unique identifier for several files\nContinue?",
-            false,
+            Answer::No,
         )?;
-        if !accept {
+        if accept.is_no() {
             UI::no_action_needed();
             return Ok(());
         }
@@ -97,7 +98,7 @@ pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             return Ok(());
         }
 
-        if !args.accept && !ui.rename(&file_name, &new_file_name)? {
+        if !args.accept && ui.rename(&file_name, &new_file_name)?.is_no() {
             UI::no_action_needed();
             return Ok(());
         }
