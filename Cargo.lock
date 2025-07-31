@@ -129,9 +129,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.5.41"
+version = "4.5.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be92d32e80243a54711e5d7ce823c35c41c9d929dc4ab58e1276f625841aadf9"
+checksum = "ed87a9d530bb41a67537289bafcac159cb3ee28460e0a4571123d2a778a6a882"
 dependencies = [
  "clap_builder",
  "clap_derive",
@@ -139,9 +139,9 @@ dependencies = [
 
 [[package]]
 name = "clap_builder"
-version = "4.5.41"
+version = "4.5.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "707eab41e9622f9139419d573eca0900137718000c517d47da73045f54331c3d"
+checksum = "64f4f3f3c77c94aff3c7e9aac9a2ca1974a5adf392a8bb751e827d6d127ab966"
 dependencies = [
  "anstream",
  "anstyle",
@@ -666,9 +666,7 @@ checksum = "271414315aff87387382ec3d271b52d7ae78726f5d44ac98b4f4030c91880486"
 
 [[package]]
 name = "zeroten-denote"
-version = "0.1.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "97388669d7426f3c6d6af69763377eb38aceb82fb41a626cfab7baedcb5a68eb"
+version = "0.1.7"
 dependencies = [
  "chrono",
  "regex",
@@ -677,6 +675,8 @@ dependencies = [
 [[package]]
 name = "zeroten-denote"
 version = "0.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "078783ff834bdb72f0bf959d4b2a736e8e072ff45188efdb36b4734ec34965b9"
 dependencies = [
  "chrono",
  "regex",
@@ -689,5 +689,5 @@ dependencies = [
  "anyhow",
  "clap",
  "fs-err",
- "zeroten-denote 0.1.6",
+ "zeroten-denote 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
