@@ -9,7 +9,7 @@ use std::fmt::{self, Display};
 use crate::format;
 
 const PREFIX: &str = "--";
-const SEPARATOR: &str = "-q";
+const SEPARATOR: &str = "-";
 
 /// Represent title in denote name scheme
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
