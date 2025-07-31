@@ -6,7 +6,7 @@
 
 use std::fmt::{self, Display};
 
-use crate::format;
+use crate::format::{self, Separator};
 
 const PREFIX: &str = "__";
 const SEPARATOR: &str = "_";
@@ -44,7 +44,7 @@ impl Keywords {
         fn inner(string: &str, separator: &str) -> Option<Keywords> {
             let keywords: Vec<_> = string
                 .split(separator)
-                .map(|s| format::slugify(s, ""))
+                .map(|s| format::slugify(s, &Separator::None))
                 .filter(|k| !k.is_empty())
                 .collect();
             (!keywords.is_empty()).then_some(keywords).map(Keywords)

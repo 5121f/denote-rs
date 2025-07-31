@@ -6,10 +6,10 @@
 
 use std::fmt::{self, Display};
 
-use crate::format;
+use crate::format::{self, Separator};
 
 const PREFIX: &str = "--";
-const SEPARATOR: &str = "-";
+const SEPARATOR: Separator = Separator::Char('-');
 
 /// Represent title in denote name scheme
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
@@ -23,7 +23,7 @@ impl Title {
     /// assert_eq!(Title::parse("some-title").unwrap().to_string(), "--some-title");
     /// ```
     pub fn parse<S: AsRef<str>>(string: S) -> Option<Self> {
-        let string = format::slugify(string, SEPARATOR);
+        let string = format::slugify(string, &SEPARATOR);
         (!string.is_empty()).then_some(string).map(Self)
     }
 
@@ -33,7 +33,7 @@ impl Title {
     /// assert_eq!(Title::parse(" some Title").unwrap().desluggify(), "Some title");
     /// ```
     pub fn desluggify(&self) -> String {
-        let deslugify = self.0.clone().replace(SEPARATOR, " ");
+        let deslugify = self.0.clone().replace(&SEPARATOR.to_string(), " ");
         format::first_letter_uppercase(&deslugify)
     }
 }
