@@ -37,8 +37,9 @@ pub fn slugify<S: AsRef<str>>(s: S, separator: &str) -> String {
 
         if !separator.is_empty() && slug.ends_with(separator) {
             slug.pop();
-            slug.shrink_to_fit();
         }
+
+        slug.shrink_to_fit();
 
         slug
     }
