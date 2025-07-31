@@ -6,7 +6,7 @@
 
 use std::fmt::{self, Display};
 
-use crate::format::{self, slugify};
+use crate::format;
 
 const PREFIX: &str = "__";
 const SEPARATOR: &str = "_";
