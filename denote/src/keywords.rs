@@ -43,6 +43,7 @@ impl Keywords {
     fn parse(string: &str, separator: &str) -> Option<Self> {
         let keywords: Vec<_> = slugify(string, separator)
             .split(separator)
+            .filter(|k| !k.is_empty())
             .map(ToOwned::to_owned)
             .collect();
         (!keywords.is_empty()).then_some(keywords).map(Self)
