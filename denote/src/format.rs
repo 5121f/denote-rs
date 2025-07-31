@@ -23,7 +23,7 @@ pub fn slugify(s: &str, separator: &str) -> String {
     let mut prev_is_dash = true;
 
     for x in s.chars() {
-        if x.is_alphabetic() {
+        if x.is_alphabetic() || x.is_numeric() {
             slug.push_str(&x.to_lowercase().to_string());
             prev_is_dash = false;
             continue;
