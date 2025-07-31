@@ -1,12 +1,16 @@
 # denote changelog
 
+## 0.1.7 (2025-07-31)
+
+- Many functions now accept `AsRef<str>` instead of `&str`
+
 ## 0.1.6 (2025-07-21)
 
-- Allow using turbofish syntax in functions that take AsRef<Path>
+- Allow using turbofish syntax in functions that take `AsRef<Path>`
 
 ## 0.1.5 (2025-07-20)
 
-- Not all removed features was useless :)
+- Not all removed features were useless :)
 
 ## 0.1.4 (2025-07-20)
 
