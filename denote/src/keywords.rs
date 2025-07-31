@@ -6,7 +6,7 @@
 
 use std::fmt::{self, Display};
 
-use crate::format::slugify;
+use crate::format::{self, slugify};
 
 const PREFIX: &str = "__";
 const SEPARATOR: &str = "_";
@@ -41,10 +41,10 @@ impl Keywords {
     }
 
     fn parse(string: &str, separator: &str) -> Option<Self> {
-        let keywords: Vec<_> = slugify(string, separator)
+        let keywords: Vec<_> = string
             .split(separator)
+            .map(|s| format::slugify(s, ""))
             .filter(|k| !k.is_empty())
-            .map(ToOwned::to_owned)
             .collect();
         (!keywords.is_empty()).then_some(keywords).map(Self)
     }
