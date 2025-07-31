@@ -8,6 +8,9 @@ use std::fmt::{self, Display};
 
 use crate::format;
 
+const PREFIX: &str = "==";
+const SEPARATOR: &str = "=";
+
 /// Represent signature in denote name scheme
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct Signature(String);
@@ -19,13 +22,13 @@ impl Signature {
     /// assert_eq!(Signature::parse("1b 2b=3c").unwrap().to_string(), "==1b=2b=3c");
     /// ```
     pub fn parse(string: &str) -> Option<Self> {
-        let string = format::slugify(string, "=");
+        let string = format::slugify(string, SEPARATOR);
         (!string.is_empty()).then_some(string).map(Self)
     }
 }
 
 impl Display for Signature {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "=={}", self.0)
+        write!(f, "{}{}", PREFIX, self.0)
     }
 }

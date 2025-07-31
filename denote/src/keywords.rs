@@ -6,7 +6,10 @@
 
 use std::fmt::{self, Display};
 
-use crate::format;
+use crate::format::slugify;
+
+const PREFIX: &str = "__";
+const SEPARATOR: &str = "_";
 
 /// Represent keyword in denote name scheme
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
@@ -38,10 +41,9 @@ impl Keywords {
     }
 
     fn parse(string: &str, separator: &str) -> Option<Self> {
-        let keywords: Vec<_> = string
+        let keywords: Vec<_> = slugify(string, separator)
             .split(separator)
-            .map(|s| format::slugify(s, ""))
-            .filter(|s| !s.is_empty())
+            .map(ToOwned::to_owned)
             .collect();
         (!keywords.is_empty()).then_some(keywords).map(Self)
     }
@@ -49,6 +51,6 @@ impl Keywords {
 
 impl Display for Keywords {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "__{}", self.0.join("_"))
+        write!(f, "{}{}", PREFIX, self.0.join(SEPARATOR))
     }
 }

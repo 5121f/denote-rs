@@ -8,6 +8,9 @@ use std::fmt::{self, Display};
 
 use crate::format;
 
+const PREFIX: &str = "--";
+const SEPARATOR: &str = "-q";
+
 /// Represent title in denote name scheme
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct Title(String);
@@ -20,7 +23,7 @@ impl Title {
     /// assert_eq!(Title::parse("some-title").unwrap().to_string(), "--some-title");
     /// ```
     pub fn parse(string: &str) -> Option<Self> {
-        let string = format::slugify(string, "-");
+        let string = format::slugify(string, SEPARATOR);
         (!string.is_empty()).then_some(string).map(Self)
     }
 
@@ -30,13 +33,13 @@ impl Title {
     /// assert_eq!(Title::parse(" some Title").unwrap().desluggify(), "Some title");
     /// ```
     pub fn desluggify(&self) -> String {
-        let deslugify = self.0.clone().replace('-', " ");
+        let deslugify = self.0.clone().replace(SEPARATOR, " ");
         format::first_letter_uppercase(&deslugify)
     }
 }
 
 impl Display for Title {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "--{}", self.0)
+        write!(f, "{}{}", PREFIX, self.0)
     }
 }
