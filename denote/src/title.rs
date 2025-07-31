@@ -20,7 +20,7 @@ impl Title {
     /// assert_eq!(Title::parse("some-title").unwrap().to_string(), "--some-title");
     /// ```
     pub fn parse(string: &str) -> Option<Self> {
-        let string = format::format(string, "-");
+        let string = format::slugify(string, "-");
         (!string.is_empty()).then_some(string).map(Self)
     }
 

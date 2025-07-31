@@ -17,18 +17,9 @@ pub fn first_letter_uppercase(string: &str) -> String {
     })
 }
 
-pub fn format(string: &str, separator: &str) -> String {
-    let string = slugify(string);
-    if separator == "-" {
-        string
-    } else {
-        string.replace('-', separator)
-    }
-}
-
-pub fn slugify(s: &str) -> String {
+pub fn slugify(s: &str, separator: &str) -> String {
     let mut slug = String::with_capacity(s.len());
-    // Starts with true to avoid leading -
+    // Starts with true to avoid leading separator
     let mut prev_is_dash = true;
 
     for x in s.chars() {
@@ -38,15 +29,28 @@ pub fn slugify(s: &str) -> String {
             continue;
         }
         if !prev_is_dash {
-            slug.push('-');
+            slug.push_str(separator);
             prev_is_dash = true;
         }
     }
 
-    if slug.ends_with('-') {
+    if !separator.is_empty() && slug.ends_with(separator) {
         slug.pop();
         slug.shrink_to_fit();
     }
 
     slug
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test() {
+        assert_eq!(slugify("Some title ", "-"), "some-title");
+        assert_eq!(slugify("Some,keywords asd ", ","), "some,keywords,asd");
+        assert_eq!(slugify("empTy  separator", ""), "emptyseparator");
+        assert_eq!(slugify("ddDDDD  ,  lll", "="), "dddddd=lll");
+    }
 }

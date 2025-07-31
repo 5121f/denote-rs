@@ -40,7 +40,7 @@ impl Keywords {
     fn parse(string: &str, separator: &str) -> Option<Self> {
         let keywords: Vec<_> = string
             .split(separator)
-            .map(|s| format::format(s, ""))
+            .map(|s| format::slugify(s, ""))
             .filter(|s| !s.is_empty())
             .collect();
         (!keywords.is_empty()).then_some(keywords).map(Self)
