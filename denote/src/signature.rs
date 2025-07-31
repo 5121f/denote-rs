@@ -21,7 +21,7 @@ impl Signature {
     ///
     /// assert_eq!(Signature::parse("1b 2b=3c").unwrap().to_string(), "==1b=2b=3c");
     /// ```
-    pub fn parse(string: &str) -> Option<Self> {
+    pub fn parse<S: AsRef<str>>(string: S) -> Option<Self> {
         let string = format::slugify(string, SEPARATOR);
         (!string.is_empty()).then_some(string).map(Self)
     }

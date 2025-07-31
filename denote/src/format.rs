@@ -17,29 +17,33 @@ pub fn first_letter_uppercase(string: &str) -> String {
     })
 }
 
-pub fn slugify(s: &str, separator: &str) -> String {
-    let mut slug = String::with_capacity(s.len());
-    // Starts with true to avoid leading separator
-    let mut prev_is_dash = true;
+pub fn slugify<S: AsRef<str>>(s: S, separator: &str) -> String {
+    fn inner(s: &str, separator: &str) -> String {
+        let mut slug = String::with_capacity(s.len());
+        // Starts with true to avoid leading separator
+        let mut prev_is_dash = true;
 
-    for x in s.chars() {
-        if x.is_alphabetic() || x.is_numeric() {
-            slug.push_str(&x.to_lowercase().to_string());
-            prev_is_dash = false;
-            continue;
+        for x in s.chars() {
+            if x.is_alphabetic() || x.is_numeric() {
+                slug.push_str(&x.to_lowercase().to_string());
+                prev_is_dash = false;
+                continue;
+            }
+            if !prev_is_dash {
+                slug.push_str(separator);
+                prev_is_dash = true;
+            }
         }
-        if !prev_is_dash {
-            slug.push_str(separator);
-            prev_is_dash = true;
+
+        if !separator.is_empty() && slug.ends_with(separator) {
+            slug.pop();
+            slug.shrink_to_fit();
         }
+
+        slug
     }
 
-    if !separator.is_empty() && slug.ends_with(separator) {
-        slug.pop();
-        slug.shrink_to_fit();
-    }
-
-    slug
+    inner(s.as_ref(), separator)
 }
 
 #[cfg(test)]

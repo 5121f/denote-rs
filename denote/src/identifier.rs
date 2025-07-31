@@ -25,41 +25,57 @@ impl Identifier {
     }
 
     /// Try parse identifier from given string.
-    pub fn parse(string: &str) -> Option<Self> {
-        if string == "now" {
-            return Some(Self::now());
+    pub fn parse<S: AsRef<str>>(string: S) -> Option<Self> {
+        fn inner(string: &str) -> Option<Identifier> {
+            if string == "now" {
+                return Some(Identifier::now());
+            }
+
+            Identifier::find_in_string(string).or_else(|| Identifier::from_string(string))
         }
 
-        Self::find_in_string(string).or_else(|| Self::from_string(string))
+        inner(string.as_ref())
     }
 
     /// Just call a `from_string_date` and `parse_from_xml` functions.
-    pub fn from_string(string: &str) -> Option<Self> {
-        let current_time = Local::now().naive_local().time();
+    pub fn from_string<S: AsRef<str>>(string: S) -> Option<Self> {
+        fn inner(string: &str) -> Option<Identifier> {
+            let current_time = Local::now().naive_local().time();
 
-        Self::from_string_date(string, current_time)
-            .or_else(|| Self::parse_from_xml_date(string, current_time))
+            Identifier::from_string_date(string, current_time)
+                .or_else(|| Identifier::parse_from_xml_date(string, current_time))
+        }
+
+        inner(string.as_ref())
     }
 
     /// Parse date from xml date format. Takes time from given `time`.
-    pub fn parse_from_xml_date(string: &str, time: NaiveTime) -> Option<Self> {
-        NaiveDate::parse_from_str(string, "%Y-%m-%d")
-            .ok()
-            .map(|d| d.and_time(time))
-            .map(Into::into)
+    pub fn parse_from_xml_date<S: AsRef<str>>(string: S, time: NaiveTime) -> Option<Self> {
+        fn inner(string: &str, time: NaiveTime) -> Option<Identifier> {
+            NaiveDate::parse_from_str(string, "%Y-%m-%d")
+                .ok()
+                .map(|d| d.and_time(time))
+                .map(Into::into)
+        }
+
+        inner(string.as_ref(), time)
     }
 
     /// Parse string for date and time formatted  as follows: `%Y-%m-%d %H:%M`.
     /// Takes milliseconds from given `time`.
-    pub fn from_string_date(string: &str, time: NaiveTime) -> Option<Self> {
-        NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
-            .ok()
-            .and_then(|d| {
-                d.checked_add_signed(Duration::milliseconds(
-                    time.format("%S%3f").to_string().parse().ok()?,
-                ))
-            })
-            .map(Into::into)
+    pub fn from_string_date<S: AsRef<str>>(string: S, time: NaiveTime) -> Option<Self> {
+        fn inner(string: &str, time: NaiveTime) -> Option<Identifier> {
+            NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M")
+                .ok()
+                .and_then(|d| {
+                    d.checked_add_signed(Duration::milliseconds(
+                        time.format("%S%3f").to_string().parse().ok()?,
+                    ))
+                })
+                .map(Into::into)
+        }
+
+        inner(string.as_ref(), time)
     }
 
     /// Take date of file creation from file metadata and format it in denote identifier format
@@ -84,15 +100,19 @@ impl Identifier {
     /// let id = Identifier::find_in_string(string).unwrap();
     /// assert_eq!(id.to_string(), "20240912T13015412");
     /// ```
-    pub fn find_in_string(string: &str) -> Option<Self> {
-        let captures = regex::IDENTIFIER.captures(string)?;
+    pub fn find_in_string<S: AsRef<str>>(string: S) -> Option<Self> {
+        fn inner(string: &str) -> Option<Identifier> {
+            let captures = regex::IDENTIFIER.captures(string)?;
 
-        // We have test in `regex` module to ensure regex is contains `id` group
-        let id = captures
-            .name("id")
-            .expect("Regex: \"id\" name group didn't found");
+            // We have test in `regex` module to ensure regex is contains `id` group
+            let id = captures
+                .name("id")
+                .expect("Regex: \"id\" name group didn't found");
 
-        Some(Self(id.as_str().to_string()))
+            Some(Identifier(id.as_str().to_string()))
+        }
+
+        inner(string.as_ref())
     }
 }
 

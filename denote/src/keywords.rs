@@ -24,7 +24,7 @@ impl Keywords {
     ///     "__word1_word2_word3"
     /// );
     /// ```
-    pub fn parse_user_input(string: &str) -> Option<Self> {
+    pub fn parse_user_input<S: AsRef<str>>(string: S) -> Option<Self> {
         Self::parse(string, ",")
     }
 
@@ -36,17 +36,21 @@ impl Keywords {
     ///     "__word1_word2"
     /// );
     /// ```
-    pub fn parse_schemed_string(string: &str) -> Option<Self> {
+    pub fn parse_schemed_string<S: AsRef<str>>(string: S) -> Option<Self> {
         Self::parse(string, "_")
     }
 
-    fn parse(string: &str, separator: &str) -> Option<Self> {
-        let keywords: Vec<_> = string
-            .split(separator)
-            .map(|s| format::slugify(s, ""))
-            .filter(|k| !k.is_empty())
-            .collect();
-        (!keywords.is_empty()).then_some(keywords).map(Self)
+    fn parse<S: AsRef<str>>(string: S, separator: &str) -> Option<Self> {
+        fn inner(string: &str, separator: &str) -> Option<Keywords> {
+            let keywords: Vec<_> = string
+                .split(separator)
+                .map(|s| format::slugify(s, ""))
+                .filter(|k| !k.is_empty())
+                .collect();
+            (!keywords.is_empty()).then_some(keywords).map(Keywords)
+        }
+
+        inner(string.as_ref(), separator)
     }
 }
 
