@@ -101,10 +101,9 @@ pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             return Ok(());
         }
 
-        let parent = path.parent().context(format!(
-            "Failed to find parent of dir '{}'",
-            path.to_string_lossy()
-        ))?;
+        let parent = path.parent().with_context(|| {
+            format!("Failed to find parent of dir '{}'", path.to_string_lossy())
+        })?;
         let new_path = parent.join(&new_file_name);
 
         fs::rename(path, new_path)?;
