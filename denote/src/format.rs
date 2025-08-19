@@ -4,17 +4,29 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+use std::borrow::Cow;
+
 /// Makes first letter in string uppercase
-pub fn first_letter_uppercase(string: &str) -> String {
-    let mut chars = string.chars();
-    let first_letter = chars.next();
-    first_letter.map_or_else(String::new, |c| {
-        format!(
-            "{first_letter}{other_letters}",
-            first_letter = c.to_uppercase(),
-            other_letters = chars.as_str()
-        )
-    })
+pub fn first_letter_uppercase<'a, S>(string: S) -> Cow<'a, str>
+where
+    S: Into<Cow<'a, str>>,
+{
+    fn inner(string: Cow<'_, str>) -> Cow<'_, str> {
+        let mut chars = string.chars();
+        let first_letter = chars.next();
+        first_letter
+            .map(|c| {
+                format!(
+                    "{first_letter}{other_letters}",
+                    first_letter = c.to_uppercase(),
+                    other_letters = chars.as_str()
+                )
+                .into()
+            })
+            .unwrap_or(string)
+    }
+
+    inner(string.into())
 }
 
 pub fn slugify<S: AsRef<str>>(s: S, separator: Option<char>) -> String {

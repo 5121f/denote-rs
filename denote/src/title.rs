@@ -34,7 +34,7 @@ impl Title {
     /// ```
     pub fn desluggify(&self) -> String {
         let deslugify = self.0.clone().replace(&SEPARATOR.to_string(), " ");
-        format::first_letter_uppercase(&deslugify)
+        format::first_letter_uppercase(deslugify).to_string()
     }
 }
 
