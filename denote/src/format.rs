@@ -4,8 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::fmt;
-
 /// Makes first letter in string uppercase
 pub fn first_letter_uppercase(string: &str) -> String {
     let mut chars = string.chars();
@@ -19,10 +17,10 @@ pub fn first_letter_uppercase(string: &str) -> String {
     })
 }
 
-pub fn slugify<S: AsRef<str>>(s: S, separator: &Separator) -> String {
-    fn inner(s: &str, separator: &Separator) -> String {
+pub fn slugify<S: AsRef<str>>(s: S, separator: Option<char>) -> String {
+    fn inner(s: &str, separator: Option<char>) -> String {
         let mut slug = String::with_capacity(s.len());
-        let sep_str = separator.to_string();
+        let separator = separator.map(|c| c.to_string()).unwrap_or_default();
         // Starts with true to avoid leading separator
         let mut prev_is_dash = true;
 
@@ -33,16 +31,15 @@ pub fn slugify<S: AsRef<str>>(s: S, separator: &Separator) -> String {
                 continue;
             }
             if !prev_is_dash {
-                slug.push_str(&sep_str);
+                slug.push_str(&separator);
                 prev_is_dash = true;
             }
         }
 
-        if !separator.is_none() && slug.ends_with(&sep_str) {
+        if !separator.is_empty() && slug.ends_with(&separator) {
             slug.pop();
+            slug.shrink_to_fit();
         }
-
-        slug.shrink_to_fit();
 
         slug
     }
@@ -50,39 +47,19 @@ pub fn slugify<S: AsRef<str>>(s: S, separator: &Separator) -> String {
     inner(s.as_ref(), separator)
 }
 
-pub enum Separator {
-    Char(char),
-    None,
-}
-
-impl Separator {
-    const fn is_none(&self) -> bool {
-        matches!(self, Self::None)
-    }
-}
-
-impl fmt::Display for Separator {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Self::Char(ch) => ch.fmt(f),
-            Self::None => "".fmt(f),
-        }
-    }
-}
-
 #[cfg(test)]
 mod test {
     use super::*;
-    use Separator::*;
+    // use Separator::*;
 
     #[test]
     fn test() {
-        assert_eq!(slugify("Some title ", &Char('-')), "some-title");
+        assert_eq!(slugify("Some title ", Some('-')), "some-title");
         assert_eq!(
-            slugify("Some,keywords asd ", &Char(',')),
+            slugify("Some,keywords asd ", Some(',')),
             "some,keywords,asd"
         );
-        assert_eq!(slugify("empTy  separator", &None), "emptyseparator");
-        assert_eq!(slugify("ddDDDD  ,  lll", &Char('=')), "dddddd=lll");
+        assert_eq!(slugify("empTy  separator", None), "emptyseparator");
+        assert_eq!(slugify("ddDDDD  ,  lll", Some('=')), "dddddd=lll");
     }
 }
