@@ -43,7 +43,7 @@ pub fn touch(args: args::Touch, ui: &mut UI) -> anyhow::Result<()> {
 
     let file_name = name_scheme.to_string();
 
-    if !args.accept && ui.create_file_p(&file_name)?.is_no() {
+    if !args.accept && !*ui.create_file_p(&file_name)? {
         UI::no_action_needed();
         return Ok(());
     }

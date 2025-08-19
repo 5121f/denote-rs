@@ -4,7 +4,10 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::io::{self, Write};
+use std::{
+    io::{self, Write},
+    ops::Deref,
+};
 
 use Answer::{No, Yes};
 use denote::{Extension, Keywords, Title};
@@ -104,9 +107,16 @@ pub enum Answer {
     No,
 }
 
-impl Answer {
-    pub fn is_no(&self) -> bool {
-        matches!(self, No)
+impl Answer {}
+
+impl Deref for Answer {
+    type Target = bool;
+
+    fn deref(&self) -> &Self::Target {
+        match self {
+            Yes => &true,
+            No => &false,
+        }
     }
 }
 
