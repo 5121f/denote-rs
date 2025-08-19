@@ -50,10 +50,8 @@ pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
 
         if let Some(signature) = &args.signature {
             name_scheme.signature = Signature::parse(signature);
-        } else if !interactive {
-            if let Some(cns) = &current_name_scheme {
-                name_scheme.signature.clone_from(&cns.signature);
-            }
+        } else if !interactive && let Some(cns) = &current_name_scheme {
+            name_scheme.signature.clone_from(&cns.signature);
         }
 
         if let Some(title) = &args.title {
