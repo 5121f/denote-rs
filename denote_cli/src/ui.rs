@@ -23,7 +23,7 @@ impl UI {
         }
     }
 
-    pub(crate) fn question(&mut self, question: &str, default_ansfer: Answer) -> Result<Answer> {
+    pub(crate) fn confirm(&mut self, question: &str, default_ansfer: Answer) -> Result<Answer> {
         let prompt = match default_ansfer {
             Yes => "[Y/n]",
             No => "[y/N]",
@@ -46,11 +46,11 @@ impl UI {
             "Old name \"{old_file_name}\"\n\
             New name \"{new_file_name}\""
         );
-        self.question("Accept?", Yes)
+        self.confirm("Accept?", Yes)
     }
 
     pub fn create_file_p(&mut self, file_name: &str) -> Result<Answer> {
-        self.question(&format!("Create file \"{file_name}\"?"), Yes)
+        self.confirm(&format!("Create file \"{file_name}\"?"), Yes)
     }
 
     pub(crate) fn title_with_old_title(&mut self, old_title: &str) -> Result<Option<Title>> {

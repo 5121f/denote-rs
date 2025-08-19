@@ -13,7 +13,7 @@ use crate::ui::{Answer, UI};
 
 pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
     if args.paths.len() > 1 && unic_id(args.date.as_deref()) {
-        let accept = ui.question(
+        let accept = ui.confirm(
             "It is not recommended to use one unique identifier for several files\nContinue?",
             Answer::No,
         )?;
