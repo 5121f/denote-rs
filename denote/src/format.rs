@@ -62,7 +62,6 @@ pub fn slugify<S: AsRef<str>>(s: S, separator: Option<char>) -> String {
 #[cfg(test)]
 mod test {
     use super::*;
-    // use Separator::*;
 
     #[test]
     fn test() {
