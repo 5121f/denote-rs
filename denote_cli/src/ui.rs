@@ -4,11 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::{
-    fmt,
-    io::{self, Write},
-    ops::Deref,
-};
+use std::fmt;
+use std::io::{self, Write};
+use std::ops::Deref;
 
 use Answer::{No, Yes};
 use anyhow::{Context, Result};

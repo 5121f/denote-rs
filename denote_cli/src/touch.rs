@@ -4,7 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::{path::Path, process::Stdio};
+use std::path::Path;
+use std::process::Stdio;
 
 use anyhow::{Context, Result};
 use denote::{Denote, Extension, Identifier, Keywords, Signature, Title};
