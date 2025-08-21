@@ -5,6 +5,7 @@
  */
 
 use std::{
+    fmt,
     io::{self, Write},
     ops::Deref,
 };
@@ -26,12 +27,16 @@ impl UI {
         }
     }
 
-    pub(crate) fn confirm(&mut self, question: &str, default_ansfer: Answer) -> Result<Answer> {
+    pub(crate) fn confirm(
+        &mut self,
+        question: impl fmt::Display,
+        default_ansfer: Answer,
+    ) -> Result<Answer> {
         let prompt = match default_ansfer {
             Yes => "[Y/n]",
             No => "[y/N]",
         };
-        self.print(&format!("{question} {prompt} "))?;
+        self.print(format!("{question} {prompt} "))?;
         let response = self.read_line()?;
         let response = if response.is_empty() {
             default_ansfer
@@ -53,11 +58,11 @@ impl UI {
     }
 
     pub fn create_file_p(&mut self, file_name: &str) -> Result<Answer> {
-        self.confirm(&format!("Create file \"{file_name}\"?"), Yes)
+        self.confirm(format!("Create file \"{file_name}\"?"), Yes)
     }
 
     pub(crate) fn title_with_old_title(&mut self, old_title: &str) -> Result<Option<Title>> {
-        self.print(&format!("Title [{old_title}]: "))?;
+        self.print(format!("Title [{old_title}]: "))?;
         let input = self.read_line()?;
         let title = if input.trim().is_empty() {
             old_title
@@ -95,7 +100,7 @@ impl UI {
         Ok(buf)
     }
 
-    fn print(&mut self, value: &str) -> Result<()> {
+    fn print(&mut self, value: impl fmt::Display) -> Result<()> {
         print!("{value}");
         self.stdout.flush()?;
         Ok(())
