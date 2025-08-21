@@ -92,7 +92,7 @@ impl UI {
     fn read_line(&self) -> Result<String> {
         let mut buf = String::new();
         self.stdin.read_line(&mut buf)?;
-        Ok(buf.trim().to_owned())
+        Ok(buf)
     }
 
     fn print(&mut self, value: &str) -> Result<()> {
