@@ -47,7 +47,7 @@ impl UI {
         Ok(response)
     }
 
-    pub fn rename(
+    pub fn rename_confirm(
         &mut self,
         old_file_name: impl fmt::Display,
         new_file_name: impl fmt::Display,
@@ -59,7 +59,7 @@ impl UI {
         self.confirm("Accept?", Yes)
     }
 
-    pub fn create_file_p(&mut self, file_name: impl fmt::Display) -> Result<Answer> {
+    pub fn create_file_confirm(&mut self, file_name: impl fmt::Display) -> Result<Answer> {
         self.confirm(format!("Create file \"{file_name}\"?"), Yes)
     }
 

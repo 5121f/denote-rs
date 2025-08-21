@@ -96,7 +96,7 @@ pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             return Ok(());
         }
 
-        if !args.accept && !ui.rename(&file_name, &new_file_name)?.as_bool() {
+        if !args.accept && !ui.rename_confirm(&file_name, &new_file_name)?.as_bool() {
             UI::no_action_needed();
             return Ok(());
         }
