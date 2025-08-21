@@ -17,7 +17,7 @@ pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             "It is not recommended to use one unique identifier for several files\nContinue?",
             Answer::No,
         )?;
-        if !*accept {
+        if !accept.as_bool() {
             UI::no_action_needed();
             return Ok(());
         }
@@ -96,7 +96,7 @@ pub fn rename(args: &args::Rename, ui: &mut UI) -> anyhow::Result<()> {
             return Ok(());
         }
 
-        if !args.accept && !*ui.rename(&file_name, &new_file_name)? {
+        if !args.accept && !ui.rename(&file_name, &new_file_name)?.as_bool() {
             UI::no_action_needed();
             return Ok(());
         }

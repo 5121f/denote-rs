@@ -6,7 +6,6 @@
 
 use std::fmt;
 use std::io::{self, Write};
-use std::ops::Deref;
 
 use Answer::{No, Yes};
 use anyhow::{Context, Result};
@@ -121,13 +120,11 @@ pub enum Answer {
     No,
 }
 
-impl Deref for Answer {
-    type Target = bool;
-
-    fn deref(&self) -> &Self::Target {
+impl Answer {
+    pub fn as_bool(&self) -> bool {
         match self {
-            Yes => &true,
-            No => &false,
+            Yes => true,
+            No => false,
         }
     }
 }
