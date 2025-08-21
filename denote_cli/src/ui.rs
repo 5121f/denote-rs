@@ -11,6 +11,7 @@ use std::{
 };
 
 use Answer::{No, Yes};
+use anyhow::{Context, Result};
 use denote::{Extension, Keywords, Title};
 
 /// User Interface
@@ -96,13 +97,15 @@ impl UI {
 
     fn read_line(&self) -> Result<String> {
         let mut buf = String::new();
-        self.stdin.read_line(&mut buf)?;
+        self.stdin
+            .read_line(&mut buf)
+            .context("failed to read user input")?;
         Ok(buf)
     }
 
     fn print(&mut self, value: impl fmt::Display) -> Result<()> {
         print!("{value}");
-        self.stdout.flush()?;
+        self.stdout.flush().context("failed to flush stdout")?;
         Ok(())
     }
 }
@@ -122,5 +125,3 @@ impl Deref for Answer {
         }
     }
 }
-
-type Result<T> = std::result::Result<T, io::Error>;
