@@ -107,8 +107,6 @@ pub enum Answer {
     No,
 }
 
-impl Answer {}
-
 impl Deref for Answer {
     type Target = bool;
 
