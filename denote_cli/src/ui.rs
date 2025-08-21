@@ -50,7 +50,11 @@ impl UI {
         Ok(response)
     }
 
-    pub fn rename(&mut self, old_file_name: &str, new_file_name: &str) -> Result<Answer> {
+    pub fn rename(
+        &mut self,
+        old_file_name: impl fmt::Display,
+        new_file_name: impl fmt::Display,
+    ) -> Result<Answer> {
         println!(
             "Old name \"{old_file_name}\"\n\
             New name \"{new_file_name}\""
@@ -58,11 +62,15 @@ impl UI {
         self.confirm("Accept?", Yes)
     }
 
-    pub fn create_file_p(&mut self, file_name: &str) -> Result<Answer> {
+    pub fn create_file_p(&mut self, file_name: impl fmt::Display) -> Result<Answer> {
         self.confirm(format!("Create file \"{file_name}\"?"), Yes)
     }
 
-    pub(crate) fn title_with_old_title(&mut self, old_title: &str) -> Result<Option<Title>> {
+    pub(crate) fn title_with_old_title<S>(&mut self, old_title: S) -> Result<Option<Title>>
+    where
+        S: AsRef<str>,
+    {
+        let old_title = old_title.as_ref();
         self.print(format!("Title [{old_title}]: "))?;
         let input = self.read_line()?;
         let title = if input.trim().is_empty() {
