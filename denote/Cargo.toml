@@ -19,3 +19,4 @@ features = ["alloc", "clock"]
 
 [lints.clippy]
 pedantic = "warn"
+nursery = "warn"

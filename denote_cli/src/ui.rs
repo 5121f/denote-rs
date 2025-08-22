@@ -118,7 +118,7 @@ pub enum Answer {
 }
 
 impl Answer {
-    pub fn as_bool(&self) -> bool {
+    pub const fn as_bool(&self) -> bool {
         match self {
             Yes => true,
             No => false,

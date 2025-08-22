@@ -73,6 +73,6 @@ mod denote {
             .signature(Signature::parse("1b").unwrap())
             .extension(Extension::new("txt").unwrap())
             .to_string();
-        assert_eq!(denote.to_string(), "20240912T13015412==1b--some-title.txt");
+        assert_eq!(denote, "20240912T13015412==1b--some-title.txt");
     }
 }

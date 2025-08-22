@@ -26,3 +26,4 @@ version = "0.1.7"
 
 [lints.clippy]
 pedantic = "warn"
+nursery = "warn"
