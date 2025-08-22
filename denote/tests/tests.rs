@@ -48,7 +48,7 @@ mod extension {
     #[test]
     fn empty_input() {
         let extension = Extension::new("");
-        assert!(extension.is_none())
+        assert!(extension.is_none());
     }
 
     #[test]
