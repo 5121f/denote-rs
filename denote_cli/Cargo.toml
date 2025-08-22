@@ -23,3 +23,6 @@ fs-err = "3.1.1"
 package = "zeroten-denote"
 version = "0.1.7"
 # path = "../denote"
+
+[lints.clippy]
+pedantic = "warn"

@@ -16,3 +16,6 @@ regex = "1"
 version = "0"
 default-features = false
 features = ["alloc", "clock"]
+
+[lints.clippy]
+pedantic = "warn"
