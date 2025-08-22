@@ -36,16 +36,12 @@ impl UI {
         };
         self.print(format!("{question} {prompt} "))?;
         let mut response = self.read_line()?;
-        let response = if response.is_empty() {
-            default_ansfer
-        } else {
-            response.make_ascii_lowercase();
-            match response.trim() {
-                "y" | "yes" => Yes,
-                _ => No,
-            }
-        };
-        Ok(response)
+        response.make_ascii_lowercase();
+        Ok(match response.trim() {
+            "y" | "yes" => Yes,
+            "" => default_ansfer,
+            _ => No,
+        })
     }
 
     pub fn rename_confirm(
