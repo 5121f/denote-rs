@@ -35,11 +35,12 @@ impl UI {
             No => "[y/N]",
         };
         self.print(format!("{question} {prompt} "))?;
-        let response = self.read_line()?;
+        let mut response = self.read_line()?;
         let response = if response.is_empty() {
             default_ansfer
         } else {
-            match response.to_lowercase().trim() {
+            response.make_ascii_lowercase();
+            match response.trim() {
                 "y" | "yes" => Yes,
                 _ => No,
             }
