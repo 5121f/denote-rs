@@ -48,8 +48,8 @@ to get any corrections and feedback from you.
 
 ## License
 
-Most of the files in this project are dual-licensed under **Mozilla Public
-License 2.0 (MPL 2.0) and the GNU General Public License version 2 or
-later (GPL-2.0-or-later)**, at the user's option.
+This project is dual-licensed under **Mozilla Public License 2.0 (MPL 2.0)
+and the GNU General Public License version 2 or later
+(GPL-2.0-or-later)**, at the user's option.
 
 The full texts of the licenses can be found in the [`LICENSES`](./LICENSES) directory.
