@@ -1,11 +1,15 @@
-// SPDX-License-Identifier: MPL-2.0 OR GPL-2.0-or-later
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 
 use std::fmt;
 use std::io::{self, Write};
 
+use Answer::{No, Yes};
 use anyhow::{Context, Result};
 use denote::{Extension, Keywords, Title};
-use Answer::{No, Yes};
 
 /// User Interface
 pub struct UI {
